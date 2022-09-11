@@ -16,12 +16,14 @@ function createMainWindow() {
     // minWidth: 980,
     // minHeight: 285,
     // maxHeight: 285,
+    // opacity: 0.5,
+    // backgroundColor: '#000',
   });
   // 加载应用----适用于 react 项目
   browserWindow.loadURL('http://localhost:3000/');
 
   // 打开开发者工具，默认不打开
-  browserWindow.webContents.openDevTools();
+  // browserWindow.webContents.openDevTools();
 }
 
 app.on('ready', () => {

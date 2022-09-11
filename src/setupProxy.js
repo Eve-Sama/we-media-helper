@@ -9,7 +9,7 @@ module.exports = function (app) {
       pathRewrite: path => path.replace('/api-bilibili', ''),
       headers: {
         referer: 'https://member.bilibili.com',
-        cookie: `111`,
+        cookie: ``,
       },
     }),
   );
