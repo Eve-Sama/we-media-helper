@@ -12,7 +12,14 @@ function initTray() {
         {
           label: 'Bilibili',
           click: () => {
-            trayClick('bilibili', 'Bilibili');
+            trayClick('bilibili', 'Bilibili - 前夕Sama', {
+              width: 980,
+              height: 1600,
+              openDevTools: true,
+              resizable: false,
+              fullscreenable: false,
+              alwaysOnTop: true,
+            });
           },
         },
         {

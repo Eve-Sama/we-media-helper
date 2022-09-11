@@ -3,7 +3,7 @@ var _ = require('lodash');
 
 const windowList = [];
 
-function createWindow(path, title) {
+function createWindow(path, title, windowOptions = {}) {
   if (path === 'bilibili') {
     const filter = {
       urls: [],
@@ -17,24 +17,27 @@ function createWindow(path, title) {
     });
   }
   const browserWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    alwaysOnTop: true,
+    width: 1200,
+    height: 1000,
     webPreferences: {
+      nodeIntegration: true,
       webSecurity: false,
     },
+    ...windowOptions,
   });
   browserWindow.loadURL(`http://localhost:3000/${path}`);
   browserWindow.webContents.on('did-finish-load', () => browserWindow.setTitle(title));
-  browserWindow.webContents.openDevTools();
+  if (windowOptions.openDevTools) {
+    browserWindow.webContents.openDevTools();
+  }
   browserWindow.addListener('closed', () => _.remove(windowList, v => v === path));
   windowList.push(browserWindow);
 }
 
-function trayClick(path, title) {
+function trayClick(path, title, windowOptions) {
   const index = windowList.findIndex(v => v === path);
   if (index === -1) {
-    createWindow(path, title);
+    createWindow(path, title, windowOptions);
     windowList.push(path);
   } else {
     new Notification({ title: 'Platform Listener', body: '已存在该监听器!' }).show();
