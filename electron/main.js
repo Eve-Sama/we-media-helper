@@ -1,7 +1,4 @@
-// 引入electron并创建一个Browserwindow
-const { app, BrowserWindow } = require('electron');
-const { session } = require('electron');
-// 保持window对象的全局引用,避免JavaScript对象被垃圾回收时,窗口被自动关闭.
+const { app, BrowserWindow, Notification } = require('electron');
 
 function createWindow() {
   // const filter = {
@@ -28,6 +25,7 @@ function createWindow() {
     webPreferences: {
       webSecurity: false, // 禁止同源策略
     },
+    frame: false,
   });
   // 加载应用----适用于 react 项目
   browserWindow.loadURL('http://localhost:3000/');
@@ -38,7 +36,7 @@ function createWindow() {
 
 // 当 Electron 完成初始化并准备创建浏览器窗口时调用此方法
 app.on('ready', () => {
-  createWindow;
+  createWindow();
 });
 
 // 所有窗口关闭时退出应用.
@@ -53,6 +51,7 @@ app.on('activate', function () {
   // macOS中点击Dock图标时没有已打开的其余应用窗口时,则通常在应用中重建一个窗口
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
+    new Notification({ title: 'React YYDS', body: '重新创建咯' }).show();
   }
 });
 

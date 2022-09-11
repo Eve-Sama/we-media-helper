@@ -3,6 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "main": "electron/main.js",
+  "mac": {
+    "icon": "./public/antv.icns"
+  },
+  "win": {
+    "icon": "./public/antv.icon"
+  },
   "scripts": {
     "start:web": "react-scripts start",
     "start:app": "electron .",
