@@ -1,5 +1,5 @@
 import './App.scss';
-import { Bilibili } from './bilibili/bilibili';
+import { Bilibili } from './pages/bilibili/bilibili';
 
 function App() {
   return (
