@@ -1,18 +1,13 @@
 const { app, BrowserWindow, Notification } = require('electron');
+const { initTray } = require('./tray');
 
-function createWindow() {
-  // const filter = {
-  //   urls: [],
-  // };
-  // session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
-  //   if (details.url.startsWith('https://member.bilibili.com')) {
-  //     details.requestHeaders['Referer'] = null;
-  //     details.requestHeaders['cookie'] = `111`;
-  //   }
-  //   callback({ cancel: false, requestHeaders: details.requestHeaders });
-  // });
+// ipcMain.on('navigate', e => {
+//   // console.log(e, e);
+//   // createWindow();
+//   app.quit();
+// });
 
-  //创建浏览器窗口,宽高自定义具体大小你开心就好
+function createMainWindow() {
   const browserWindow = new BrowserWindow({
     width: 1172,
     height: 955,
@@ -21,11 +16,6 @@ function createWindow() {
     // minWidth: 980,
     // minHeight: 285,
     // maxHeight: 285,
-    title: 'platform-listener',
-    webPreferences: {
-      webSecurity: false, // 禁止同源策略
-    },
-    frame: false,
   });
   // 加载应用----适用于 react 项目
   browserWindow.loadURL('http://localhost:3000/');
@@ -34,9 +24,9 @@ function createWindow() {
   browserWindow.webContents.openDevTools();
 }
 
-// 当 Electron 完成初始化并准备创建浏览器窗口时调用此方法
 app.on('ready', () => {
-  createWindow();
+  createMainWindow();
+  initTray();
 });
 
 // 所有窗口关闭时退出应用.
@@ -50,9 +40,7 @@ app.on('window-all-closed', function () {
 app.on('activate', function () {
   // macOS中点击Dock图标时没有已打开的其余应用窗口时,则通常在应用中重建一个窗口
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
+    createMainWindow();
     new Notification({ title: 'React YYDS', body: '重新创建咯' }).show();
   }
 });
-
-// 你可以在这个脚本中续写或者使用require引入独立的js文件.
