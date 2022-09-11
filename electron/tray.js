@@ -1,17 +1,6 @@
-const { Tray, Menu, BrowserWindow } = require('electron');
+const { Tray, Menu, shell } = require('electron');
 const path = require('path');
-
-function createWindow(path) {
-  const browserWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-  });
-  browserWindow.loadURL(`http://localhost:3000/${path}`);
-  browserWindow.webContents.openDevTools();
-  // browserWindow.webContents.on('did-finish-load', () => {
-  //   browserWindow.setTitle('xxx');
-  // });
-}
+const { trayClick } = require('./window');
 
 function initTray() {
   const trayMenu = new Tray(path.join(__dirname, '../public/antv_16x16.png'));
@@ -19,25 +8,41 @@ function initTray() {
     {
       label: '监听器',
       submenu: [
-        {
-          label: '全部开启',
-          click: () => {
-            console.log('全部开启');
-          },
-        },
         { type: 'separator' },
         {
           label: 'Bilibili',
-          type: 'radio',
           click: () => {
-            createWindow('bilibili');
+            trayClick('bilibili', 'Bilibili');
           },
         },
         {
           label: '掘金',
-          type: 'radio',
           click: () => {
-            createWindow('juejin');
+            trayClick('juejin', '掘金');
+          },
+        },
+      ],
+    },
+    {
+      label: '更多',
+      submenu: [
+        {
+          label: '作者',
+          submenu: [
+            {
+              label: 'B站',
+              click: () => shell.openExternal('https://space.bilibili.com/29191310'),
+            },
+            {
+              label: '掘金',
+              click: () => shell.openExternal('https://juejin.cn/user/2700056290417133'),
+            },
+          ],
+        },
+        {
+          label: '关于软件',
+          click: () => {
+            trayClick('about', '关于软件');
           },
         },
       ],
