@@ -1,12 +1,8 @@
-import './App.scss';
-import { Bilibili } from './pages/bilibili/bilibili';
+import { useRoutes } from 'react-router-dom';
+import { router } from './router';
 
 function App() {
-  return (
-    <div>
-      <Bilibili />
-    </div>
-  );
+  return useRoutes(router);
 }
 
 export default App;
