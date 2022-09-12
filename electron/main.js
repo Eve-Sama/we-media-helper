@@ -9,8 +9,8 @@ const { initTray } = require('./tray');
 
 function createMainWindow() {
   const browserWindow = new BrowserWindow({
-    width: 1172,
-    height: 955,
+    // width: 1172,
+    // height: 955,
     // width: 980,
     // height: 285,
     // minWidth: 980,

@@ -1,6 +1,5 @@
-import { ContainerStyle } from './data-card-style';
+import styles from './style.module.scss';
 
-// export function DataCard(title: string, changeValue: number, totalValue: number) {
 export function DataCard(props: { title: string; changeValue: number; totalValue: number }) {
   const { title, changeValue, totalValue } = props;
   const reg = /(?=(\B\d{3})+$)/g;
@@ -9,14 +8,12 @@ export function DataCard(props: { title: string; changeValue: number; totalValue
   };
 
   return (
-    <ContainerStyle>
-      <div className="container">
-        <div className="header">
-          <div className="title">{title}</div>
-          <div className="change-value">{changeValue}</div>
-        </div>
-        <div className="total-value">{getFormaValue(totalValue)}</div>
+    <div className={styles['container']}>
+      <div className={styles['header']}>
+        <div className={styles['title']}>{title}</div>
+        <div className={styles['change-value']}>{changeValue}</div>
       </div>
-    </ContainerStyle>
+      <div className={styles['total-value']}>{getFormaValue(totalValue)}</div>
+    </div>
   );
 }

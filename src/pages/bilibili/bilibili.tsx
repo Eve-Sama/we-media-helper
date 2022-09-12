@@ -1,7 +1,7 @@
 import { DataCard } from './data-card/data-card';
 import { useEffect, useState } from 'react';
 import { getStat } from '../../request';
-import { ContainerStyle } from './bilibili-style';
+import styles from './style.module.scss';
 
 export function Bilibili() {
   const [
@@ -36,21 +36,19 @@ export function Bilibili() {
     });
   }, []);
   return (
-    <ContainerStyle>
-      <div className="bilibili-container">
-        <div className="line-1">
-          <DataCard title="净增粉丝" changeValue={data.incr_fans} totalValue={data.total_fans}></DataCard>
-          <DataCard title="播放量" changeValue={data.incr_click} totalValue={data.total_click}></DataCard>
-          <DataCard title="评论" changeValue={data.incr_reply} totalValue={data.total_reply}></DataCard>
-          <DataCard title="弹幕" changeValue={data.incr_dm} totalValue={data.total_dm}></DataCard>
-        </div>
-        <div className="line-2">
-          <DataCard title="点赞" changeValue={data.inc_like} totalValue={data.total_like}></DataCard>
-          <DataCard title="分享" changeValue={data.inc_share} totalValue={data.total_share}></DataCard>
-          <DataCard title="收藏" changeValue={data.inc_fav} totalValue={data.total_fav}></DataCard>
-          <DataCard title="投币" changeValue={data.inc_coin} totalValue={data.total_coin}></DataCard>
-        </div>
+    <div className={styles['bilibili-container']}>
+      <div className={styles['line-1']}>
+        <DataCard title="净增粉丝" changeValue={data.incr_fans} totalValue={data.total_fans}></DataCard>
+        <DataCard title="播放量" changeValue={data.incr_click} totalValue={data.total_click}></DataCard>
+        <DataCard title="评论" changeValue={data.incr_reply} totalValue={data.total_reply}></DataCard>
+        <DataCard title="弹幕" changeValue={data.incr_dm} totalValue={data.total_dm}></DataCard>
       </div>
-    </ContainerStyle>
+      <div className={styles['line-2']}>
+        <DataCard title="点赞" changeValue={data.inc_like} totalValue={data.total_like}></DataCard>
+        <DataCard title="分享" changeValue={data.inc_share} totalValue={data.total_share}></DataCard>
+        <DataCard title="收藏" changeValue={data.inc_fav} totalValue={data.total_fav}></DataCard>
+        <DataCard title="投币" changeValue={data.inc_coin} totalValue={data.total_coin}></DataCard>
+      </div>
+    </div>
   );
 }

@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { SettingBilibili } from './setting-bilibili/setting-bilibili';
 import { SettingGithub } from './setting-github/setting-github';
 import { SettingJuejin } from './setting-juejin/setting-juejin';
-import { ContainerStyle } from './setting-style';
 import { SettingZhihu } from './setting-zhihu/setting-zhihu';
+import styles from './style.module.scss';
 
 const items: MenuProps['items'] = [
   {
@@ -49,11 +49,11 @@ export function Setting() {
       break;
   }
   return (
-    <ContainerStyle>
-      <div className="setting-container">
-        <Menu onClick={onClick} style={{ width: 256 }} defaultSelectedKeys={['Github']} mode="inline" items={items} />
-        <div className="setting-content">{settingContet}</div>
+    <div className={styles['setting-container']}>
+      <div className={styles['setting-menu']}>
+        <Menu onClick={onClick} style={{ width: 256 }} defaultSelectedKeys={['Bilibili']} mode="inline" items={items} />
       </div>
-    </ContainerStyle>
+      <div className={styles['setting-content']}>{settingContet}</div>
+    </div>
   );
 }
