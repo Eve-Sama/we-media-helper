@@ -35,10 +35,10 @@ function initTray() {
       label: '偏好设置',
       click: () =>
         trayClick('setting', '偏好设置', {
-          width: 800,
+          width: 576,
           height: 600,
           openDevTools: true,
-          resizable: true,
+          resizable: false,
           fullscreenable: false,
           alwaysOnTop: true,
         }),

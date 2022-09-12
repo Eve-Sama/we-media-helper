@@ -1,5 +1,6 @@
 const { app, BrowserWindow, Notification } = require('electron');
 const { initTray } = require('./tray');
+const { initEvent } = require('./event');
 
 // ipcMain.on('navigate', e => {
 //   // console.log(e, e);
@@ -29,6 +30,7 @@ function createMainWindow() {
 app.on('ready', () => {
   createMainWindow();
   initTray();
+  initEvent();
 });
 
 // 所有窗口关闭时退出应用.

@@ -1,10 +1,13 @@
 const { session, BrowserWindow, Notification } = require('electron');
-var _ = require('lodash');
+const ElectronStore = require('electron-store');
+ElectronStore.initRenderer();
+const path = require('path');
+const _ = require('lodash');
 
 const windowList = [];
 
-function createWindow(path, title, windowOptions = {}) {
-  if (path === 'bilibili') {
+function createWindow(routePath, title, windowOptions = {}) {
+  if (routePath === 'bilibili') {
     const filter = {
       urls: [],
     };
@@ -22,15 +25,16 @@ function createWindow(path, title, windowOptions = {}) {
     webPreferences: {
       nodeIntegration: true,
       webSecurity: false,
+      preload: path.join(__dirname, 'preload.js'),
     },
     ...windowOptions,
   });
-  browserWindow.loadURL(`http://localhost:3000/${path}`);
+  browserWindow.loadURL(`http://localhost:3000/${routePath}`);
   browserWindow.webContents.on('did-finish-load', () => browserWindow.setTitle(title));
   if (windowOptions.openDevTools) {
     browserWindow.webContents.openDevTools();
   }
-  browserWindow.addListener('closed', () => _.remove(windowList, v => v === path));
+  browserWindow.addListener('closed', () => _.remove(windowList, v => v === routePath));
   windowList.push(browserWindow);
 }
 

@@ -1,6 +1,14 @@
 .setting-container {
   display: flex;
+  .setting-menu {
+    height: 100vh;
+    >ul {
+      height: 100vh;
+    }
+  }
   .setting-content {
+    flex: 1;
+    display: flex;
     margin: 16px 16px 0px;
   }
 }
