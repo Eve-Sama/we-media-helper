@@ -10,12 +10,12 @@ function initTray() {
       submenu: [
         { type: 'separator' },
         {
-          label: 'Bilibili',
+          label: '哔哩哔哩',
           click: () => {
             trayClick('bilibili', 'Bilibili - 前夕Sama', {
               width: 980,
-              height: 1600,
-              openDevTools: true,
+              height: 270,
+              openDevTools: false,
               resizable: false,
               fullscreenable: false,
               alwaysOnTop: true,
@@ -30,6 +30,20 @@ function initTray() {
         },
       ],
     },
+    { type: 'separator' },
+    {
+      label: '偏好设置',
+      click: () =>
+        trayClick('setting', '偏好设置', {
+          width: 800,
+          height: 600,
+          openDevTools: true,
+          resizable: true,
+          fullscreenable: false,
+          alwaysOnTop: true,
+        }),
+    },
+    { type: 'separator' },
     {
       label: '更多',
       submenu: [

@@ -7,6 +7,9 @@ import { Setting } from '../pages/setting/setting';
 export const router: RouteObject[] = [
   {
     path: '/',
+  },
+  {
+    path: '/setting',
     element: <Setting />,
   },
   {
