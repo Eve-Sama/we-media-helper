@@ -1,28 +1,45 @@
-import { Button, Form, Input, message } from 'antd';
-const { TextArea } = Input;
+import { Button, Checkbox, Form, Input, message } from 'antd';
+import styles from './style.module.scss';
 
+const { TextArea } = Input;
 const broadcastChannel = new BroadcastChannel('bilibili');
 
 export function SettingBilibili() {
-  const config = window.electron.store.get('bilibili-config') || {};
+  const config = window.electron.store.get('bilibili-config') || {
+    cookie: '',
+    displayType: [],
+  };
   const onFinish = (values: any) => {
-    config.cookie = values.cookie;
+    Object.assign(config, values);
     window.electron.store.set('bilibili-config', config);
     message.success('操作成功!');
     broadcastChannel.postMessage('bilibili-init');
   };
-
+  const displayType = [
+    { label: '净增粉丝', value: 'fan' },
+    { label: '播放量', value: 'click' },
+    { label: '评论', value: 'reply' },
+    { label: '弹幕', value: 'dm' },
+    { label: '点赞', value: 'like' },
+    { label: '分享', value: 'share' },
+    { label: '收藏', value: 'favorite' },
+    { label: '投币', value: 'coin' },
+  ];
   return (
-    <Form name="basic" labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} initialValues={{ cookie: config.cookie }} onFinish={onFinish} autoComplete="off">
-      <Form.Item label="cookie" name="cookie">
-        <TextArea rows={4} placeholder="Input your cookie" />
-      </Form.Item>
-
-      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-        <Button type="primary" htmlType="submit" block>
-          保存
-        </Button>
-      </Form.Item>
-    </Form>
+    <div className={styles['container']}>
+      <Form name="basic" labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} initialValues={{ ...config }} onFinish={onFinish} autoComplete="off">
+        <Form.Item label="cookie" name="cookie">
+          <TextArea rows={4} placeholder="Input your cookie" />
+        </Form.Item>
+        <Form.Item label="显示模块" name="displayType">
+          <Checkbox.Group options={displayType} />
+        </Form.Item>
+        <Form.Item wrapperCol={{ offset: 4, span: 24 }}>
+          <Button type="primary" htmlType="submit" block>
+            保存
+          </Button>
+        </Form.Item>
+      </Form>
+    </div>
   );
 }
