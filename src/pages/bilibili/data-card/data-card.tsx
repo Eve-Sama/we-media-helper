@@ -1,7 +1,7 @@
 import styles from './style.module.scss';
 
 export function DataCard(props: { title: string; changeValue: number; totalValue: number }) {
-  const { title, changeValue, totalValue } = props;
+  const { title, changeValue = 0, totalValue = 0 } = props;
   const reg = /(?=(\B\d{3})+$)/g;
   const getFormaValue = (value: number): string => {
     return value.toString().replace(reg, ',');

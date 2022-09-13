@@ -12,7 +12,7 @@ function initTray() {
         {
           label: '哔哩哔哩',
           click: () => {
-            trayClick('bilibili', 'Bilibili - 前夕Sama', {
+            trayClick('bilibili', 'Bilibili', {
               width: 980,
               height: 270,
               openDevTools: false,
@@ -32,12 +32,12 @@ function initTray() {
     },
     { type: 'separator' },
     {
-      label: '偏好设置',
+      label: '鉴权中心',
       click: () =>
-        trayClick('setting', '偏好设置', {
+        trayClick('setting', '鉴权中心', {
           width: 576,
-          height: 600,
-          openDevTools: true,
+          height: 300,
+          openDevTools: false,
           resizable: false,
           fullscreenable: false,
           alwaysOnTop: true,

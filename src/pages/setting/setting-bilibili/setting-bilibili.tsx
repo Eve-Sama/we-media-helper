@@ -1,11 +1,15 @@
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 const { TextArea } = Input;
+
+const broadcastChannel = new BroadcastChannel('bilibili');
+
 export function SettingBilibili() {
   const config = window.electron.store.get('bilibili-config') || {};
-  console.log(config, `config`);
   const onFinish = (values: any) => {
     config.cookie = values.cookie;
     window.electron.store.set('bilibili-config', config);
+    message.success('操作成功!');
+    broadcastChannel.postMessage('bilibili-init');
   };
 
   return (
@@ -16,7 +20,7 @@ export function SettingBilibili() {
 
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button type="primary" htmlType="submit" block>
-          提交
+          保存
         </Button>
       </Form.Item>
     </Form>

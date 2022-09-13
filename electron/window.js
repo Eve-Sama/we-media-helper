@@ -1,4 +1,4 @@
-const { session, BrowserWindow, Notification } = require('electron');
+const { BrowserWindow, Notification } = require('electron');
 const ElectronStore = require('electron-store');
 ElectronStore.initRenderer();
 const path = require('path');
@@ -7,18 +7,6 @@ const _ = require('lodash');
 const windowList = [];
 
 function createWindow(routePath, title, windowOptions = {}) {
-  if (routePath === 'bilibili') {
-    const filter = {
-      urls: [],
-    };
-    session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
-      if (details.url.startsWith('https://member.bilibili.com')) {
-        details.requestHeaders['Referer'] = null;
-        details.requestHeaders['cookie'] = `111`;
-      }
-      callback({ cancel: false, requestHeaders: details.requestHeaders });
-    });
-  }
   const browserWindow = new BrowserWindow({
     width: 1200,
     height: 1000,
