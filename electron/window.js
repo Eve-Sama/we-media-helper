@@ -1,4 +1,4 @@
-const { BrowserWindow, Notification } = require('electron');
+const { BrowserWindow, Notification, ipcMain } = require('electron');
 const ElectronStore = require('electron-store');
 ElectronStore.initRenderer();
 const path = require('path');
@@ -18,7 +18,8 @@ function createWindow(routePath, title, windowOptions = {}) {
     ...windowOptions,
   });
   browserWindow.loadURL(`http://localhost:3000/${routePath}`);
-  browserWindow.webContents.on('did-finish-load', () => browserWindow.setTitle(title));
+  // 销毁窗口是不是可以取消监听?
+  ipcMain.on('bilibili-set-title', (_, message) => browserWindow.setTitle(message));
   if (windowOptions.openDevTools) {
     browserWindow.webContents.openDevTools();
   }

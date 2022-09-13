@@ -36,7 +36,7 @@ export function SettingBilibili() {
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 4, span: 24 }}>
           <Button type="primary" htmlType="submit" block>
-            保存
+            应用
           </Button>
         </Form.Item>
       </Form>

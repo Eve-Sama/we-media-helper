@@ -1,1 +1,1 @@
-export * from './bilibili.request';
+export * from './bilibili/bilibili.request';

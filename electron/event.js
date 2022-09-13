@@ -11,7 +11,7 @@ function initEvent() {
         urls: [],
       };
       session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
-        if (details.url.startsWith('https://member.bilibili.com')) {
+        if (details.url.indexOf('bilibili') !== -1) {
           details.requestHeaders['Referer'] = null;
           details.requestHeaders['cookie'] = cookie;
         }
