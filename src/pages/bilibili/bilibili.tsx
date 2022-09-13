@@ -13,7 +13,7 @@ export function Bilibili() {
   useEffect(() => {
     broadcastChannel.onmessage = v => {
       if (v.data === 'bilibili-init') {
-        // setDate(new Date());
+        setLoading(true);
         initData();
       }
     };
@@ -22,22 +22,24 @@ export function Bilibili() {
 
   const initData = () => {
     window.electron.ipcRenderer.send('bilibili-set-cookie');
-    getStat().then(
-      v => {
-        const responseData = v.data;
-        if (responseData.code === 0) {
-          setData(responseData.data);
-          setLoading(false);
-        } else {
+    getStat()
+      .then(
+        v => {
+          const responseData = v.data;
+          if (responseData.code === 0) {
+            setData(responseData.data);
+            setLoading(false);
+          } else {
+            setData({});
+            message.error('鉴权失败, 请打开『鉴权中心』设置cookie!');
+          }
+        },
+        () => {
           setData({});
           message.error('鉴权失败, 请打开『鉴权中心』设置cookie!');
-        }
-      },
-      () => {
-        setData({});
-        message.error('鉴权失败, 请打开『鉴权中心』设置cookie!');
-      },
-    );
+        },
+      )
+      .finally(() => setLoading(false));
   };
 
   return (
