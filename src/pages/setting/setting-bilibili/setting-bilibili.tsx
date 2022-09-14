@@ -17,12 +17,17 @@ export function SettingBilibili() {
   const displayType = [
     { label: '净增粉丝', value: 'fan' },
     { label: '播放量', value: 'click' },
-    { label: '评论', value: 'reply' },
+    { label: '评论', value: 'totalReply' },
     { label: '弹幕', value: 'dm' },
-    { label: '点赞', value: 'like' },
+    { label: '点赞', value: 'totalLike' },
     { label: '分享', value: 'share' },
     { label: '收藏', value: 'favorite' },
     { label: '投币', value: 'coin' },
+    { label: '回复我的', value: 'reply' },
+    { label: '@我的', value: 'at' },
+    { label: '收到的赞', value: 'like' },
+    { label: '系统消息', value: 'systemMessage' },
+    { label: '我的消息', value: 'message' },
   ];
   return (
     <div className={styles['container']}>

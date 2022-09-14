@@ -35,3 +35,21 @@ export interface Account {
     rank: string;
   };
 }
+
+export interface Unread {
+  code: number;
+  data: {
+    at: number;
+    like: number;
+    sys_msg: number;
+    reply: number;
+  };
+}
+
+export interface Message {
+  code: number;
+  data: {
+    follow_unread: number;
+    unfollow_unread: number;
+  };
+}
