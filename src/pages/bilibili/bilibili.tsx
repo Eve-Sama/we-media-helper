@@ -3,13 +3,11 @@ import { useEffect, useState } from 'react';
 import { getAccount, getStat } from '../../request';
 import { Spin, message } from 'antd';
 import styles from './style.module.scss';
-import { Account } from '../../request/bilibili/bilibili.interface';
 
 const broadcastChannel = new BroadcastChannel('bilibili');
 
 export function Bilibili() {
   const [stat, setStat] = useState<any>({});
-  const [account, setAccount] = useState<Account['data']>();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,11 +22,16 @@ export function Bilibili() {
     initComponents();
   }, []);
 
+  const setDefaultTitle = () => {
+    window.electron.ipcRenderer.send('bilibili-set-title', 'Bilibili');
+  };
+
   const initData = () => {
     window.electron.ipcRenderer.send('bilibili-set-cookie');
     Promise.all([getStat(), getAccount()])
       .then(
         v => {
+          let showError = false;
           // 处理统计数据
           const [tempStat, tempAccount] = v;
           const responseTempStatData = tempStat.data;
@@ -36,24 +39,25 @@ export function Bilibili() {
             setStat(responseTempStatData.data);
           } else {
             setStat({});
-            message.error('getStat 出错, 请联系作者!');
+            showError = true;
           }
           // 处理账户信息
           const responseTempAccountData = tempAccount.data;
           if (responseTempAccountData.code === 0) {
-            setAccount(responseTempAccountData.data);
             // 因为 setState 是异步, 所以这里的 account 是undefined, 先临时处理下
-            window.electron.ipcRenderer.send('bilibili-set-title', `Bilibili - ${responseTempAccountData.data!.uname}`);
+            window.electron.ipcRenderer.send('bilibili-set-title', `Bilibili - ${responseTempAccountData.data.uname}`);
           } else {
-            setAccount(undefined);
-            window.electron.ipcRenderer.send('bilibili-set-title', 'Bilibili');
-            message.error('getAccount 出错, 请联系作者!');
+            setDefaultTitle();
+            showError = true;
+          }
+          // 统一报错
+          if (showError) {
+            message.error('鉴权失败, 请打开『偏好设置』设置cookie!');
           }
         },
         () => {
           setStat({});
-          setAccount(undefined);
-          window.electron.ipcRenderer.send('bilibili-set-title', 'Bilibili');
+          setDefaultTitle();
           message.error('鉴权失败, 请打开『偏好设置』设置cookie!');
         },
       )

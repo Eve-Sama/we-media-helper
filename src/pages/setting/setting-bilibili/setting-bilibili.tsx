@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Input, message } from 'antd';
+import { Button, Checkbox, Form, Input } from 'antd';
 import styles from './style.module.scss';
 
 const { TextArea } = Input;
@@ -12,7 +12,6 @@ export function SettingBilibili() {
   const onFinish = (values: any) => {
     Object.assign(config, values);
     window.electron.store.set('bilibili-config', config);
-    message.success('操作成功!');
     broadcastChannel.postMessage('bilibili-init');
   };
   const displayType = [
