@@ -1,9 +1,16 @@
 .bilibili-container {
-  padding: 24px;
-  border-radius: 2px;
-  background: #fff;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  column-gap: 16px;
-  row-gap: 16px;
+  .countdown-container {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+  }
+  .panel-container {
+    padding: 24px;
+    border-radius: 2px;
+    background: #fff;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 16px;
+    row-gap: 16px;
+  }
 }

@@ -1,4 +1,5 @@
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Checkbox, Form, Input, TimePicker } from 'antd';
+import moment from 'moment';
 import styles from './style.module.scss';
 
 const { TextArea } = Input;
@@ -8,12 +9,18 @@ export function SettingBilibili() {
   const config = window.electron.store.get('bilibili-config') || {
     cookie: '',
     displayType: [],
+    refreshTime: '00:00:30',
   };
-  const onFinish = (values: any) => {
+  // TimePicker 只接受 moment 类型的时间
+  config.refreshTime = moment(config.refreshTime, 'HH:mm:ss');
+
+  const onSubmit = (values: any) => {
     Object.assign(config, values);
+    config.refreshTime = values.refreshTime.format('HH:mm:ss');
     window.electron.store.set('bilibili-config', config);
     broadcastChannel.postMessage('bilibili-init');
   };
+
   const displayType = [
     { label: '净增粉丝', value: 'fan' },
     { label: '播放量', value: 'click' },
@@ -29,14 +36,18 @@ export function SettingBilibili() {
     { label: '系统消息', value: 'systemMessage' },
     { label: '我的消息', value: 'message' },
   ];
+
   return (
     <div className={styles['container']}>
-      <Form name="basic" labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} initialValues={{ ...config }} onFinish={onFinish} autoComplete="off">
+      <Form name="basic" labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} initialValues={{ ...config }} onFinish={onSubmit} autoComplete="off">
         <Form.Item label="cookie" name="cookie">
           <TextArea rows={4} placeholder="Input your cookie" />
         </Form.Item>
         <Form.Item label="显示模块" name="displayType">
           <Checkbox.Group options={displayType} />
+        </Form.Item>
+        <Form.Item label="刷新间隔" name="refreshTime">
+          <TimePicker />
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 4, span: 24 }}>
           <Button type="primary" htmlType="submit" block>

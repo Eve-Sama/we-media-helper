@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { getAccount, getMessage, getStat, getUnread } from '../../request';
 import { Spin, message } from 'antd';
 import styles from './style.module.scss';
+import { CountdownDisplay } from './countdown-display/countdown-display';
 
 const broadcastChannel = new BroadcastChannel('bilibili');
 
@@ -17,7 +18,6 @@ export function Bilibili() {
   useEffect(() => {
     broadcastChannel.onmessage = v => {
       if (v.data === 'bilibili-init') {
-        setLoading(true);
         initData();
       }
     };
@@ -29,6 +29,7 @@ export function Bilibili() {
   };
 
   const initData = () => {
+    setLoading(true);
     window.electron.ipcRenderer.send('bilibili-set-cookie');
     Promise.all([getStat(), getAccount(), getUnread(), getMessage()])
       .then(
@@ -128,8 +129,13 @@ export function Bilibili() {
   };
 
   return (
-    <Spin tip="Loading..." spinning={loading}>
-      <div className={styles['bilibili-container']}>{initComponents()}</div>
-    </Spin>
+    <div className={styles['bilibili-container']}>
+      <div className={styles['countdown-container']}>
+        <CountdownDisplay initData={initData} />
+      </div>
+      <Spin tip="Loading..." spinning={loading}>
+        <div className={styles['panel-container']}>{initComponents()}</div>
+      </Spin>
+    </div>
   );
 }
