@@ -1,5 +1,5 @@
 import { DataCard } from './data-card/data-card';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getAccount, getMessage, getStat, getUnread } from '../../request';
 import { Spin, message } from 'antd';
 import styles from './style.module.scss';
@@ -12,23 +12,25 @@ export function Bilibili() {
   const [unreadData, setUnreadData] = useState<any>({});
   const [messageData, setMessageData] = useState<any>({});
   const [loading, setLoading] = useState(true);
+  const countdownRef = useRef<{ startCountdown: () => void }>(null);
+
   const config = window.electron.store.get('bilibili-config');
   const displayType = config.displayType as string[];
 
   useEffect(() => {
     broadcastChannel.onmessage = v => {
       if (v.data === 'bilibili-init') {
-        initData();
+        loadData();
       }
     };
-    initData();
+    loadData();
   }, []);
 
   const setDefaultTitle = () => {
     window.electron.ipcRenderer.send('bilibili-set-title', 'Bilibili');
   };
 
-  const initData = () => {
+  const loadData = () => {
     setLoading(true);
     window.electron.ipcRenderer.send('bilibili-set-cookie');
     Promise.all([getStat(), getAccount(), getUnread(), getMessage()])
@@ -71,6 +73,8 @@ export function Bilibili() {
           // 统一报错
           if (showError) {
             message.error('鉴权失败, 请打开『偏好设置』设置cookie!');
+          } else {
+            countdownRef.current?.startCountdown();
           }
         },
         () => {
@@ -131,7 +135,7 @@ export function Bilibili() {
   return (
     <div className={styles['bilibili-container']}>
       <div className={styles['countdown-container']}>
-        <CountdownDisplay initData={initData} />
+        <CountdownDisplay loadData={loadData} ref={countdownRef} />
       </div>
       <Spin tip="Loading..." spinning={loading}>
         <div className={styles['panel-container']}>{initComponents()}</div>
