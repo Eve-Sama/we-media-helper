@@ -12,35 +12,40 @@ function initTray() {
         {
           label: '哔哩哔哩',
           click: () => {
-            trayClick('bilibili', 'Bilibili', {
+            trayClick('bilibili', {
               width: 980,
-              height: 270,
-              openDevTools: false,
-              resizable: false,
+              height: 1270,
+              minWidth: 980,
+              openDevTools: true,
+              resizable: true,
               fullscreenable: false,
-              alwaysOnTop: true,
+              alwaysOnTop: false,
+              title: 'Bilibili',
             });
           },
         },
         {
           label: '掘金',
           click: () => {
-            trayClick('juejin', '掘金');
+            trayClick('juejin', {
+              title: '掘金',
+            });
           },
         },
       ],
     },
     { type: 'separator' },
     {
-      label: '鉴权中心',
+      label: '偏好设置',
       click: () =>
-        trayClick('setting', '鉴权中心', {
-          width: 576,
-          height: 300,
-          openDevTools: false,
+        trayClick('setting', {
+          width: 800,
+          height: 1300,
+          openDevTools: true,
           resizable: false,
           fullscreenable: false,
-          alwaysOnTop: true,
+          alwaysOnTop: false,
+          title: '偏好设置',
         }),
     },
     { type: 'separator' },
@@ -63,7 +68,7 @@ function initTray() {
         {
           label: '关于软件',
           click: () => {
-            trayClick('about', '关于软件');
+            // trayClick('about', '关于软件');
           },
         },
       ],

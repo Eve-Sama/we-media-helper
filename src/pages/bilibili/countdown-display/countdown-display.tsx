@@ -23,7 +23,7 @@ export const CountdownDisplay = forwardRef<BilibiliRef, BilibiliProps>((props, r
   const startCountdown = () => {
     const { refreshTime } = window.electron.store.get('bilibili-config');
     const [hour, minite, second] = refreshTime.split(':');
-    setCountdownValue(Date.now() + 1000 * (parseInt(hour) * 3600 + parseInt(minite) * 60 + parseInt(second)));
+    setCountdownValue(Date.now() + 1000 * (parseInt(hour) * 3600 + parseInt(minite) * 60 + parseInt(second)) + 1000);
   };
 
   return <Countdown value={countdownValue} onFinish={loadData}></Countdown>;

@@ -1,12 +1,11 @@
-const { BrowserWindow, Notification, ipcMain } = require('electron');
+const { BrowserWindow } = require('electron');
 const ElectronStore = require('electron-store');
 ElectronStore.initRenderer();
 const path = require('path');
-const _ = require('lodash');
 
-const windowList = [];
+const windowMap = new Map();
 
-function createWindow(routePath, title, windowOptions = {}) {
+function createWindow(routePath, windowOptions = {}) {
   const browserWindow = new BrowserWindow({
     width: 1200,
     height: 1000,
@@ -18,23 +17,21 @@ function createWindow(routePath, title, windowOptions = {}) {
     ...windowOptions,
   });
   browserWindow.loadURL(`http://localhost:3000/${routePath}`);
-  // 销毁窗口是不是可以取消监听?
-  ipcMain.on('bilibili-set-title', (_, message) => browserWindow.setTitle(message));
   if (windowOptions.openDevTools) {
     browserWindow.webContents.openDevTools();
   }
-  browserWindow.addListener('closed', () => _.remove(windowList, v => v === routePath));
-  windowList.push(browserWindow);
+  browserWindow.addListener('closed', () => windowMap.delete(routePath));
+  windowMap.set(routePath, browserWindow);
 }
 
-function trayClick(path, title, windowOptions) {
-  const index = windowList.findIndex(v => v === path);
-  if (index === -1) {
-    createWindow(path, title, windowOptions);
-    windowList.push(path);
+function trayClick(path, windowOptions) {
+  const window = windowMap.get(path);
+  if (window) {
+    window.show();
   } else {
-    new Notification({ title: 'Platform Listener', body: '已存在该监听器!' }).show();
+    createWindow(path, windowOptions);
   }
 }
 
 exports.trayClick = trayClick;
+exports.windowMap = windowMap;
