@@ -1,9 +1,9 @@
-import { DataCard } from './data-card/data-card';
 import { useEffect, useRef, useState } from 'react';
 import { getAccount, getMessage, getStat, getUnread } from '../../request';
 import { Spin, message } from 'antd';
 import styles from './style.module.scss';
-import { CountdownDisplay } from './countdown-display/countdown-display';
+import { CountdownDisplay } from '../common/countdown-display/countdown-display';
+import { DataCard } from '../common/data-card/data-card';
 
 const broadcastChannel = new BroadcastChannel('bilibili');
 
