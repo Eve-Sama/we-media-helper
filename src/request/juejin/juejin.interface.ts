@@ -1,4 +1,5 @@
 export interface Count {
+  err_no: number;
   data: {
     count: {
       /** 点赞消息 */
@@ -12,5 +13,12 @@ export interface Count {
       /** 职位沟通 */
       5: number;
     };
+  };
+}
+
+export interface User {
+  err_no: number;
+  data: {
+    user_name: string;
   };
 }

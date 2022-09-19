@@ -15,7 +15,6 @@ function initTray() {
             trayClick('bilibili', {
               width: 980,
               height: 1270,
-              minWidth: 980,
               openDevTools: true,
               resizable: true,
               fullscreenable: false,
@@ -28,6 +27,12 @@ function initTray() {
           label: '掘金',
           click: () => {
             trayClick('juejin', {
+              width: 980,
+              height: 1270,
+              openDevTools: true,
+              resizable: true,
+              fullscreenable: false,
+              alwaysOnTop: false,
               title: '掘金',
             });
           },

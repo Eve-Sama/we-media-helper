@@ -10,6 +10,11 @@ function initEvent() {
     browserWindow.setTitle(message);
   });
 
+  ipcMain.on('juejin-set-title', (_, message) => {
+    const browserWindow = windowMap.get('juejin');
+    browserWindow.setTitle(message);
+  });
+
   ipcMain.on('bilibili-set-cookie', () => {
     const { cookie } = store.get('bilibili-config') || {};
     if (cookie) {
@@ -24,9 +29,25 @@ function initEvent() {
         callback({ cancel: false, requestHeaders: details.requestHeaders });
       });
     }
-    // console.log(message, `message`);
-    // new Notification({ title: 'Notification', body: message }).show();
   });
+
+  ipcMain.on('juejin-set-cookie', () => {
+    const { cookie } = store.get('juejin-config') || {};
+    if (cookie) {
+      const filter = {
+        urls: [],
+      };
+      session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
+        if (details.url.indexOf('juejin') !== -1) {
+          details.requestHeaders['Referer'] = null;
+          details.requestHeaders['cookie'] = cookie;
+        }
+        callback({ cancel: false, requestHeaders: details.requestHeaders });
+      });
+    }
+  });
+  // console.log(message, `message`);
+  // new Notification({ title: 'Notification', body: message }).show();
 }
 
 exports.initEvent = initEvent;
