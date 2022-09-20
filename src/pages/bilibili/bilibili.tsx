@@ -88,7 +88,7 @@ export function Bilibili() {
       .finally(() => setLoading(false));
   };
 
-  const initComponents = () => {
+  const initComponents: () => JSX.Element[] = () => {
     const res: JSX.Element[] = [];
     if (displayType.includes('fan')) {
       res.push(<DataCard key="fan" title="净增粉丝" changeValue={statData.incr_fans} totalValue={statData.total_fans}></DataCard>);
@@ -132,11 +132,17 @@ export function Bilibili() {
     return res;
   };
 
+  const countdownDisplay: () => JSX.Element = () => {
+    let content: JSX.Element;
+    if (config.showCountdown) {
+      content = <CountdownDisplay loadData={loadData} display={config.showCountdown} ref={countdownRef} />;
+    }
+    return content;
+  };
+
   return (
     <div className={styles['bilibili-container']}>
-      <div className={styles['countdown-container']}>
-        <CountdownDisplay loadData={loadData} ref={countdownRef} />
-      </div>
+      {countdownDisplay()}
       <Spin tip="Loading..." spinning={loading}>
         <div className={styles['panel-container']}>{initComponents()}</div>
       </Spin>

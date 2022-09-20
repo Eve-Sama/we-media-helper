@@ -68,7 +68,7 @@ export function JueJin() {
       .finally(() => setLoading(false));
   };
 
-  const initComponents = () => {
+  const initComponents: () => JSX.Element[] = () => {
     const res: JSX.Element[] = [];
     if (displayType.includes('reply')) {
       res.push(<DataCard key="reply" title="评论消息" changeValue={countData['3']} totalValue={0}></DataCard>);
@@ -88,11 +88,17 @@ export function JueJin() {
     return res;
   };
 
+  const countdownDisplay: () => JSX.Element = () => {
+    let content: JSX.Element;
+    if (config.showCountdown) {
+      content = <CountdownDisplay loadData={loadData} display={config.showCountdown} ref={countdownRef} />;
+    }
+    return content;
+  };
+
   return (
     <div className={styles['container']}>
-      <div className={styles['countdown-container']}>
-        <CountdownDisplay loadData={loadData} ref={countdownRef} />
-      </div>
+      {countdownDisplay()}
       <Spin tip="Loading..." spinning={loading}>
         <div className={styles['panel-container']}>{initComponents()}</div>
       </Spin>

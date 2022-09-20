@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Input, TimePicker } from 'antd';
+import { Button, Checkbox, Form, Input, Switch, TimePicker } from 'antd';
 import moment from 'moment';
 import styles from './style.module.scss';
 
@@ -10,6 +10,7 @@ export function SettingBilibili() {
     cookie: '',
     displayType: [],
     refreshTime: '00:00:30',
+    showCountdown: true,
   };
   // TimePicker 只接受 moment 类型的时间
   config.refreshTime = moment(config.refreshTime, 'HH:mm:ss');
@@ -48,6 +49,9 @@ export function SettingBilibili() {
         </Form.Item>
         <Form.Item label="刷新间隔" name="refreshTime">
           <TimePicker />
+        </Form.Item>
+        <Form.Item label="显示倒计时" name="showCountdown" valuePropName="checked">
+          <Switch />
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 4, span: 24 }}>
           <Button type="primary" htmlType="submit" block>

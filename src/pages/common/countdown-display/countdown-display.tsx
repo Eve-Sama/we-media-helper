@@ -10,10 +10,11 @@ interface BilibiliRef {
 
 interface BilibiliProps {
   loadData: () => void;
+  display: boolean;
 }
 
 export const CountdownDisplay = forwardRef<BilibiliRef, BilibiliProps>((props, ref) => {
-  const { loadData } = props;
+  const { loadData, display } = props;
 
   const [countdownValue, setCountdownValue] = useState<number>(0);
 
@@ -28,7 +29,7 @@ export const CountdownDisplay = forwardRef<BilibiliRef, BilibiliProps>((props, r
   };
 
   return (
-    <div className={styles['container']}>
+    <div className={styles['container']} style={{ display: display ? 'flex' : 'none' }}>
       <Divider>
         <Countdown value={countdownValue} onFinish={loadData}></Countdown>
       </Divider>
