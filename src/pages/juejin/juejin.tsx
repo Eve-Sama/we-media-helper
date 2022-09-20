@@ -39,7 +39,7 @@ export function JueJin() {
           const [tempCountData, tempUserData] = v;
           const responseCountData = tempCountData.data;
           if (responseCountData.err_no === 0) {
-            setCountData(responseCountData.data);
+            setCountData(responseCountData.data.count);
           } else {
             setCountData({});
             showError = true;
@@ -71,19 +71,19 @@ export function JueJin() {
   const initComponents: () => JSX.Element[] = () => {
     const res: JSX.Element[] = [];
     if (displayType.includes('reply')) {
-      res.push(<DataCard key="reply" title="评论消息" changeValue={countData['3']} totalValue={0}></DataCard>);
+      res.push(<DataCard key="reply" title="评论消息" changeValue={0} totalValue={countData['3']}></DataCard>);
     }
     if (displayType.includes('like')) {
-      res.push(<DataCard key="like" title="点赞消息" changeValue={countData['1']} totalValue={0}></DataCard>);
+      res.push(<DataCard key="like" title="点赞消息" changeValue={0} totalValue={countData['1']}></DataCard>);
     }
     if (displayType.includes('follow')) {
-      res.push(<DataCard key="follow" title="关注消息" changeValue={countData['2']} totalValue={0}></DataCard>);
+      res.push(<DataCard key="follow" title="关注消息" changeValue={0} totalValue={countData['2']}></DataCard>);
     }
     if (displayType.includes('system')) {
-      res.push(<DataCard key="system" title="系统消息" changeValue={countData['4']} totalValue={0}></DataCard>);
+      res.push(<DataCard key="system" title="系统消息" changeValue={0} totalValue={countData['4']}></DataCard>);
     }
     if (displayType.includes('job')) {
-      res.push(<DataCard key="job" title="职位沟通" changeValue={countData['5']} totalValue={0}></DataCard>);
+      res.push(<DataCard key="job" title="职位沟通" changeValue={0} totalValue={countData['5']}></DataCard>);
     }
     return res;
   };
