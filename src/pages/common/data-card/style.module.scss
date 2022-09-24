@@ -9,8 +9,16 @@
     display: flex;
     justify-content: space-between;
     font-size: 14px;
-    .change-value {
+    .change-value-positive {
       color: #ff4684;
+      font-weight: 500;
+    }
+    .change-value-nagative {
+      color: green;
+      font-weight: 500;
+    }
+    .change-value-zero {
+      color: gray;
       font-weight: 500;
     }
   }
