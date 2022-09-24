@@ -4,6 +4,7 @@ import { Spin, message } from 'antd';
 import styles from './style.module.scss';
 import { CountdownDisplay } from '../common/countdown-display/countdown-display';
 import { DataCard } from '../common/data-card/data-card';
+import _ from 'lodash';
 
 const broadcastChannel = new BroadcastChannel('bilibili');
 
@@ -14,7 +15,9 @@ export function Bilibili() {
   const [loading, setLoading] = useState(true);
   const countdownRef = useRef<{ startCountdown: () => void }>(null);
 
-  const config = window.electron.store.get('bilibili-data').config;
+  const bilibiliData = window.electron.store.get('bilibili-data');
+  const dataCardList = bilibiliData.dataCardList as Array<{ type: string; value: number }>;
+  const config = bilibiliData.config;
   const displayType = config.displayType as string[];
 
   useEffect(() => {
@@ -87,6 +90,46 @@ export function Bilibili() {
       )
       .finally(() => setLoading(false));
   };
+
+  useEffect(() => {
+    if (config.notify) {
+      ['reply', 'systemMessage', 'message', 'at'].forEach(type => {
+        let target = dataCardList.find(v => v.type === type);
+        let currentValue: number;
+        let title: string;
+        if (type === 'reply') {
+          currentValue = unreadData.reply;
+          title = '回复我的';
+        } else if (type === 'systemMessage') {
+          currentValue = unreadData.sys_msg;
+          title = '系统消息';
+        } else if (type === 'message') {
+          currentValue = messageData.follow_unread + messageData.unfollow_unread;
+          title = '我的消息';
+        } else if (type === 'at') {
+          currentValue = unreadData.at;
+          title = '@我的';
+        }
+        // 初始化执行时, 未请求过数据, 导致初始化的值都是空的
+        if (_.isNil(currentValue) || isNaN(currentValue)) {
+          return;
+        }
+        if (target) {
+          if (currentValue > target.value) {
+            window.electron.ipcRenderer.send('notify', { title: `Bilibili - ${title}` });
+          }
+          target.value = currentValue;
+        } else {
+          target = {
+            type,
+            value: currentValue,
+          };
+          dataCardList.push(target);
+        }
+      });
+      window.electron.store.set('bilibili-data', { ...bilibiliData, dataCardList });
+    }
+  }, [unreadData]);
 
   const initComponents: () => JSX.Element[] = () => {
     const res: JSX.Element[] = [];

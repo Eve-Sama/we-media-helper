@@ -1,4 +1,4 @@
-const { session, ipcMain } = require('electron');
+const { session, ipcMain, Notification } = require('electron');
 const { windowMap } = require('./window');
 
 const Store = require('electron-store');
@@ -33,7 +33,6 @@ function initEvent() {
 
   ipcMain.on('juejin-set-cookie', () => {
     const { cookie } = (store.get('juejin-data') || {}).config;
-    console.log(cookie, `cookie`);
     if (cookie) {
       const filter = {
         urls: [],
@@ -47,8 +46,11 @@ function initEvent() {
       });
     }
   });
-  // console.log(message, `message`);
-  // new Notification({ title: 'Notification', body: message }).show();
+
+  ipcMain.on('notify', (_, message) => {
+    const { title } = message;
+    new Notification({ title, body: '你收到了一条消息' }).show();
+  });
 }
 
 exports.initEvent = initEvent;

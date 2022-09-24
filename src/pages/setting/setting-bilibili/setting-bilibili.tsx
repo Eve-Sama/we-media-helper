@@ -49,6 +49,9 @@ export function SettingBilibili() {
         <Form.Item label="显示倒计时" name="showCountdown" valuePropName="checked">
           <Switch />
         </Form.Item>
+        <Form.Item label="动态通知" name="notify" valuePropName="checked">
+          <Switch />
+        </Form.Item>
         <Form.Item wrapperCol={{ offset: 4, span: 24 }}>
           <Button type="primary" htmlType="submit" block>
             应用
