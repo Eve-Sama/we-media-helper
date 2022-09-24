@@ -10,11 +10,11 @@ interface BilibiliRef {
 
 interface BilibiliProps {
   loadData: () => void;
-  display: boolean;
+  refreshTime: string;
 }
 
 export const CountdownDisplay = forwardRef<BilibiliRef, BilibiliProps>((props, ref) => {
-  const { loadData, display } = props;
+  const { loadData, refreshTime } = props;
 
   const [countdownValue, setCountdownValue] = useState<number>(0);
 
@@ -23,13 +23,12 @@ export const CountdownDisplay = forwardRef<BilibiliRef, BilibiliProps>((props, r
   }));
 
   const startCountdown = () => {
-    const { refreshTime } = window.electron.store.get('bilibili-config');
-    const [hour, minite, second] = refreshTime.split(':');
-    setCountdownValue(Date.now() + 1000 * (parseInt(hour) * 3600 + parseInt(minite) * 60 + parseInt(second)) + 1000);
+    const [hour, minite, second] = refreshTime.split(':').map(v => parseInt(v));
+    setCountdownValue(Date.now() + 1000 * (hour * 3600 + minite * 60 + second) + 1000);
   };
 
   return (
-    <div className={styles['container']} style={{ display: display ? 'flex' : 'none' }}>
+    <div className={styles['container']}>
       <Divider>
         <Countdown value={countdownValue} onFinish={loadData}></Countdown>
       </Divider>

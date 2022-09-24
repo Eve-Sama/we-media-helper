@@ -132,17 +132,11 @@ export function Bilibili() {
     return res;
   };
 
-  const countdownDisplay: () => JSX.Element = () => {
-    let content: JSX.Element;
-    if (config.showCountdown) {
-      content = <CountdownDisplay loadData={loadData} display={config.showCountdown} ref={countdownRef} />;
-    }
-    return content;
-  };
-
   return (
     <div className={styles['bilibili-container']}>
-      {countdownDisplay()}
+      <div style={{ display: config.showCountdown ? 'flex' : 'none' }}>
+        <CountdownDisplay loadData={loadData} refreshTime={config.refreshTime} ref={countdownRef} />
+      </div>
       <Spin tip="Loading..." spinning={loading}>
         <div className={styles['panel-container']}>{initComponents()}</div>
       </Spin>
