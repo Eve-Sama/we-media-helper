@@ -1,10 +1,12 @@
 const { app, BrowserWindow } = require('electron');
 const { initTray } = require('./tray');
 const { initEvent } = require('./event');
+const { initSetting } = require('./storage');
 
 app.on('ready', () => {
   initTray();
   initEvent();
+  initSetting();
 });
 
 // 所有窗口关闭时退出应用.

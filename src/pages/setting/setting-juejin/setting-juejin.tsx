@@ -5,19 +5,15 @@ const { TextArea } = Input;
 const broadcastChannel = new BroadcastChannel('juejin');
 
 export function SettingJuejin() {
-  const config = window.electron.store.get('juejin-config') || {
-    cookie: '',
-    displayType: [],
-    refreshTime: '00:00:30',
-    showCountdown: true,
-  };
+  const juejinData = window.electron.store.get('juejin-data');
+  const config = juejinData.config;
   // TimePicker 只接受 moment 类型的时间
   config.refreshTime = moment(config.refreshTime, 'HH:mm:ss');
 
   const onSubmit = (values: any) => {
     Object.assign(config, values);
     config.refreshTime = values.refreshTime.format('HH:mm:ss');
-    window.electron.store.set('juejin-config', config);
+    window.electron.store.set('juejin-data', { ...juejinData, config });
     broadcastChannel.postMessage('juejin-init');
   };
 

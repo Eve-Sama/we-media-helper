@@ -16,7 +16,7 @@ function initEvent() {
   });
 
   ipcMain.on('bilibili-set-cookie', () => {
-    const { cookie } = store.get('bilibili-config') || {};
+    const { cookie } = (store.get('bilibili-data') || {}).config;
     if (cookie) {
       const filter = {
         urls: [],
@@ -32,7 +32,8 @@ function initEvent() {
   });
 
   ipcMain.on('juejin-set-cookie', () => {
-    const { cookie } = store.get('juejin-config') || {};
+    const { cookie } = (store.get('juejin-data') || {}).config;
+    console.log(cookie, `cookie`);
     if (cookie) {
       const filter = {
         urls: [],

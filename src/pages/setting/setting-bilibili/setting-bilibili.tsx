@@ -6,19 +6,15 @@ const { TextArea } = Input;
 const broadcastChannel = new BroadcastChannel('bilibili');
 
 export function SettingBilibili() {
-  const config = window.electron.store.get('bilibili-config') || {
-    cookie: '',
-    displayType: [],
-    refreshTime: '00:00:30',
-    showCountdown: true,
-  };
+  const bilibiliData = window.electron.store.get('bilibili-data');
+  const config = bilibiliData.config;
   // TimePicker 只接受 moment 类型的时间
   config.refreshTime = moment(config.refreshTime, 'HH:mm:ss');
 
   const onSubmit = (values: any) => {
     Object.assign(config, values);
     config.refreshTime = values.refreshTime.format('HH:mm:ss');
-    window.electron.store.set('bilibili-config', config);
+    window.electron.store.set('bilibili-data', { ...bilibiliData, config });
     broadcastChannel.postMessage('bilibili-init');
   };
 

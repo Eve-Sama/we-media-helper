@@ -12,7 +12,7 @@ export function JueJin() {
   const [loading, setLoading] = useState(true);
   const countdownRef = useRef<{ startCountdown: () => void }>(null);
 
-  const config = window.electron.store.get('juejin-config');
+  const config = window.electron.store.get('juejin-data').config;
   const displayType = config.displayType as string[];
 
   useEffect(() => {

@@ -14,7 +14,7 @@ export function Bilibili() {
   const [loading, setLoading] = useState(true);
   const countdownRef = useRef<{ startCountdown: () => void }>(null);
 
-  const config = window.electron.store.get('bilibili-config');
+  const config = window.electron.store.get('bilibili-data').config;
   const displayType = config.displayType as string[];
 
   useEffect(() => {
