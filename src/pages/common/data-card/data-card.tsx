@@ -12,23 +12,24 @@ export function DataCard(props: DataCardProps) {
     return value.toLocaleString();
   };
 
-  const changeValueComponent: () => string = () => {
+  const changeValueComponent: () => JSX.Element = () => {
     let className = '';
     if (changeValue === 0) {
-      className = styles['change-value-zero'];
-    } else if (changeValue > 0) {
+      return null;
+    }
+    if (changeValue > 0) {
       className = styles['change-value-positive'];
     } else {
       className = styles['change-value-nagative'];
     }
-    return className;
+    return <div className={className}>{changeValue}</div>;
   };
 
   return (
     <div className={styles['container']}>
       <div className={styles['header']}>
         <div className={styles['title']}>{title}</div>
-        <div className={changeValueComponent()}>{changeValue}</div>
+        {changeValueComponent()}
       </div>
       {/* totalValue 虽然在解构的时候默认值为0, 但是传入值如果是 NaN, 则解构默认值不起作用 */}
       <div className={styles['total-value']}>{getFormaValue(totalValue || 0)}</div>
