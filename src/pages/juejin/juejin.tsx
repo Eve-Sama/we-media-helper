@@ -3,34 +3,72 @@ import { Spin, message } from 'antd';
 import styles from './style.module.scss';
 import { CountdownDisplay } from '../common/countdown-display/countdown-display';
 import { DataCard } from '../common/data-card/data-card';
-import { getCount, getUser } from '../../request/juejin/bilibili.request';
+import { getCount, getUser } from '../../request/juejin/juejin.request';
+import _ from 'lodash';
 
-const broadcastChannel = new BroadcastChannel('juejin');
+const key = 'juejin';
+const broadcastChannel = new BroadcastChannel(key);
 
 export function JueJin() {
   const [countData, setCountData] = useState<any>({});
   const [loading, setLoading] = useState(true);
   const countdownRef = useRef<{ startCountdown: () => void }>(null);
 
-  const config = window.electron.store.get('juejin-data').config;
+  const storageData = window.electron.store.get(`${key}-data`);
+  const config = storageData.config;
+  const dataCardList = storageData.dataCardList as Array<{ type: string; value: number }>;
   const displayType = config.displayType as string[];
 
   useEffect(() => {
     broadcastChannel.onmessage = v => {
-      if (v.data === 'juejin-init') {
+      if (v.data === `${key}-init`) {
         loadData();
       }
     };
     loadData();
   }, []);
 
+  useEffect(() => {
+    if (config.notify) {
+      ['reply', 'system'].forEach(type => {
+        let target = dataCardList.find(v => v.type === type);
+        let currentValue: number;
+        let title: string;
+        if (type === 'reply') {
+          currentValue = countData['3'];
+          title = '评论消息';
+        } else if (type === 'system') {
+          currentValue = countData['4'];
+          title = '系统消息';
+        }
+        // 初始化执行时, 未请求过数据, 导致初始化的值都是空的
+        if (_.isNil(currentValue)) {
+          return;
+        }
+        if (target) {
+          if (currentValue > target.value) {
+            window.electron.ipcRenderer.send('notify', { title: `掘金 - ${title}` });
+          }
+          target.value = currentValue;
+        } else {
+          target = {
+            type,
+            value: currentValue,
+          };
+          dataCardList.push(target);
+        }
+      });
+      window.electron.store.set(`${key}-data`, { ...storageData, dataCardList });
+    }
+  }, [countData]);
+
   const setDefaultTitle = () => {
-    window.electron.ipcRenderer.send('juejin-set-title', 'juejin');
+    window.electron.ipcRenderer.send(`${key}-set-title`, '掘金');
   };
 
   const loadData = () => {
     setLoading(true);
-    window.electron.ipcRenderer.send('juejin-set-cookie');
+    window.electron.ipcRenderer.send(`${key}-set-cookie`);
     Promise.all([getCount(), getUser()])
       .then(
         v => {
@@ -47,7 +85,7 @@ export function JueJin() {
           // 处理账户信息
           const responseUserData = tempUserData.data;
           if (responseUserData.err_no === 0) {
-            window.electron.ipcRenderer.send('juejin-set-title', `掘金 - ${responseUserData.data.user_name}`);
+            window.electron.ipcRenderer.send(`${key}-set-title`, `掘金 - ${responseUserData.data.user_name}`);
           } else {
             setDefaultTitle();
             showError = true;

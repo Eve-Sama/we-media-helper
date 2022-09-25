@@ -2,19 +2,20 @@ import { Button, Checkbox, Form, Input, Switch, TimePicker } from 'antd';
 import moment from 'moment';
 
 const { TextArea } = Input;
+const key = 'juejin';
 const broadcastChannel = new BroadcastChannel('juejin');
 
 export function SettingJuejin() {
-  const juejinData = window.electron.store.get('juejin-data');
-  const config = juejinData.config;
+  const storageData = window.electron.store.get(`${key}-data`);
+  const config = storageData.config;
   // TimePicker 只接受 moment 类型的时间
   config.refreshTime = moment(config.refreshTime, 'HH:mm:ss');
 
   const onSubmit = (values: any) => {
     Object.assign(config, values);
     config.refreshTime = values.refreshTime.format('HH:mm:ss');
-    window.electron.store.set('juejin-data', { ...juejinData, config });
-    broadcastChannel.postMessage('juejin-init');
+    window.electron.store.set(`${key}-data`, { ...storageData, config });
+    broadcastChannel.postMessage(`${key}-init`);
   };
 
   const displayType = [
@@ -37,6 +38,9 @@ export function SettingJuejin() {
         <TimePicker />
       </Form.Item>
       <Form.Item label="显示倒计时" name="showCountdown" valuePropName="checked">
+        <Switch />
+      </Form.Item>
+      <Form.Item label="动态通知" name="notify" valuePropName="checked">
         <Switch />
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 4, span: 24 }}>

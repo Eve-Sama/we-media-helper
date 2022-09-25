@@ -6,7 +6,8 @@ import { CountdownDisplay } from '../common/countdown-display/countdown-display'
 import { DataCard } from '../common/data-card/data-card';
 import _ from 'lodash';
 
-const broadcastChannel = new BroadcastChannel('bilibili');
+const key = 'bilibili';
+const broadcastChannel = new BroadcastChannel(key);
 
 export function Bilibili() {
   const [statData, setStatData] = useState<any>({});
@@ -15,27 +16,67 @@ export function Bilibili() {
   const [loading, setLoading] = useState(true);
   const countdownRef = useRef<{ startCountdown: () => void }>(null);
 
-  const bilibiliData = window.electron.store.get('bilibili-data');
-  const dataCardList = bilibiliData.dataCardList as Array<{ type: string; value: number }>;
-  const config = bilibiliData.config;
+  const storageData = window.electron.store.get(`${key}-data`);
+  const dataCardList = storageData.dataCardList as Array<{ type: string; value: number }>;
+  const config = storageData.config;
   const displayType = config.displayType as string[];
 
   useEffect(() => {
     broadcastChannel.onmessage = v => {
-      if (v.data === 'bilibili-init') {
+      if (v.data === `${key}-init`) {
         loadData();
       }
     };
     loadData();
   }, []);
 
+  useEffect(() => {
+    if (config.notify) {
+      ['reply', 'systemMessage', 'message', 'at'].forEach(type => {
+        let target = dataCardList.find(v => v.type === type);
+        let currentValue: number;
+        let title: string;
+        if (type === 'reply') {
+          currentValue = unreadData.reply;
+          title = '回复我的';
+        } else if (type === 'systemMessage') {
+          currentValue = unreadData.sys_msg;
+          title = '系统消息';
+        } else if (type === 'message') {
+          currentValue = messageData.follow_unread + messageData.unfollow_unread;
+          title = '我的消息';
+        } else if (type === 'at') {
+          currentValue = unreadData.at;
+          title = '@我的';
+        }
+        // 初始化执行时, 未请求过数据, 导致初始化的值都是空的. NaN 判断是因为 undefined + undefined = Nan
+        if (_.isNil(currentValue) || isNaN(currentValue)) {
+          return;
+        }
+        if (target) {
+          if (currentValue > target.value) {
+            window.electron.ipcRenderer.send('notify', { title: `哔哩哔哩 - ${title}` });
+          }
+          target.value = currentValue;
+        } else {
+          target = {
+            type,
+            value: currentValue,
+          };
+          dataCardList.push(target);
+        }
+      });
+      window.electron.store.set(`${key}-data`, { ...storageData, dataCardList });
+    }
+  }, [unreadData]);
+
   const setDefaultTitle = () => {
-    window.electron.ipcRenderer.send('bilibili-set-title', 'Bilibili');
+    window.electron.ipcRenderer.send(`${key}-set-title`, '哔哩哔哩');
   };
 
   const loadData = () => {
     setLoading(true);
-    window.electron.ipcRenderer.send('bilibili-set-cookie');
+    window.electron.ipcRenderer.send(`${key}-set-cookie`);
     Promise.all([getStat(), getAccount(), getUnread(), getMessage()])
       .then(
         v => {
@@ -52,7 +93,7 @@ export function Bilibili() {
           // 处理账户信息
           const responseTempAccountData = tempAccountData.data;
           if (responseTempAccountData.code === 0) {
-            window.electron.ipcRenderer.send('bilibili-set-title', `Bilibili - ${responseTempAccountData.data.uname}`);
+            window.electron.ipcRenderer.send(`${key}-set-title`, `哔哩哔哩 - ${responseTempAccountData.data.uname}`);
           } else {
             setDefaultTitle();
             showError = true;
@@ -90,46 +131,6 @@ export function Bilibili() {
       )
       .finally(() => setLoading(false));
   };
-
-  useEffect(() => {
-    if (config.notify) {
-      ['reply', 'systemMessage', 'message', 'at'].forEach(type => {
-        let target = dataCardList.find(v => v.type === type);
-        let currentValue: number;
-        let title: string;
-        if (type === 'reply') {
-          currentValue = unreadData.reply;
-          title = '回复我的';
-        } else if (type === 'systemMessage') {
-          currentValue = unreadData.sys_msg;
-          title = '系统消息';
-        } else if (type === 'message') {
-          currentValue = messageData.follow_unread + messageData.unfollow_unread;
-          title = '我的消息';
-        } else if (type === 'at') {
-          currentValue = unreadData.at;
-          title = '@我的';
-        }
-        // 初始化执行时, 未请求过数据, 导致初始化的值都是空的
-        if (_.isNil(currentValue) || isNaN(currentValue)) {
-          return;
-        }
-        if (target) {
-          if (currentValue > target.value) {
-            window.electron.ipcRenderer.send('notify', { title: `Bilibili - ${title}` });
-          }
-          target.value = currentValue;
-        } else {
-          target = {
-            type,
-            value: currentValue,
-          };
-          dataCardList.push(target);
-        }
-      });
-      window.electron.store.set('bilibili-data', { ...bilibiliData, dataCardList });
-    }
-  }, [unreadData]);
 
   const initComponents: () => JSX.Element[] = () => {
     const res: JSX.Element[] = [];
