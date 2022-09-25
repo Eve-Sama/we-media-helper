@@ -14,6 +14,7 @@ export function Bilibili() {
   const [unreadData, setUnreadData] = useState<any>({});
   const [messageData, setMessageData] = useState<any>({});
   const [loading, setLoading] = useState(true);
+  const [retryTimes, setRetryTimes] = useState(0);
   const countdownRef = useRef<{ startCountdown: () => void }>(null);
 
   const storageData = window.electron.store.get(`${key}-data`);
@@ -70,9 +71,19 @@ export function Bilibili() {
     }
   }, [unreadData]);
 
-  const setDefaultTitle = () => {
-    window.electron.ipcRenderer.send(`${key}-set-title`, '哔哩哔哩');
-  };
+  useEffect(() => {
+    if (retryTimes > 0 && retryTimes < 5) {
+      message.error(`鉴权失败, 3秒后将重试(${retryTimes}/5).`);
+      setTimeout(() => {
+        loadData();
+      }, 3 * 1000);
+    }
+    if (retryTimes === 5) {
+      message.error('鉴权失败, 请打开『偏好设置』设置cookie!');
+    }
+  }, [retryTimes]);
+
+  const setDefaultTitle = () => window.electron.ipcRenderer.send(`${key}-set-title`, '哔哩哔哩');
 
   const loadData = () => {
     setLoading(true);
@@ -116,20 +127,20 @@ export function Bilibili() {
           }
           // 统一报错
           if (showError) {
-            message.error('鉴权失败, 请打开『偏好设置』设置cookie!');
+            handleRequestError();
           } else {
+            setRetryTimes(0);
             countdownRef.current?.startCountdown();
           }
         },
-        () => {
-          setStatData({});
-          setUnreadData({});
-          setMessageData({});
-          setDefaultTitle();
-          message.error('鉴权失败, 请打开『偏好设置』设置cookie!');
-        },
+        () => handleRequestError(),
       )
       .finally(() => setLoading(false));
+  };
+
+  const handleRequestError: () => void = () => {
+    setRetryTimes(retryTimes + 1);
+    setDefaultTitle();
   };
 
   const initComponents: () => JSX.Element[] = () => {
