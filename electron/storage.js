@@ -1,4 +1,6 @@
 const Store = require('electron-store');
+const { v4: uuidv4 } = require('uuid');
+
 const store = new Store();
 
 function _initBilibiliSetting() {
@@ -8,10 +10,21 @@ function _initBilibiliSetting() {
     storage = {
       config: {
         cookie: '',
-        displayType: ['fan', 'click', 'reply', 'system', 'totalReply', 'dm', 'totalLike', 'share', 'favorite', 'coin', 'reply', 'at', 'systemMessage', 'message'],
         refreshTime: '00:00:30',
         showCountdown: true,
         notify: true,
+        groupList: [
+          {
+            label: '基础数据',
+            cardList: ['fan', 'click', 'totalReply', 'dm', 'totalLike', 'share', 'favorite', 'coin'],
+            uuid: uuidv4(),
+          },
+          {
+            label: '消息通知',
+            cardList: ['reply', 'at', 'systemMessage', 'message'],
+            uuid: uuidv4(),
+          },
+        ],
       },
       dataCardList: [],
     };
@@ -38,8 +51,8 @@ function _initJueJinSetting() {
 
 function initSetting() {
   // const key = 'bilibili-data';
-  // const data = store.get(key);
-  // data.dataCardList = [];
+  // // const data = store.get(key);
+  // // data.dataCardList = [];
   // store.set(key, null);
   _initBilibiliSetting();
   _initJueJinSetting();

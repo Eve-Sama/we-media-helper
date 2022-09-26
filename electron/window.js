@@ -17,9 +17,7 @@ function createWindow(routePath, windowOptions = {}) {
     ...windowOptions,
   });
   browserWindow.loadURL(`http://localhost:3000/${routePath}`);
-  if (windowOptions.openDevTools) {
-    browserWindow.webContents.openDevTools();
-  }
+  browserWindow.webContents.openDevTools();
   browserWindow.addListener('closed', () => windowMap.delete(routePath));
   windowMap.set(routePath, browserWindow);
 }

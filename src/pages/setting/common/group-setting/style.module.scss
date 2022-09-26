@@ -1,0 +1,19 @@
+.container {
+  width: 100%;
+  .tag-label {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+    .tag-setting {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: 8px;
+    }
+  }
+  .tag-container {
+    margin-top: 4px;
+    .tag {
+      margin-top: 4px;
+    }
+  }
+}

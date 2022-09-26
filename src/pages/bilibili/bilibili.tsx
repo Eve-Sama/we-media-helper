@@ -5,6 +5,7 @@ import styles from './style.module.scss';
 import { CountdownDisplay } from '../common/countdown-display/countdown-display';
 import { DataCard } from '../common/data-card/data-card';
 import _ from 'lodash';
+import { Group } from '../setting/common/group-setting/group-setting';
 
 const key = 'bilibili';
 const broadcastChannel = new BroadcastChannel(key);
@@ -19,8 +20,8 @@ export function Bilibili() {
 
   const storageData = window.electron.store.get(`${key}-data`);
   const dataCardList = storageData.dataCardList as Array<{ type: string; value: number }>;
+  const groupList = storageData.config.groupList as Group[];
   const config = storageData.config;
-  const displayType = config.displayType as string[];
 
   useEffect(() => {
     broadcastChannel.onmessage = v => {
@@ -143,47 +144,63 @@ export function Bilibili() {
     setDefaultTitle();
   };
 
-  const initComponents: () => JSX.Element[] = () => {
+  const initGroupComponents = () => {
     const res: JSX.Element[] = [];
-    if (displayType.includes('fan')) {
-      res.push(<DataCard key="fan" title="净增粉丝" changeValue={statData.incr_fans} totalValue={statData.total_fans}></DataCard>);
-    }
-    if (displayType.includes('click')) {
-      res.push(<DataCard key="click" title="播放量" changeValue={statData.incr_click} totalValue={statData.total_click}></DataCard>);
-    }
-    if (displayType.includes('totalReply')) {
-      res.push(<DataCard key="totalReply" title="评论" changeValue={statData.incr_reply} totalValue={statData.total_reply}></DataCard>);
-    }
-    if (displayType.includes('dm')) {
-      res.push(<DataCard key="dm" title="弹幕" changeValue={statData.incr_dm} totalValue={statData.total_dm}></DataCard>);
-    }
-    if (displayType.includes('totalLike')) {
-      res.push(<DataCard key="totalLike" title="点赞" changeValue={statData.inc_like} totalValue={statData.total_like}></DataCard>);
-    }
-    if (displayType.includes('share')) {
-      res.push(<DataCard key="share" title="分享" changeValue={statData.inc_share} totalValue={statData.total_share}></DataCard>);
-    }
-    if (displayType.includes('favorite')) {
-      res.push(<DataCard key="favorite" title="收藏" changeValue={statData.inc_fav} totalValue={statData.total_fav}></DataCard>);
-    }
-    if (displayType.includes('coin')) {
-      res.push(<DataCard key="coin" title="投币" changeValue={statData.inc_coin} totalValue={statData.total_coin}></DataCard>);
-    }
-    if (displayType.includes('reply')) {
-      res.push(<DataCard key="reply" title="回复我的" changeValue={0} totalValue={unreadData.reply}></DataCard>);
-    }
-    if (displayType.includes('at')) {
-      res.push(<DataCard key="at" title="@我的" changeValue={0} totalValue={unreadData.at}></DataCard>);
-    }
-    if (displayType.includes('like')) {
-      res.push(<DataCard key="like" title="收到的赞" changeValue={0} totalValue={unreadData.like}></DataCard>);
-    }
-    if (displayType.includes('systemMessage')) {
-      res.push(<DataCard key="systemMessage" title="系统消息" changeValue={0} totalValue={unreadData.sys_msg}></DataCard>);
-    }
-    if (displayType.includes('message')) {
-      res.push(<DataCard key="message" title="我的消息" changeValue={0} totalValue={messageData.follow_unread + messageData.unfollow_unread}></DataCard>);
-    }
+    groupList.forEach((group, index) => {
+      const cardComponents = getCardComponents(group.cardList);
+      res.push(
+        <div key={index}>
+          <span className={styles['group-label']}>{group.label}</span>
+          <div className={styles['group-card-list']}>{cardComponents}</div>
+        </div>,
+      );
+    });
+    return res;
+  };
+
+  const getCardComponents = (cardList: Group['cardList']) => {
+    const res: JSX.Element[] = [];
+    cardList.forEach(card => {
+      if (card.includes('fan')) {
+        res.push(<DataCard key="fan" title="净增粉丝" changeValue={statData.incr_fans} totalValue={statData.total_fans}></DataCard>);
+      }
+      if (card.includes('click')) {
+        res.push(<DataCard key="click" title="播放量" changeValue={statData.incr_click} totalValue={statData.total_click}></DataCard>);
+      }
+      if (card.includes('totalReply')) {
+        res.push(<DataCard key="totalReply" title="评论" changeValue={statData.incr_reply} totalValue={statData.total_reply}></DataCard>);
+      }
+      if (card.includes('dm')) {
+        res.push(<DataCard key="dm" title="弹幕" changeValue={statData.incr_dm} totalValue={statData.total_dm}></DataCard>);
+      }
+      if (card.includes('totalLike')) {
+        res.push(<DataCard key="totalLike" title="点赞" changeValue={statData.inc_like} totalValue={statData.total_like}></DataCard>);
+      }
+      if (card.includes('share')) {
+        res.push(<DataCard key="share" title="分享" changeValue={statData.inc_share} totalValue={statData.total_share}></DataCard>);
+      }
+      if (card.includes('favorite')) {
+        res.push(<DataCard key="favorite" title="收藏" changeValue={statData.inc_fav} totalValue={statData.total_fav}></DataCard>);
+      }
+      if (card.includes('coin')) {
+        res.push(<DataCard key="coin" title="投币" changeValue={statData.inc_coin} totalValue={statData.total_coin}></DataCard>);
+      }
+      if (card.includes('reply')) {
+        res.push(<DataCard key="reply" title="回复我的" changeValue={0} totalValue={unreadData.reply}></DataCard>);
+      }
+      if (card.includes('at')) {
+        res.push(<DataCard key="at" title="@我的" changeValue={0} totalValue={unreadData.at}></DataCard>);
+      }
+      if (card.includes('like')) {
+        res.push(<DataCard key="like" title="收到的赞" changeValue={0} totalValue={unreadData.like}></DataCard>);
+      }
+      if (card.includes('systemMessage')) {
+        res.push(<DataCard key="systemMessage" title="系统消息" changeValue={0} totalValue={unreadData.sys_msg}></DataCard>);
+      }
+      if (card.includes('message')) {
+        res.push(<DataCard key="message" title="我的消息" changeValue={0} totalValue={messageData.follow_unread + messageData.unfollow_unread}></DataCard>);
+      }
+    });
     return res;
   };
 
@@ -193,7 +210,7 @@ export function Bilibili() {
         <CountdownDisplay loadData={loadData} refreshTime={config.refreshTime} ref={countdownRef} />
       </div>
       <Spin tip="Loading..." spinning={loading}>
-        <div className={styles['panel-container']}>{initComponents()}</div>
+        <div className={styles['group-container']}>{initGroupComponents()}</div>
       </Spin>
     </div>
   );

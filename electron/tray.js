@@ -15,10 +15,8 @@ function initTray() {
             trayClick('bilibili', {
               width: 980,
               height: 1270,
-              openDevTools: true,
               resizable: true,
               fullscreenable: false,
-              alwaysOnTop: false,
               title: 'Bilibili',
             });
           },
@@ -29,10 +27,8 @@ function initTray() {
             trayClick('juejin', {
               width: 980,
               height: 1270,
-              openDevTools: true,
               resizable: true,
               fullscreenable: false,
-              alwaysOnTop: false,
               title: '掘金',
             });
           },
@@ -45,11 +41,11 @@ function initTray() {
       click: () =>
         trayClick('setting', {
           width: 800,
+          minWidth: 800,
+          maxWidth: 800,
           height: 1300,
-          openDevTools: true,
-          resizable: false,
+          resizable: true,
           fullscreenable: false,
-          alwaysOnTop: false,
           title: '偏好设置',
         }),
     },

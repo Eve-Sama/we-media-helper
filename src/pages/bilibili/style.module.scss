@@ -1,11 +1,19 @@
 .bilibili-container {
-  .panel-container {
-    padding: 24px;
-    border-radius: 2px;
-    background: #fff;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    column-gap: 16px;
-    row-gap: 16px;
+  .group-container {
+    .group-label {
+      margin-left: 24px;
+      color: #00a1d6;
+      font-weight: 700;
+      font-size: 16px;
+    }
+    .group-card-list {
+      padding: 24px;
+      border-radius: 2px;
+      background: #fff;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      column-gap: 16px;
+      row-gap: 16px;
+    }
   }
 }
