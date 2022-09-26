@@ -73,13 +73,13 @@ export function Bilibili() {
   }, [unreadData]);
 
   useEffect(() => {
-    if (retryTimes > 0 && retryTimes < 5) {
-      message.error(`鉴权失败, 3秒后将重试(${retryTimes}/5).`);
+    if (retryTimes > 0 && retryTimes < 3) {
+      message.error(`鉴权失败, 3秒后将重试(${retryTimes}/3).`);
       setTimeout(() => {
         loadData();
       }, 3 * 1000);
     }
-    if (retryTimes === 5) {
+    if (retryTimes === 3) {
       message.error('鉴权失败, 请打开『偏好设置』设置cookie!');
     }
   }, [retryTimes]);

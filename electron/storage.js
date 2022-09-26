@@ -39,9 +39,16 @@ function _initJueJinSetting() {
     storage = {
       config: {
         cookie: '',
-        displayType: ['reply', 'system'],
         refreshTime: '00:00:30',
         showCountdown: true,
+        notify: true,
+        groupList: [
+          {
+            label: '消息通知',
+            cardList: ['reply', 'system'],
+            uuid: uuidv4(),
+          },
+        ],
       },
       dataCardList: [],
     };
@@ -50,7 +57,7 @@ function _initJueJinSetting() {
 }
 
 function initSetting() {
-  // const key = 'bilibili-data';
+  // const key = 'juejin-data';
   // // const data = store.get(key);
   // // data.dataCardList = [];
   // store.set(key, null);

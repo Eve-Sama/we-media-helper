@@ -5,6 +5,7 @@ import { CountdownDisplay } from '../common/countdown-display/countdown-display'
 import { DataCard } from '../common/data-card/data-card';
 import { getCount, getUser } from '../../request/juejin/juejin.request';
 import _ from 'lodash';
+import { Group } from '../setting/common/group-setting/group-setting';
 
 const key = 'juejin';
 const broadcastChannel = new BroadcastChannel(key);
@@ -18,7 +19,7 @@ export function JueJin() {
   const storageData = window.electron.store.get(`${key}-data`);
   const config = storageData.config;
   const dataCardList = storageData.dataCardList as Array<{ type: string; value: number }>;
-  const displayType = config.displayType as string[];
+  const groupList = storageData.config.groupList as Group[];
 
   useEffect(() => {
     loadData();
@@ -67,13 +68,13 @@ export function JueJin() {
   }, [countData]);
 
   useEffect(() => {
-    if (retryTimes > 0 && retryTimes < 5) {
-      message.error(`鉴权失败, 3秒后将重试(${retryTimes}/5).`);
+    if (retryTimes > 0 && retryTimes < 3) {
+      message.error(`鉴权失败, 3秒后将重试(${retryTimes}/3).`);
       setTimeout(() => {
         loadData();
       }, 3 * 1000);
     }
-    if (retryTimes === 5) {
+    if (retryTimes === 3) {
       message.error('鉴权失败, 请打开『偏好设置』设置cookie!');
     }
   }, [retryTimes]);
@@ -122,23 +123,39 @@ export function JueJin() {
     setDefaultTitle();
   };
 
-  const initComponents: () => JSX.Element[] = () => {
+  const initGroupComponents = () => {
     const res: JSX.Element[] = [];
-    if (displayType.includes('reply')) {
-      res.push(<DataCard key="reply" title="评论消息" changeValue={0} totalValue={countData['3']}></DataCard>);
-    }
-    if (displayType.includes('like')) {
-      res.push(<DataCard key="like" title="点赞消息" changeValue={0} totalValue={countData['1']}></DataCard>);
-    }
-    if (displayType.includes('follow')) {
-      res.push(<DataCard key="follow" title="关注消息" changeValue={0} totalValue={countData['2']}></DataCard>);
-    }
-    if (displayType.includes('system')) {
-      res.push(<DataCard key="system" title="系统消息" changeValue={0} totalValue={countData['4']}></DataCard>);
-    }
-    if (displayType.includes('job')) {
-      res.push(<DataCard key="job" title="职位沟通" changeValue={0} totalValue={countData['5']}></DataCard>);
-    }
+    groupList.forEach((group, index) => {
+      const cardComponents = getCardComponents(group.cardList);
+      res.push(
+        <div key={index}>
+          <span className={styles['group-label']}>{group.label}</span>
+          <div className={styles['group-card-list']}>{cardComponents}</div>
+        </div>,
+      );
+    });
+    return res;
+  };
+
+  const getCardComponents = (cardList: Group['cardList']) => {
+    const res: JSX.Element[] = [];
+    cardList.forEach(card => {
+      if (card.includes('reply')) {
+        res.push(<DataCard key="reply" title="评论消息" changeValue={0} totalValue={countData['3']}></DataCard>);
+      }
+      if (card.includes('like')) {
+        res.push(<DataCard key="like" title="点赞消息" changeValue={0} totalValue={countData['1']}></DataCard>);
+      }
+      if (card.includes('follow')) {
+        res.push(<DataCard key="follow" title="关注消息" changeValue={0} totalValue={countData['2']}></DataCard>);
+      }
+      if (card.includes('system')) {
+        res.push(<DataCard key="system" title="系统消息" changeValue={0} totalValue={countData['4']}></DataCard>);
+      }
+      if (card.includes('job')) {
+        res.push(<DataCard key="job" title="职位沟通" changeValue={0} totalValue={countData['5']}></DataCard>);
+      }
+    });
     return res;
   };
 
@@ -148,7 +165,7 @@ export function JueJin() {
         <CountdownDisplay loadData={loadData} refreshTime={config.refreshTime} ref={countdownRef} />
       </div>
       <Spin tip="Loading..." spinning={loading}>
-        <div className={styles['panel-container']}>{initComponents()}</div>
+        <div className={styles['group-container']}>{initGroupComponents()}</div>
       </Spin>
     </div>
   );
