@@ -1,6 +1,7 @@
 import { Divider, Statistic } from 'antd';
 import { forwardRef, useImperativeHandle, useState } from 'react';
 import styles from './style.module.scss';
+import { useDebounceFn } from 'ahooks';
 
 const { Countdown } = Statistic;
 
@@ -27,10 +28,14 @@ export const CountdownDisplay = forwardRef<BilibiliRef, BilibiliProps>((props, r
     setCountdownValue(Date.now() + 1000 * (hour * 3600 + minite * 60 + second) + 1000);
   };
 
+  const { run: loadDataCB } = useDebounceFn(() => loadData(), { wait: 300 });
+
   return (
     <div className={styles['container']}>
       <Divider>
-        <Countdown value={countdownValue} onFinish={loadData}></Countdown>
+        <div className={styles['countdown-container']} onClick={loadDataCB}>
+          <Countdown value={countdownValue} onFinish={loadData}></Countdown>
+        </div>
       </Divider>
     </div>
   );

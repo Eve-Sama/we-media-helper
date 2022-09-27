@@ -16,6 +16,7 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "ahooks": "^3.7.1",
     "antd": "^4.23.1",
     "axios-esm": "^1.0.0",
     "electron-store": "^8.1.0",
