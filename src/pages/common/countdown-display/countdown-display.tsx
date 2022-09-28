@@ -28,7 +28,7 @@ export const CountdownDisplay = forwardRef<BilibiliRef, BilibiliProps>((props, r
     setCountdownValue(Date.now() + 1000 * (hour * 3600 + minite * 60 + second) + 1000);
   };
 
-  const { run: loadDataCB } = useDebounceFn(() => loadData(), { wait: 300 });
+  const { run: loadDataCB } = useDebounceFn(loadData, { wait: 300 });
 
   return (
     <div className={styles['container']}>

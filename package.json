@@ -10,8 +10,7 @@
     "icon": "./public/antv.icon"
   },
   "scripts": {
-    "start:web": "react-scripts start",
-    "start:app": "electron .",
+    "start": "cross-env BROWSER=none react-scripts start & electron .",
     "build": "react-scripts build",
     "eject": "react-scripts eject"
   },
@@ -19,6 +18,7 @@
     "ahooks": "^3.7.1",
     "antd": "^4.23.1",
     "axios-esm": "^1.0.0",
+    "cross-env": "^7.0.3",
     "electron-store": "^8.1.0",
     "http-proxy-middleware": "^2.0.6",
     "lodash": "^4.17.21",
