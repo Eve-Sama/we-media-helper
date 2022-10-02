@@ -13,6 +13,12 @@ export interface Group {
 
 export interface GroupSettingRef {
   getData: () => Group[];
+  /**
+   * @todo 遇到个场景问题, 暂时不知道怎么解决.
+   * GroupSetting 通过 props 拿到了 groupList, 再创建了一个 state groupListData. 之后在本组件内无论怎么操作, 修改的都是 groupListData 而不是 groupList.
+   * 那么当父组件想要重置 groupList 的时候, 好像只能通过手动调用子组件方法来重置.
+   */
+  setGroupListData: React.Dispatch<React.SetStateAction<Group[]>>;
 }
 
 interface GroupSettingProps {
@@ -28,14 +34,15 @@ export const GroupSetting = forwardRef<GroupSettingRef, GroupSettingProps>((prop
   const [modalAction, setModalAction] = useState<'add' | 'edit'>();
   const [form] = Form.useForm();
 
-  useImperativeHandle(ref, () => ({
-    getData,
-  }));
-
   const children: React.ReactNode[] = [];
   cardList.forEach(v => {
     children.push(<Option key={v.value}>{v.label}</Option>);
   });
+
+  useImperativeHandle(ref, () => ({
+    getData,
+    setGroupListData,
+  }));
 
   const getData = () => {
     return groupListData;

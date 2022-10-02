@@ -6,6 +6,7 @@ import { CountdownDisplay } from '../common/countdown-display/countdown-display'
 import { DataCard } from '../common/data-card/data-card';
 import _ from 'lodash';
 import { Group } from '../setting/common/group-setting/group-setting';
+import { BilibiliConfig } from '../setting/setting-bilibili/setting-bilibili';
 
 const key = 'bilibili';
 const broadcastChannel = new BroadcastChannel(key);
@@ -18,9 +19,9 @@ export function Bilibili() {
   const [retryTimes, setRetryTimes] = useState(0);
   const countdownRef = useRef<{ startCountdown: () => void }>(null);
 
-  const storageData = window.electron.store.get(`${key}-data`);
-  const dataCardList = storageData.dataCardList as Array<{ type: string; value: number }>;
-  const groupList = storageData.config.groupList as Group[];
+  const storageData = window.electron.store.get(`${key}-data`) as BilibiliConfig;
+  const dataCardList = storageData.dataCardList;
+  const groupList = storageData.config.groupList;
   const config = storageData.config;
 
   useEffect(() => {
@@ -88,6 +89,7 @@ export function Bilibili() {
 
   const loadData = () => {
     setLoading(true);
+    setRetryTimes(0);
     window.electron.ipcRenderer.send(`${key}-set-cookie`);
     Promise.all([getStat(), getAccount(), getUnread(), getMessage()])
       .then(
