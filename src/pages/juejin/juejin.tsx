@@ -85,7 +85,6 @@ export function JueJin() {
   const loadData = () => {
     setLoading(true);
     setRetryTimes(0);
-    window.electron.ipcRenderer.send(`${key}-set-cookie`);
     Promise.all([getCount(), getUser()])
       .then(
         v => {
