@@ -6,6 +6,7 @@ import { DataCard } from '../common/data-card/data-card';
 import { getCount, getUser } from '../../request/juejin/juejin.request';
 import _ from 'lodash';
 import { Group } from '../setting/common/group-setting/group-setting';
+import { JuejinConfig } from '../setting/setting-juejin/setting-juejin';
 
 const key = 'juejin';
 const broadcastChannel = new BroadcastChannel(key);
@@ -16,10 +17,10 @@ export function JueJin() {
   const [retryTimes, setRetryTimes] = useState(0);
   const countdownRef = useRef<{ startCountdown: () => void }>(null);
 
-  const storageData = window.electron.store.get(`${key}-data`);
+  const storageData = window.electron.store.get(`${key}-data`) as JuejinConfig;
+  const dataCardList = storageData.dataCardList;
+  const groupList = storageData.config.groupList;
   const config = storageData.config;
-  const dataCardList = storageData.dataCardList as Array<{ type: string; value: number }>;
-  const groupList = storageData.config.groupList as Group[];
 
   useEffect(() => {
     loadData();
@@ -83,6 +84,7 @@ export function JueJin() {
 
   const loadData = () => {
     setLoading(true);
+    setRetryTimes(0);
     window.electron.ipcRenderer.send(`${key}-set-cookie`);
     Promise.all([getCount(), getUser()])
       .then(

@@ -1,27 +1,69 @@
 import { Button, Form, Input, Switch, TimePicker } from 'antd';
-import moment from 'moment';
-import { useRef } from 'react';
-import { GroupSettingRef, GroupSetting } from '../common/group-setting/group-setting';
+import moment, { Moment } from 'moment';
+import { useEffect, useRef, useState } from 'react';
+import { GroupSettingRef, GroupSetting, Group } from '../common/group-setting/group-setting';
 import styles from './style.module.scss';
+import { v4 as uuidv4 } from 'uuid';
 
 const { TextArea } = Input;
 const key = 'juejin';
 const broadcastChannel = new BroadcastChannel('juejin');
 
-export function SettingJuejin() {
-  const storageData = window.electron.store.get(`${key}-data`);
-  const config = storageData.config;
-  // TimePicker 只接受 moment 类型的时间
-  config.refreshTime = moment(config.refreshTime, 'HH:mm:ss');
+export interface JuejinConfig {
+  /** 偏好设置 */
+  config: {
+    cookie: string;
+    refreshTime: string;
+    showCountdown: boolean;
+    notify: boolean;
+    groupList: Group[];
+  };
+  /** 卡片最新数据, 用于推送提醒 */
+  dataCardList: Array<{ type: string; value: number }>;
+}
 
+const defaultConfig: JuejinConfig = {
+  config: {
+    cookie: '',
+    refreshTime: '00:00:30',
+    showCountdown: true,
+    notify: true,
+    groupList: [
+      {
+        label: '消息通知',
+        cardList: ['reply', 'system'],
+        uuid: uuidv4(),
+      },
+    ],
+  },
+  dataCardList: [],
+};
+
+export function SettingJuejin() {
+  const storageData = (window.electron.store.get(`${key}-data`) || defaultConfig) as JuejinConfig;
+  const [config, setConfig] = useState<JuejinConfig['config']>(storageData.config);
   const groupSettingRef = useRef<GroupSettingRef>(null);
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    // TimePicker 只接受 moment 类型的时间
+    const refreshTime = moment(config.refreshTime, 'HH:mm:ss');
+    form.setFieldsValue({ ...config, refreshTime });
+  }, [config]);
 
   const onSubmit = (values: any) => {
     const groupList = groupSettingRef.current.getData();
     Object.assign(config, { ...values, groupList });
-    config.refreshTime = values.refreshTime.format('HH:mm:ss');
+    config.refreshTime = (values.refreshTime as unknown as Moment).format('HH:mm:ss');
     window.electron.store.set(`${key}-data`, { ...storageData, config });
     broadcastChannel.postMessage(`${key}-init`);
+  };
+
+  const resetConfig = () => {
+    const refreshTime = moment(defaultConfig.config.refreshTime, 'HH:mm:ss');
+    form.setFieldsValue({ ...defaultConfig.config, refreshTime });
+    groupSettingRef.current.setGroupListData(defaultConfig.config.groupList);
+    setConfig({ ...defaultConfig.config });
   };
 
   const cardList = [
@@ -34,7 +76,7 @@ export function SettingJuejin() {
 
   return (
     <div className={styles['container']}>
-      <Form name="basic" labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} initialValues={{ ...config }} onFinish={onSubmit} autoComplete="off">
+      <Form form={form} name="basic" labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} onFinish={onSubmit} autoComplete="off">
         <Form.Item label="cookie" name="cookie">
           <TextArea rows={4} placeholder="Input your cookie" />
         </Form.Item>
@@ -51,9 +93,14 @@ export function SettingJuejin() {
           <Switch />
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 4, span: 24 }}>
-          <Button type="primary" htmlType="submit" block>
-            应用
-          </Button>
+          <div className={styles['btn-container']}>
+            <Button type="primary" htmlType="submit">
+              应用
+            </Button>
+            <Button type="default" onClick={() => resetConfig()}>
+              恢复默认
+            </Button>
+          </div>
         </Form.Item>
       </Form>
     </div>

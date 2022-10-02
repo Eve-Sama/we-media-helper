@@ -60,18 +60,15 @@ export function SettingBilibili() {
     const groupList = groupSettingRef.current.getData();
     Object.assign(config, { ...values, groupList });
     config.refreshTime = (values.refreshTime as unknown as Moment).format('HH:mm:ss');
-    console.log(config, `config`);
     window.electron.store.set(`${key}-data`, { ...storageData, config });
     broadcastChannel.postMessage(`${key}-init`);
   };
 
   const resetConfig = () => {
-    console.log('resetConfig');
-    // setStorageData(defaultConfig);
     const refreshTime = moment(defaultConfig.config.refreshTime, 'HH:mm:ss');
     form.setFieldsValue({ ...defaultConfig.config, refreshTime });
     groupSettingRef.current.setGroupListData(defaultConfig.config.groupList);
-    setConfig(defaultConfig.config);
+    setConfig({ ...defaultConfig.config });
   };
 
   const cardList = [

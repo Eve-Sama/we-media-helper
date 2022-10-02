@@ -3,4 +3,8 @@
   form {
     width: 100%;
   }
+  .btn-container {
+    display: flex;
+    justify-content: space-evenly;
+  }
 }
