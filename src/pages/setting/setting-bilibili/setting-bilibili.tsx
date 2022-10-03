@@ -1,4 +1,4 @@
-import { Button, Form, Input, InputNumber, Switch, TimePicker } from 'antd';
+import { Button, Divider, Form, Input, InputNumber, Switch, TimePicker } from 'antd';
 import moment, { Moment } from 'moment';
 import { useEffect, useRef, useState } from 'react';
 import { Group, GroupSetting, GroupSettingRef } from '../common/group-setting/group-setting';
@@ -110,17 +110,16 @@ export function SettingBilibili() {
         <Form.Item label="动态通知" name="notify" valuePropName="checked">
           <Switch />
         </Form.Item>
-        <Form.Item wrapperCol={{ offset: 4, span: 24 }}>
-          <div className={styles['btn-container']}>
-            <Button type="primary" htmlType="submit">
-              应用
-            </Button>
-            <Button type="default" onClick={() => resetConfig()}>
-              恢复默认
-            </Button>
-          </div>
-        </Form.Item>
       </Form>
+      <Divider></Divider>
+      <div className={styles['btn-container']}>
+        <Button type="primary" onClick={() => form.submit()}>
+          应用
+        </Button>
+        <Button type="default" onClick={() => resetConfig()}>
+          恢复默认
+        </Button>
+      </div>
     </div>
   );
 }

@@ -51,7 +51,7 @@ function _initJueJinSetting() {
             uuid: uuidv4(),
           },
         ],
-        columnNum: 4,
+        columnNum: 2,
       },
       dataCardList: [],
     };

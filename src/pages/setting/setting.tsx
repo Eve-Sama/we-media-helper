@@ -2,9 +2,7 @@ import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 import { useState } from 'react';
 import { SettingBilibili } from './setting-bilibili/setting-bilibili';
-import { SettingGithub } from './setting-github/setting-github';
 import { SettingJuejin } from './setting-juejin/setting-juejin';
-import { SettingZhihu } from './setting-zhihu/setting-zhihu';
 import styles from './style.module.scss';
 
 const items: MenuProps['items'] = [
@@ -20,14 +18,6 @@ const items: MenuProps['items'] = [
     label: '掘金',
     key: 'JueJin',
   },
-  {
-    label: '知乎',
-    key: 'ZhiHu',
-  },
-  {
-    label: 'Github',
-    key: 'Github',
-  },
 ];
 
 export function Setting() {
@@ -40,12 +30,6 @@ export function Setting() {
       break;
     case 'JueJin':
       settingContet = <SettingJuejin />;
-      break;
-    case 'ZhiHu':
-      settingContet = <SettingZhihu />;
-      break;
-    case 'Github':
-      settingContet = <SettingGithub />;
       break;
   }
   return (
