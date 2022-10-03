@@ -35,37 +35,37 @@ export function JueJin() {
   }, []);
 
   useEffect(() => {
-    if (config.notify) {
-      ['reply', 'system'].forEach(type => {
-        let target = dataCardList.find(v => v.type === type);
-        let currentValue: number;
-        let title: string;
-        if (type === 'reply') {
-          currentValue = countData['3'];
-          title = '评论消息';
-        } else if (type === 'system') {
-          currentValue = countData['4'];
-          title = '系统消息';
-        }
-        // 初始化执行时, 未请求过数据, 导致初始化的值都是空的
-        if (_.isNil(currentValue)) {
-          return;
-        }
-        if (target) {
-          if (currentValue > target.value) {
-            window.electron.ipcRenderer.send('notify', { title: `掘金 - ${title}`, url: 'https://juejin.cn/notification' });
-          }
-          target.value = currentValue;
-        } else {
-          target = {
-            type,
-            value: currentValue,
-          };
-          dataCardList.push(target);
-        }
-      });
-      window.electron.store.set(`${key}-data`, { ...storageData, dataCardList });
-    }
+    // if (config.notify) {
+    //   ['reply', 'system'].forEach(type => {
+    //     let target = dataCardList.find(v => v.type === type);
+    //     let currentValue: number;
+    //     let title: string;
+    //     if (type === 'reply') {
+    //       currentValue = countData['3'];
+    //       title = '评论消息';
+    //     } else if (type === 'system') {
+    //       currentValue = countData['4'];
+    //       title = '系统消息';
+    //     }
+    //     // 初始化执行时, 未请求过数据, 导致初始化的值都是空的
+    //     if (_.isNil(currentValue)) {
+    //       return;
+    //     }
+    //     if (target) {
+    //       if (currentValue > target.value) {
+    //         window.electron.ipcRenderer.send('notify', { title: `掘金 - ${title}`, url: 'https://juejin.cn/notification' });
+    //       }
+    //       target.value = currentValue;
+    //     } else {
+    //       target = {
+    //         type,
+    //         value: currentValue,
+    //       };
+    //       dataCardList.push(target);
+    //     }
+    //   });
+    //   window.electron.store.set(`${key}-data`, { ...storageData, dataCardList });
+    // }
   }, [countData]);
 
   useEffect(() => {
@@ -143,19 +143,19 @@ export function JueJin() {
   const getCardComponents = (cardList: Group['cardList']) => {
     const res: JSX.Element[] = [];
     cardList.forEach(card => {
-      if (card.includes('reply')) {
+      if (card.type.includes('reply')) {
         res.push(<DataCard key="reply" title="评论消息" changeValue={0} totalValue={countData['3']}></DataCard>);
       }
-      if (card.includes('like')) {
+      if (card.type.includes('like')) {
         res.push(<DataCard key="like" title="点赞消息" changeValue={0} totalValue={countData['1']}></DataCard>);
       }
-      if (card.includes('follow')) {
+      if (card.type.includes('follow')) {
         res.push(<DataCard key="follow" title="关注消息" changeValue={0} totalValue={countData['2']}></DataCard>);
       }
-      if (card.includes('system')) {
+      if (card.type.includes('system')) {
         res.push(<DataCard key="system" title="系统消息" changeValue={0} totalValue={countData['4']}></DataCard>);
       }
-      if (card.includes('job')) {
+      if (card.type.includes('job')) {
         res.push(<DataCard key="job" title="职位沟通" changeValue={0} totalValue={countData['5']}></DataCard>);
       }
     });

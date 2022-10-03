@@ -15,7 +15,6 @@ export interface JuejinConfig {
     cookie: string;
     refreshTime: string;
     showCountdown: boolean;
-    notify: boolean;
     groupList: Group[];
   };
   /** 卡片最新数据, 用于推送提醒 */
@@ -27,11 +26,19 @@ const defaultConfig: JuejinConfig = {
     cookie: '',
     refreshTime: '00:00:30',
     showCountdown: true,
-    notify: true,
     groupList: [
       {
         label: '消息通知',
-        cardList: ['reply', 'system'],
+        cardList: [
+          {
+            type: 'reply',
+            notify: true,
+          },
+          {
+            type: 'system',
+            notify: true,
+          },
+        ],
         uuid: uuidv4(),
         columnNum: 2,
       },
@@ -77,17 +84,17 @@ export function SettingJuejin() {
 
   return (
     <div className={styles['container']}>
-      <Form form={form} name="basic" labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} onFinish={onSubmit} autoComplete="off">
+      <Form form={form} name="basic" labelCol={{ span: 5 }} wrapperCol={{ span: 19 }} onFinish={onSubmit} autoComplete="off">
         <Form.Item label="cookie" name="cookie">
           <TextArea rows={4} placeholder="Input your cookie" />
         </Form.Item>
         <Form.Item label="分组设置">
           <GroupSetting ref={groupSettingRef} cardList={cardList} groupList={config.groupList} />
         </Form.Item>
-        <Form.Item label="刷新间隔" name="refreshTime">
+        <Form.Item label="刷新间隔时间" name="refreshTime">
           <TimePicker />
         </Form.Item>
-        <Form.Item label="显示倒计时" name="showCountdown" valuePropName="checked">
+        <Form.Item label="显示倒计时" name="showCountdown" valuePropName="checked" tooltip={{ title: () => '只影响显示, 不影响倒计时刷新功能' }}>
           <Switch />
         </Form.Item>
         <Form.Item label="动态通知" name="notify" valuePropName="checked">

@@ -13,7 +13,20 @@
   .tag-container {
     margin-top: 4px;
     .tag {
+      display: inline-flex;
+      align-items: center;
       margin-top: 4px;
+      cursor: pointer;
+      .switch {
+        margin-left: 8px;
+      }
+      .notify {
+        margin-left: 4px;
+        border: 1px solid #fff;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
     }
   }
 }

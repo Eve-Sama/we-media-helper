@@ -4,9 +4,8 @@ import { Spin, message } from 'antd';
 import styles from './style.module.scss';
 import { CountdownDisplay } from '../common/countdown-display/countdown-display';
 import { DataCard } from '../common/data-card/data-card';
-import _ from 'lodash';
 import { Group } from '../setting/common/group-setting/group-setting';
-import { BilibiliConfig } from '../setting/setting-bilibili/setting-bilibili';
+import { BilibiliConfig, BilibiliCardList } from '../setting/setting-bilibili/setting-bilibili';
 
 const key = 'bilibili';
 const broadcastChannel = new BroadcastChannel(key);
@@ -34,44 +33,86 @@ export function Bilibili() {
   }, []);
 
   useEffect(() => {
-    if (config.notify) {
-      ['reply', 'systemMessage', 'message', 'at'].forEach(type => {
-        let target = dataCardList.find(v => v.type === type);
-        let currentValue: number;
-        let title: string;
-        if (type === 'reply') {
-          currentValue = unreadData.reply;
-          title = '回复我的';
-        } else if (type === 'systemMessage') {
-          currentValue = unreadData.sys_msg;
-          title = '系统消息';
-        } else if (type === 'message') {
-          currentValue = messageData.follow_unread + messageData.unfollow_unread;
-          title = '我的消息';
-        } else if (type === 'at') {
-          currentValue = unreadData.at;
-          title = '@我的';
-        }
-        // 初始化执行时, 未请求过数据, 导致初始化的值都是空的. NaN 判断是因为 undefined + undefined = Nan
-        if (_.isNil(currentValue) || isNaN(currentValue)) {
-          return;
-        }
-        if (target) {
-          if (currentValue > target.value) {
-            window.electron.ipcRenderer.send('notify', { title: `哔哩哔哩 - ${title}`, url: 'https://member.bilibili.com/platform/home' });
-          }
-          target.value = currentValue;
-        } else {
-          target = {
-            type,
-            value: currentValue,
-          };
-          dataCardList.push(target);
-        }
-      });
-      window.electron.store.set(`${key}-data`, { ...storageData, dataCardList });
+    if (Object.keys(messageData).length === 0) {
+      return;
     }
-  }, [unreadData]);
+    const typeList: string[] = [];
+    groupList.forEach(group =>
+      group.cardList.forEach(card => {
+        if (card.notify) {
+          typeList.push(card.type);
+        }
+      }),
+    );
+    const tempDataCardList: BilibiliConfig['dataCardList'] = [
+      {
+        type: 'fan',
+        value: statData.total_fans,
+      },
+      {
+        type: 'click',
+        value: statData.total_click,
+      },
+      {
+        type: 'totalReply',
+        value: statData.total_reply,
+      },
+      {
+        type: 'dm',
+        value: statData.total_dm,
+      },
+      {
+        type: 'totalLike',
+        value: statData.total_like,
+      },
+      {
+        type: 'share',
+        value: statData.total_share,
+      },
+      {
+        type: 'favorite',
+        value: statData.total_fav,
+      },
+      {
+        type: 'coin',
+        value: statData.total_coin,
+      },
+      {
+        type: 'reply',
+        value: unreadData.reply,
+      },
+      {
+        type: 'at',
+        value: unreadData.at,
+      },
+      {
+        type: 'like',
+        value: unreadData.like,
+      },
+      {
+        type: 'systemMessage',
+        value: unreadData.sys_msg,
+      },
+      {
+        type: 'message',
+        value: messageData.follow_unread + messageData.unfollow_unread,
+      },
+    ];
+    tempDataCardList.forEach(v => (v.value = v.value || 0));
+    window.electron.store.set(`${key}-data`, { ...storageData, dataCardList: tempDataCardList });
+    // 第一次运行项目的话, dataCardList 为空数组
+    if (dataCardList.length === 0) {
+      return;
+    }
+    tempDataCardList.forEach((tempDataCard, index) => {
+      const dataCard = dataCardList[index];
+      const needNotify = typeList.some(v => v === tempDataCard.type);
+      if (tempDataCard.value > dataCard.value && needNotify) {
+        const title = BilibiliCardList.find(v => v.value === tempDataCard.type).label;
+        window.electron.ipcRenderer.send('notify', { title: `哔哩哔哩 - ${title}`, url: 'https://member.bilibili.com/platform/home' });
+      }
+    });
+  }, [messageData]);
 
   useEffect(() => {
     if (retryTimes > 0 && retryTimes < 3) {
@@ -164,43 +205,43 @@ export function Bilibili() {
   const getCardComponents = (cardList: Group['cardList']) => {
     const res: JSX.Element[] = [];
     cardList.forEach(card => {
-      if (card.includes('fan')) {
+      if (card.type.includes('fan')) {
         res.push(<DataCard key="fan" title="净增粉丝" changeValue={statData.incr_fans} totalValue={statData.total_fans}></DataCard>);
       }
-      if (card.includes('click')) {
+      if (card.type.includes('click')) {
         res.push(<DataCard key="click" title="播放量" changeValue={statData.incr_click} totalValue={statData.total_click}></DataCard>);
       }
-      if (card.includes('totalReply')) {
+      if (card.type.includes('totalReply')) {
         res.push(<DataCard key="totalReply" title="评论" changeValue={statData.incr_reply} totalValue={statData.total_reply}></DataCard>);
       }
-      if (card.includes('dm')) {
+      if (card.type.includes('dm')) {
         res.push(<DataCard key="dm" title="弹幕" changeValue={statData.incr_dm} totalValue={statData.total_dm}></DataCard>);
       }
-      if (card.includes('totalLike')) {
+      if (card.type.includes('totalLike')) {
         res.push(<DataCard key="totalLike" title="点赞" changeValue={statData.inc_like} totalValue={statData.total_like}></DataCard>);
       }
-      if (card.includes('share')) {
+      if (card.type.includes('share')) {
         res.push(<DataCard key="share" title="分享" changeValue={statData.inc_share} totalValue={statData.total_share}></DataCard>);
       }
-      if (card.includes('favorite')) {
+      if (card.type.includes('favorite')) {
         res.push(<DataCard key="favorite" title="收藏" changeValue={statData.inc_fav} totalValue={statData.total_fav}></DataCard>);
       }
-      if (card.includes('coin')) {
+      if (card.type.includes('coin')) {
         res.push(<DataCard key="coin" title="投币" changeValue={statData.inc_coin} totalValue={statData.total_coin}></DataCard>);
       }
-      if (card.includes('reply')) {
+      if (card.type.includes('reply')) {
         res.push(<DataCard key="reply" title="回复我的" changeValue={0} totalValue={unreadData.reply}></DataCard>);
       }
-      if (card.includes('at')) {
+      if (card.type.includes('at')) {
         res.push(<DataCard key="at" title="@我的" changeValue={0} totalValue={unreadData.at}></DataCard>);
       }
-      if (card.includes('like')) {
+      if (card.type.includes('like')) {
         res.push(<DataCard key="like" title="收到的赞" changeValue={0} totalValue={unreadData.like}></DataCard>);
       }
-      if (card.includes('systemMessage')) {
+      if (card.type.includes('systemMessage')) {
         res.push(<DataCard key="systemMessage" title="系统消息" changeValue={0} totalValue={unreadData.sys_msg}></DataCard>);
       }
-      if (card.includes('message')) {
+      if (card.type.includes('message')) {
         res.push(<DataCard key="message" title="我的消息" changeValue={0} totalValue={messageData.follow_unread + messageData.unfollow_unread}></DataCard>);
       }
     });

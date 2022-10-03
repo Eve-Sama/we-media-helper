@@ -7,8 +7,14 @@ const { Option } = Select;
 
 export interface Group {
   label: string;
-  cardList: string[];
+  cardList: Array<{
+    /** 统计数据类型 */
+    type: string;
+    /** 数据有新增时, 弹窗提醒 */
+    notify: boolean;
+  }>;
   uuid: string;
+  /** 每一行的列数 */
   columnNum: number;
 }
 
@@ -54,23 +60,44 @@ export const GroupSetting = forwardRef<GroupSettingRef, GroupSettingProps>((prop
       .validateFields()
       .then((group: Group) => {
         const target = groupListData.find(v => v.uuid === group.uuid);
+        // cardList 在本地存储中是对象数组, 但是在表单中是个字符串数组
+        const cardList = group.cardList as unknown as string[];
         if (target) {
+          const tempCardList = (group.cardList as unknown as string[]).map(v => {
+            const typeTarget = target.cardList.find(card => card.type === v);
+            return typeTarget || { type: v, notify: false };
+          });
+          group.cardList = tempCardList;
           Object.assign(target, group);
           setGroupListData(groupListData);
         } else {
-          setGroupListData([...groupListData, group]);
+          const tempCardList = cardList.map(v => ({ type: v, notify: false }));
+          setGroupListData([...groupListData, { ...group, cardList: tempCardList }]);
         }
         setIsModalOpen(false);
       })
       .catch(v => v);
   };
 
+  /**
+   * 切换卡片通知状态
+   * @param uuid 分组的 uuid
+   * @param type 卡片类型
+   */
+  const toggleNotify = (uuid: string, type: string) => {
+    const group = groupListData.find(v => v.uuid === uuid);
+    const card = group.cardList.find(v => v.type === type);
+    card.notify = !card.notify;
+    setGroupListData([...groupListData]);
+  };
+
   const initTagListComponent = () => {
     const components: JSX.Element[] = [];
     groupListData.forEach((item, groupIndex) => {
       const tagContent = item.cardList.map((card, cardIndex) => (
-        <Tag key={cardIndex} className={styles['tag']}>
-          {cardList.find(v => v.value === card).label}
+        <Tag key={cardIndex} className={styles['tag']} onClick={() => toggleNotify(item.uuid, card.type)}>
+          <span>{cardList.find(v => v.value === card.type).label}</span>
+          <span className={styles['notify']} style={{ background: card.notify ? '#87d068' : 'gray' }}></span>
         </Tag>
       ));
       components.push(
@@ -112,7 +139,7 @@ export const GroupSetting = forwardRef<GroupSettingRef, GroupSettingProps>((prop
       setModalAction('add');
     }
     setIsModalOpen(true);
-    form.setFieldsValue(target);
+    form.setFieldsValue({ ...target, cardList: target.cardList.map(v => v.type) });
   };
 
   const cardListValidator = (_rule, value: string[] = []) => {

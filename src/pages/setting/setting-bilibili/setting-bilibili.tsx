@@ -1,4 +1,4 @@
-import { Button, Divider, Form, Input, InputNumber, Switch, TimePicker } from 'antd';
+import { Button, Divider, Form, Input, Switch, TimePicker } from 'antd';
 import moment, { Moment } from 'moment';
 import { useEffect, useRef, useState } from 'react';
 import { Group, GroupSetting, GroupSettingRef } from '../common/group-setting/group-setting';
@@ -15,7 +15,6 @@ export interface BilibiliConfig {
     cookie: string;
     refreshTime: string;
     showCountdown: boolean;
-    notify: boolean;
     groupList: Group[];
   };
   /** 卡片最新数据, 用于推送提醒 */
@@ -27,17 +26,66 @@ const defaultConfig: BilibiliConfig = {
     cookie: '',
     refreshTime: '00:00:30',
     showCountdown: true,
-    notify: true,
     groupList: [
       {
         label: '基础数据',
-        cardList: ['fan', 'click', 'totalReply', 'dm', 'totalLike', 'share', 'favorite', 'coin'],
+        cardList: [
+          {
+            type: 'fan',
+            notify: false,
+          },
+          {
+            type: 'click',
+            notify: false,
+          },
+          {
+            type: 'totalReply',
+            notify: false,
+          },
+          {
+            type: 'dm',
+            notify: false,
+          },
+          {
+            type: 'totalLike',
+            notify: false,
+          },
+          {
+            type: 'share',
+            notify: false,
+          },
+          {
+            type: 'favorite',
+            notify: false,
+          },
+          {
+            type: 'coin',
+            notify: false,
+          },
+        ],
         uuid: uuidv4(),
         columnNum: 4,
       },
       {
         label: '消息通知',
-        cardList: ['reply', 'at', 'systemMessage', 'message'],
+        cardList: [
+          {
+            type: 'reply',
+            notify: true,
+          },
+          {
+            type: 'at',
+            notify: true,
+          },
+          {
+            type: 'systemMessage',
+            notify: true,
+          },
+          {
+            type: 'message',
+            notify: true,
+          },
+        ],
         uuid: uuidv4(),
         columnNum: 4,
       },
@@ -45,6 +93,22 @@ const defaultConfig: BilibiliConfig = {
   },
   dataCardList: [],
 };
+
+export const BilibiliCardList = [
+  { label: '粉丝总量', value: 'fan' },
+  { label: '播放总量', value: 'click' },
+  { label: '评论总量', value: 'totalReply' },
+  { label: '弹幕总量', value: 'dm' },
+  { label: '点赞总量', value: 'totalLike' },
+  { label: '分享总量', value: 'share' },
+  { label: '收藏总量', value: 'favorite' },
+  { label: '投币总量', value: 'coin' },
+  { label: '回复我的', value: 'reply' },
+  { label: '@我的', value: 'at' },
+  { label: '收到的赞', value: 'like' },
+  { label: '系统消息', value: 'systemMessage' },
+  { label: '我的消息', value: 'message' },
+];
 
 export function SettingBilibili() {
   const storageData = (window.electron.store.get(`${key}-data`) || defaultConfig) as BilibiliConfig;
@@ -73,38 +137,19 @@ export function SettingBilibili() {
     setConfig({ ...defaultConfig.config });
   };
 
-  const cardList = [
-    { label: '粉丝量', value: 'fan' },
-    { label: '播放量', value: 'click' },
-    { label: '评论', value: 'totalReply' },
-    { label: '弹幕', value: 'dm' },
-    { label: '点赞', value: 'totalLike' },
-    { label: '分享', value: 'share' },
-    { label: '收藏', value: 'favorite' },
-    { label: '投币', value: 'coin' },
-    { label: '回复我的', value: 'reply' },
-    { label: '@我的', value: 'at' },
-    { label: '收到的赞', value: 'like' },
-    { label: '系统消息', value: 'systemMessage' },
-    { label: '我的消息', value: 'message' },
-  ];
-
   return (
     <div className={styles['container']}>
-      <Form form={form} name="basic" labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} onFinish={onSubmit} autoComplete="off">
+      <Form form={form} name="basic" labelCol={{ span: 5 }} wrapperCol={{ span: 19 }} onFinish={onSubmit} autoComplete="off">
         <Form.Item label="cookie" name="cookie">
           <TextArea rows={4} placeholder="Input your cookie" />
         </Form.Item>
         <Form.Item label="分组设置">
-          <GroupSetting ref={groupSettingRef} cardList={cardList} groupList={config.groupList} />
+          <GroupSetting ref={groupSettingRef} cardList={BilibiliCardList} groupList={config.groupList} />
         </Form.Item>
-        <Form.Item label="单行卡片数" name="columnNum">
-          <InputNumber<string> style={{ width: 123 }} min="1" max="10" precision={0} />
-        </Form.Item>
-        <Form.Item label="刷新间隔" name="refreshTime">
+        <Form.Item label="刷新间隔时间" name="refreshTime">
           <TimePicker />
         </Form.Item>
-        <Form.Item label="显示倒计时" name="showCountdown" valuePropName="checked">
+        <Form.Item label="显示倒计时" name="showCountdown" valuePropName="checked" tooltip={{ title: () => '只影响显示, 不影响倒计时刷新功能' }}>
           <Switch />
         </Form.Item>
         <Form.Item label="动态通知" name="notify" valuePropName="checked">

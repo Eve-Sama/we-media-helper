@@ -13,17 +13,66 @@ function _initBilibiliSetting() {
         cookie: '',
         refreshTime: '00:00:30',
         showCountdown: true,
-        notify: true,
         groupList: [
           {
             label: '基础数据',
-            cardList: ['fan', 'click', 'totalReply', 'dm', 'totalLike', 'share', 'favorite', 'coin'],
+            cardList: [
+              {
+                type: 'fan',
+                notify: false,
+              },
+              {
+                type: 'click',
+                notify: false,
+              },
+              {
+                type: 'totalReply',
+                notify: false,
+              },
+              {
+                type: 'dm',
+                notify: false,
+              },
+              {
+                type: 'totalLike',
+                notify: false,
+              },
+              {
+                type: 'share',
+                notify: false,
+              },
+              {
+                type: 'favorite',
+                notify: false,
+              },
+              {
+                type: 'coin',
+                notify: false,
+              },
+            ],
             uuid: uuidv4(),
             columnNum: 4,
           },
           {
             label: '消息通知',
-            cardList: ['reply', 'at', 'systemMessage', 'message'],
+            cardList: [
+              {
+                type: 'reply',
+                notify: true,
+              },
+              {
+                type: 'at',
+                notify: true,
+              },
+              {
+                type: 'systemMessage',
+                notify: true,
+              },
+              {
+                type: 'message',
+                notify: true,
+              },
+            ],
             uuid: uuidv4(),
             columnNum: 4,
           },
@@ -44,11 +93,19 @@ function _initJueJinSetting() {
         cookie: '',
         refreshTime: '00:00:30',
         showCountdown: true,
-        notify: true,
         groupList: [
           {
             label: '消息通知',
-            cardList: ['reply', 'system'],
+            cardList: [
+              {
+                type: 'reply',
+                notify: true,
+              },
+              {
+                type: 'system',
+                notify: true,
+              },
+            ],
             uuid: uuidv4(),
             columnNum: 2,
           },
