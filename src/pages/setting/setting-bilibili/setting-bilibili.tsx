@@ -1,4 +1,4 @@
-import { Button, Form, Input, Switch, TimePicker } from 'antd';
+import { Button, Form, Input, InputNumber, Switch, TimePicker } from 'antd';
 import moment, { Moment } from 'moment';
 import { useEffect, useRef, useState } from 'react';
 import { Group, GroupSetting, GroupSettingRef } from '../common/group-setting/group-setting';
@@ -17,6 +17,7 @@ export interface BilibiliConfig {
     showCountdown: boolean;
     notify: boolean;
     groupList: Group[];
+    columnNum: number;
   };
   /** 卡片最新数据, 用于推送提醒 */
   dataCardList: Array<{ type: string; value: number }>;
@@ -40,6 +41,7 @@ const defaultConfig: BilibiliConfig = {
         uuid: uuidv4(),
       },
     ],
+    columnNum: 4,
   },
   dataCardList: [],
 };
@@ -95,6 +97,9 @@ export function SettingBilibili() {
         </Form.Item>
         <Form.Item label="分组设置">
           <GroupSetting ref={groupSettingRef} cardList={cardList} groupList={config.groupList} />
+        </Form.Item>
+        <Form.Item label="单行卡片数" name="columnNum">
+          <InputNumber<string> style={{ width: 123 }} min="1" max="10" precision={0} />
         </Form.Item>
         <Form.Item label="刷新间隔" name="refreshTime">
           <TimePicker />

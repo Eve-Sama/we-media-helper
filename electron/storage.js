@@ -3,6 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const store = new Store();
 
+/** @todo 这种默认配置应该写一份就可以的. 但是因为 electron TS化目前跑不起来, 先临时写2份吧 */
 function _initBilibiliSetting() {
   const key = 'bilibili-data';
   let storage = store.get(key);
@@ -25,6 +26,7 @@ function _initBilibiliSetting() {
             uuid: uuidv4(),
           },
         ],
+        columnNum: 4,
       },
       dataCardList: [],
     };
@@ -49,6 +51,7 @@ function _initJueJinSetting() {
             uuid: uuidv4(),
           },
         ],
+        columnNum: 4,
       },
       dataCardList: [],
     };
@@ -57,7 +60,7 @@ function _initJueJinSetting() {
 }
 
 function initSetting() {
-  // const key = 'juejin-data';
+  // const key = 'bilibili-data';
   // // const data = store.get(key);
   // // data.dataCardList = [];
   // store.set(key, null);
