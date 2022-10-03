@@ -19,14 +19,15 @@ function _initBilibiliSetting() {
             label: '基础数据',
             cardList: ['fan', 'click', 'totalReply', 'dm', 'totalLike', 'share', 'favorite', 'coin'],
             uuid: uuidv4(),
+            columnNum: 4,
           },
           {
             label: '消息通知',
             cardList: ['reply', 'at', 'systemMessage', 'message'],
             uuid: uuidv4(),
+            columnNum: 4,
           },
         ],
-        columnNum: 4,
       },
       dataCardList: [],
     };
@@ -49,9 +50,9 @@ function _initJueJinSetting() {
             label: '消息通知',
             cardList: ['reply', 'system'],
             uuid: uuidv4(),
+            columnNum: 2,
           },
         ],
-        columnNum: 2,
       },
       dataCardList: [],
     };

@@ -17,7 +17,6 @@ export interface BilibiliConfig {
     showCountdown: boolean;
     notify: boolean;
     groupList: Group[];
-    columnNum: number;
   };
   /** 卡片最新数据, 用于推送提醒 */
   dataCardList: Array<{ type: string; value: number }>;
@@ -34,14 +33,15 @@ const defaultConfig: BilibiliConfig = {
         label: '基础数据',
         cardList: ['fan', 'click', 'totalReply', 'dm', 'totalLike', 'share', 'favorite', 'coin'],
         uuid: uuidv4(),
+        columnNum: 4,
       },
       {
         label: '消息通知',
         cardList: ['reply', 'at', 'systemMessage', 'message'],
         uuid: uuidv4(),
+        columnNum: 4,
       },
     ],
-    columnNum: 4,
   },
   dataCardList: [],
 };

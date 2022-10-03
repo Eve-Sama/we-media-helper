@@ -1,4 +1,4 @@
-import { Form, Input, List, Modal, Popconfirm, Select, Tag } from 'antd';
+import { Form, Input, InputNumber, List, Modal, Popconfirm, Select, Tag } from 'antd';
 import { forwardRef, useImperativeHandle, useState } from 'react';
 import styles from './style.module.scss';
 import { v4 as uuidv4 } from 'uuid';
@@ -9,6 +9,7 @@ export interface Group {
   label: string;
   cardList: string[];
   uuid: string;
+  columnNum: number;
 }
 
 export interface GroupSettingRef {
@@ -106,6 +107,7 @@ export const GroupSetting = forwardRef<GroupSettingRef, GroupSettingProps>((prop
         label: '',
         cardList: [],
         uuid,
+        columnNum: null,
       };
       setModalAction('add');
     }
@@ -128,15 +130,18 @@ export const GroupSetting = forwardRef<GroupSettingRef, GroupSettingProps>((prop
       <Modal title={modalAction === 'add' ? '新建分组' : '编辑分组'} maskClosable={false} open={isModalOpen} onOk={handleOk} onCancel={() => setIsModalOpen(false)} okText="确认" cancelText="取消">
         <Form form={form} layout="vertical" autoComplete="off">
           <Form.Item label="分组名" name="label" rules={[{ required: true, message: '分组名不可为空' }]}>
-            <Input placeholder="请输入分组名" />
+            <Input placeholder="区分不同组的标题" />
           </Form.Item>
           <Form.Item label="uuid" name="uuid" style={{ display: 'none' }}>
             <Input />
           </Form.Item>
           <Form.Item label="卡片列表" name="cardList" rules={[{ required: true, validator: cardListValidator }]}>
-            <Select mode="multiple" allowClear style={{ width: '100%' }} placeholder="请选择卡片">
+            <Select mode="multiple" allowClear style={{ width: '100%' }} placeholder="每个数据统计类别都是独立的卡片">
               {children}
             </Select>
+          </Form.Item>
+          <Form.Item label="单行卡片数" name="columnNum" rules={[{ required: true, message: '卡片数不可为空' }]}>
+            <InputNumber<string> style={{ width: '100%' }} min="1" max="10" precision={0} placeholder="每行分成多少列" />
           </Form.Item>
         </Form>
       </Modal>

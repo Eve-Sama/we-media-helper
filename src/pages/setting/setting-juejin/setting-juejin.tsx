@@ -1,4 +1,4 @@
-import { Button, Divider, Form, Input, InputNumber, Switch, TimePicker } from 'antd';
+import { Button, Divider, Form, Input, Switch, TimePicker } from 'antd';
 import moment, { Moment } from 'moment';
 import { useEffect, useRef, useState } from 'react';
 import { GroupSettingRef, GroupSetting, Group } from '../common/group-setting/group-setting';
@@ -17,7 +17,6 @@ export interface JuejinConfig {
     showCountdown: boolean;
     notify: boolean;
     groupList: Group[];
-    columnNum: number;
   };
   /** 卡片最新数据, 用于推送提醒 */
   dataCardList: Array<{ type: string; value: number }>;
@@ -34,9 +33,9 @@ const defaultConfig: JuejinConfig = {
         label: '消息通知',
         cardList: ['reply', 'system'],
         uuid: uuidv4(),
+        columnNum: 2,
       },
     ],
-    columnNum: 2,
   },
   dataCardList: [],
 };
@@ -84,9 +83,6 @@ export function SettingJuejin() {
         </Form.Item>
         <Form.Item label="分组设置">
           <GroupSetting ref={groupSettingRef} cardList={cardList} groupList={config.groupList} />
-        </Form.Item>
-        <Form.Item label="单行卡片数" name="columnNum">
-          <InputNumber<string> style={{ width: 123 }} min="1" max="10" precision={0} />
         </Form.Item>
         <Form.Item label="刷新间隔" name="refreshTime">
           <TimePicker />

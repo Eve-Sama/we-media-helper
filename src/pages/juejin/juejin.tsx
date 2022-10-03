@@ -131,7 +131,7 @@ export function JueJin() {
       res.push(
         <div key={index}>
           <span className={styles['group-label']}>{group.label}</span>
-          <div className={styles['group-card-list']} style={{ gridTemplateColumns: `repeat(${config.columnNum}, 1fr)` }}>
+          <div className={styles['group-card-list']} style={{ gridTemplateColumns: `repeat(${group.columnNum}, 1fr)` }}>
             {cardComponents}
           </div>
         </div>,
