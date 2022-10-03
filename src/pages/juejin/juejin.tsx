@@ -53,7 +53,7 @@ export function JueJin() {
         }
         if (target) {
           if (currentValue > target.value) {
-            window.electron.ipcRenderer.send('notify', { title: `掘金 - ${title}` });
+            window.electron.ipcRenderer.send('notify', { title: `掘金 - ${title}`, url: 'https://juejin.cn/notification' });
           }
           target.value = currentValue;
         } else {

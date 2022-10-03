@@ -1,4 +1,4 @@
-const { session, ipcMain, Notification } = require('electron');
+const { session, ipcMain, Notification, shell } = require('electron');
 const { windowMap } = require('./window');
 
 const Store = require('electron-store');
@@ -36,8 +36,12 @@ function initEvent() {
   });
 
   ipcMain.on('notify', (_, message) => {
-    const { title } = message;
-    new Notification({ title, body: '你收到了一条消息' }).show();
+    const { title, url } = message;
+    const notification = new Notification({ title, body: '你收到了一条消息' });
+    if (url) {
+      notification.on('click', () => shell.openExternal(url));
+    }
+    notification.show();
   });
 }
 

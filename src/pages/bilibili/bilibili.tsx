@@ -58,7 +58,7 @@ export function Bilibili() {
         }
         if (target) {
           if (currentValue > target.value) {
-            window.electron.ipcRenderer.send('notify', { title: `哔哩哔哩 - ${title}` });
+            window.electron.ipcRenderer.send('notify', { title: `哔哩哔哩 - ${title}`, url: 'https://member.bilibili.com/platform/home' });
           }
           target.value = currentValue;
         } else {
