@@ -23,7 +23,7 @@ export function Bilibili() {
   const groupList = storageData.config.groupList;
   const config = storageData.config;
 
-  useEffect(() => {
+  useEffect(function listenBrodcast() {
     broadcastChannel.onmessage = v => {
       if (v.data === `${key}-init`) {
         loadData();
@@ -32,52 +32,58 @@ export function Bilibili() {
     loadData();
   }, []);
 
-  useEffect(() => {
-    if (beingInit()) {
-      return;
-    }
-    const typeList: string[] = [];
-    const tempDataCardList: BilibiliConfig['dataCardList'] = [];
-    groupList.forEach(group =>
-      group.cardList.forEach(card => {
-        if (card.notify) {
-          typeList.push(card.type);
-          const data = getDataCardInfo(card.type);
-          tempDataCardList.push({
-            type: data.type,
-            value: data.totalValue,
-          });
-        }
-      }),
-    );
-    window.electron.store.set(`${key}-data`, { ...storageData, dataCardList: tempDataCardList });
-    tempDataCardList.forEach(tempDataCard => {
-      const dataCard = dataCardList.find(v => v.type === tempDataCard.type);
-      /**
-       * 需要判断 dataCard 是否存在. 因为存在一种场景, 当打开了B站面板与设置面板时, 设置面板的 dataCardList 始终是不会变化的, 而B站面板会在每次请求结束后重新设置 dataCardList
-       * 这就导致, B站面板的 dataCardList 会变而设置面板的 dataCardList 不会变. 那就有可能导致保存配置而触发的重渲染时, tempDataCardList 与 dataCardList 长度可能不一样
-       */
-      if (dataCard) {
-        const needNotify = typeList.some(v => v === tempDataCard.type);
-        if (needNotify && tempDataCard.value > dataCard.value) {
-          const title = BilibiliCardList.find(v => v.value === tempDataCard.type).label;
-          window.electron.ipcRenderer.send('notify', { title: `哔哩哔哩 - ${title}`, url: 'https://member.bilibili.com/platform/home' });
-        }
+  useEffect(
+    function notify() {
+      if (beingInit()) {
+        return;
       }
-    });
-  }, [messageData]);
+      const typeList: string[] = [];
+      const tempDataCardList: BilibiliConfig['dataCardList'] = [];
+      groupList.forEach(group =>
+        group.cardList.forEach(card => {
+          if (card.notify) {
+            typeList.push(card.type);
+            const data = getDataCardInfo(card.type);
+            tempDataCardList.push({
+              type: data.type,
+              value: data.totalValue,
+            });
+          }
+        }),
+      );
+      window.electron.store.set(`${key}-data`, { ...storageData, dataCardList: tempDataCardList });
+      tempDataCardList.forEach(tempDataCard => {
+        const dataCard = dataCardList.find(v => v.type === tempDataCard.type);
+        /**
+         * 需要判断 dataCard 是否存在. 因为存在一种场景, 当打开了B站面板与设置面板时, 设置面板的 dataCardList 始终是不会变化的, 而B站面板会在每次请求结束后重新设置 dataCardList
+         * 这就导致, B站面板的 dataCardList 会变而设置面板的 dataCardList 不会变. 那就有可能导致保存配置而触发的重渲染时, tempDataCardList 与 dataCardList 长度可能不一样
+         */
+        if (dataCard) {
+          const needNotify = typeList.some(v => v === tempDataCard.type);
+          if (needNotify && tempDataCard.value > dataCard.value) {
+            const title = BilibiliCardList.find(v => v.value === tempDataCard.type).label;
+            window.electron.ipcRenderer.send('notify', { title: `哔哩哔哩 - ${title}`, url: 'https://member.bilibili.com/platform/home' });
+          }
+        }
+      });
+    },
+    [messageData],
+  );
 
-  useEffect(() => {
-    if (retryTimes > 0 && retryTimes < 3) {
-      message.error(`鉴权失败, 3秒后将重试(${retryTimes}/3).`);
-      setTimeout(() => {
-        loadData();
-      }, 3 * 1000);
-    }
-    if (retryTimes === 3) {
-      message.error('鉴权失败, 请打开『偏好设置』设置cookie!');
-    }
-  }, [retryTimes]);
+  useEffect(
+    function retryRequest() {
+      if (retryTimes > 0 && retryTimes < 3) {
+        message.error(`鉴权失败, 3秒后将重试(${retryTimes}/3).`);
+        setTimeout(() => {
+          loadData();
+        }, 3 * 1000);
+      }
+      if (retryTimes === 3) {
+        message.error('鉴权失败, 请打开『偏好设置』设置cookie!');
+      }
+    },
+    [retryTimes],
+  );
 
   const beingInit = () => Object.keys(messageData).length === 0;
 

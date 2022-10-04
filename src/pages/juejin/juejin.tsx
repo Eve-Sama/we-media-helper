@@ -21,60 +21,63 @@ export function JueJin() {
   const groupList = storageData.config.groupList;
   const config = storageData.config;
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  useEffect(() => {
+  useEffect(function listenBrodcast() {
     broadcastChannel.onmessage = v => {
       if (v.data === `${key}-init`) {
         loadData();
       }
     };
+    loadData();
   }, []);
 
-  useEffect(() => {
-    if (Object.keys(countData).length === 0) {
-      return;
-    }
-    const typeList: string[] = [];
-    const tempDataCardList: JuejinConfig['dataCardList'] = [];
-    groupList.forEach(group =>
-      group.cardList.forEach(card => {
-        if (card.notify) {
-          typeList.push(card.type);
-          const data = getDataCardInfo(card.type);
-          tempDataCardList.push({
-            type: data.type,
-            value: data.totalValue,
-          });
-        }
-      }),
-    );
-    window.electron.store.set(`${key}-data`, { ...storageData, dataCardList: tempDataCardList });
-    tempDataCardList.forEach(tempDataCard => {
-      const dataCard = dataCardList.find(v => v.type === tempDataCard.type);
-      if (dataCard) {
-        const needNotify = typeList.some(v => v === tempDataCard.type);
-        if (needNotify && tempDataCard.value > dataCard.value) {
-          const title = JuejinCardList.find(v => v.value === tempDataCard.type).label;
-          window.electron.ipcRenderer.send('notify', { title: `掘金 - ${title}`, url: 'https://member.bilibili.com/platform/home' });
-        }
+  useEffect(
+    function notify() {
+      if (Object.keys(countData).length === 0) {
+        return;
       }
-    });
-  }, [countData]);
+      const typeList: string[] = [];
+      const tempDataCardList: JuejinConfig['dataCardList'] = [];
+      groupList.forEach(group =>
+        group.cardList.forEach(card => {
+          if (card.notify) {
+            typeList.push(card.type);
+            const data = getDataCardInfo(card.type);
+            tempDataCardList.push({
+              type: data.type,
+              value: data.totalValue,
+            });
+          }
+        }),
+      );
+      window.electron.store.set(`${key}-data`, { ...storageData, dataCardList: tempDataCardList });
+      tempDataCardList.forEach(tempDataCard => {
+        const dataCard = dataCardList.find(v => v.type === tempDataCard.type);
+        if (dataCard) {
+          const needNotify = typeList.some(v => v === tempDataCard.type);
+          if (needNotify && tempDataCard.value > dataCard.value) {
+            const title = JuejinCardList.find(v => v.value === tempDataCard.type).label;
+            window.electron.ipcRenderer.send('notify', { title: `掘金 - ${title}`, url: 'https://member.bilibili.com/platform/home' });
+          }
+        }
+      });
+    },
+    [countData],
+  );
 
-  useEffect(() => {
-    if (retryTimes > 0 && retryTimes < 3) {
-      message.error(`鉴权失败, 3秒后将重试(${retryTimes}/3).`);
-      setTimeout(() => {
-        loadData();
-      }, 3 * 1000);
-    }
-    if (retryTimes === 3) {
-      message.error('鉴权失败, 请打开『偏好设置』设置cookie!');
-    }
-  }, [retryTimes]);
+  useEffect(
+    function retryRequest() {
+      if (retryTimes > 0 && retryTimes < 3) {
+        message.error(`鉴权失败, 3秒后将重试(${retryTimes}/3).`);
+        setTimeout(() => {
+          loadData();
+        }, 3 * 1000);
+      }
+      if (retryTimes === 3) {
+        message.error('鉴权失败, 请打开『偏好设置』设置cookie!');
+      }
+    },
+    [retryTimes],
+  );
 
   const beingInit = () => Object.keys(countData).length === 0;
 

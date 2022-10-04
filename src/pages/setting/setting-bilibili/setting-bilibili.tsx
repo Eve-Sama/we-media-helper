@@ -15,11 +15,14 @@ export function SettingBilibili() {
   const groupSettingRef = useRef<GroupSettingRef>(null);
   const [form] = Form.useForm();
 
-  useEffect(() => {
-    // TimePicker 只接受 moment 类型的时间
-    const refreshTime = moment(config.refreshTime, 'HH:mm:ss');
-    form.setFieldsValue({ ...config, refreshTime });
-  }, [config]);
+  useEffect(
+    function initForm() {
+      // TimePicker 只接受 moment 类型的时间
+      const refreshTime = moment(config.refreshTime, 'HH:mm:ss');
+      form.setFieldsValue({ ...config, refreshTime });
+    },
+    [config],
+  );
 
   const onSubmit = (values: BilibiliConfig['config']) => {
     const groupList = groupSettingRef.current.getData();
