@@ -5,7 +5,7 @@ import { CountdownDisplay } from '../common/countdown-display/countdown-display'
 import { DataCard } from '../common/data-card/data-card';
 import { getCount, getUser } from '../../request/juejin/juejin.request';
 import { Group } from '../setting/common/group-setting/group-setting';
-import { JuejinCardList, JuejinConfig } from '../setting/setting-juejin/setting-juejin';
+import { JuejinConfig, JuejinCardList } from '../setting/setting-juejin/setting-juejin.interface';
 
 const key = 'juejin';
 const broadcastChannel = new BroadcastChannel(key);

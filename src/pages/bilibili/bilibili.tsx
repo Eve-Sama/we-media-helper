@@ -5,7 +5,7 @@ import styles from './style.module.scss';
 import { CountdownDisplay } from '../common/countdown-display/countdown-display';
 import { DataCard } from '../common/data-card/data-card';
 import { Group } from '../setting/common/group-setting/group-setting';
-import { BilibiliConfig, BilibiliCardList } from '../setting/setting-bilibili/setting-bilibili';
+import { BilibiliCardList, BilibiliConfig } from '../setting/setting-bilibili/setting-bilibili.interface';
 
 const key = 'bilibili';
 const broadcastChannel = new BroadcastChannel(key);

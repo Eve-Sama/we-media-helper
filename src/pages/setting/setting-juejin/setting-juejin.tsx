@@ -1,62 +1,16 @@
 import { Button, Divider, Form, Input, Switch, TimePicker } from 'antd';
 import moment, { Moment } from 'moment';
 import { useEffect, useRef, useState } from 'react';
-import { GroupSettingRef, GroupSetting, Group } from '../common/group-setting/group-setting';
+import { GroupSettingRef, GroupSetting } from '../common/group-setting/group-setting';
+import { JuejinDefaultConfig, JuejinConfig, JuejinCardList } from './setting-juejin.interface';
 import styles from './style.module.scss';
-import { v4 as uuidv4 } from 'uuid';
 
 const { TextArea } = Input;
 const key = 'juejin';
 const broadcastChannel = new BroadcastChannel('juejin');
 
-export interface JuejinConfig {
-  /** 偏好设置 */
-  config: {
-    cookie: string;
-    refreshTime: string;
-    showCountdown: boolean;
-    groupList: Group[];
-  };
-  /** 卡片最新数据, 用于推送提醒 */
-  dataCardList: Array<{ type: string; value: number }>;
-}
-
-const defaultConfig: JuejinConfig = {
-  config: {
-    cookie: '',
-    refreshTime: '00:00:30',
-    showCountdown: true,
-    groupList: [
-      {
-        label: '消息通知',
-        cardList: [
-          {
-            type: 'reply',
-            notify: true,
-          },
-          {
-            type: 'system',
-            notify: true,
-          },
-        ],
-        uuid: uuidv4(),
-        columnNum: 2,
-      },
-    ],
-  },
-  dataCardList: [],
-};
-
-export const JuejinCardList = [
-  { label: '评论消息', value: 'reply' },
-  { label: '点赞消息', value: 'like' },
-  { label: '关注消息', value: 'follow' },
-  { label: '系统消息', value: 'system' },
-  { label: '职位沟通', value: 'job' },
-];
-
 export function SettingJuejin() {
-  const storageData = (window.electron.store.get(`${key}-data`) || defaultConfig) as JuejinConfig;
+  const storageData = (window.electron.store.get(`${key}-data`) || JuejinDefaultConfig) as JuejinConfig;
   const [config, setConfig] = useState<JuejinConfig['config']>(storageData.config);
   const groupSettingRef = useRef<GroupSettingRef>(null);
   const [form] = Form.useForm();
@@ -76,10 +30,10 @@ export function SettingJuejin() {
   };
 
   const resetConfig = () => {
-    const refreshTime = moment(defaultConfig.config.refreshTime, 'HH:mm:ss');
-    form.setFieldsValue({ ...defaultConfig.config, refreshTime });
-    groupSettingRef.current.setGroupListData(defaultConfig.config.groupList);
-    setConfig({ ...defaultConfig.config });
+    const refreshTime = moment(JuejinDefaultConfig.config.refreshTime, 'HH:mm:ss');
+    form.setFieldsValue({ ...JuejinDefaultConfig.config, refreshTime });
+    groupSettingRef.current.setGroupListData(JuejinDefaultConfig.config.groupList);
+    setConfig({ ...JuejinDefaultConfig.config });
   };
 
   return (
