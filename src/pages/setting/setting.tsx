@@ -1,8 +1,6 @@
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
-import { useState } from 'react';
-import { SettingBilibili } from './setting-bilibili/setting-bilibili';
-import { SettingJuejin } from './setting-juejin/setting-juejin';
+import { Outlet, useNavigate } from 'react-router-dom';
 import styles from './style.module.scss';
 
 const items: MenuProps['items'] = [
@@ -12,32 +10,30 @@ const items: MenuProps['items'] = [
   },
   {
     label: '哔哩哔哩',
-    key: 'Bilibili',
+    key: 'bilibili',
   },
   {
     label: '掘金',
-    key: 'JueJin',
+    key: 'juejin',
   },
 ];
 
 export function Setting() {
-  const [data, setData] = useState('Bilibili');
-  const onClick: MenuProps['onClick'] = v => setData(v.key);
-  let settingContet: JSX.Element | null = null;
-  switch (data) {
-    case 'Bilibili':
-      settingContet = <SettingBilibili />;
-      break;
-    case 'JueJin':
-      settingContet = <SettingJuejin />;
-      break;
-  }
+  const pathname = location.pathname;
+  const navigate = useNavigate();
+
+  const onClick: MenuProps['onClick'] = v => {
+    navigate(v.key, { relative: 'route' });
+  };
+
   return (
     <div className={styles['setting-container']}>
       <div className={styles['setting-menu']}>
-        <Menu onClick={onClick} style={{ width: 256 }} defaultSelectedKeys={['Bilibili']} mode="inline" items={items} />
+        <Menu onClick={onClick} style={{ width: 256 }} defaultSelectedKeys={[pathname.split('/').at(-1)]} mode="inline" items={items} />
       </div>
-      <div className={styles['setting-content']}>{settingContet}</div>
+      <div className={styles['setting-content']}>
+        <Outlet></Outlet>
+      </div>
     </div>
   );
 }
