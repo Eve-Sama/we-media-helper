@@ -98,7 +98,6 @@ export function Bilibili() {
         value: messageData.follow_unread + messageData.unfollow_unread,
       },
     ];
-    tempDataCardList.forEach(v => (v.value = v.value || 0));
     window.electron.store.set(`${key}-data`, { ...storageData, dataCardList: tempDataCardList });
     // 第一次运行项目的话, dataCardList 为空数组
     if (dataCardList.length === 0) {

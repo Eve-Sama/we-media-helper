@@ -47,6 +47,14 @@ const defaultConfig: JuejinConfig = {
   dataCardList: [],
 };
 
+export const JuejinCardList = [
+  { label: '评论消息', value: 'reply' },
+  { label: '点赞消息', value: 'like' },
+  { label: '关注消息', value: 'follow' },
+  { label: '系统消息', value: 'system' },
+  { label: '职位沟通', value: 'job' },
+];
+
 export function SettingJuejin() {
   const storageData = (window.electron.store.get(`${key}-data`) || defaultConfig) as JuejinConfig;
   const [config, setConfig] = useState<JuejinConfig['config']>(storageData.config);
@@ -74,14 +82,6 @@ export function SettingJuejin() {
     setConfig({ ...defaultConfig.config });
   };
 
-  const cardList = [
-    { label: '评论消息', value: 'reply' },
-    { label: '点赞消息', value: 'like' },
-    { label: '关注消息', value: 'follow' },
-    { label: '系统消息', value: 'system' },
-    { label: '职位沟通', value: 'job' },
-  ];
-
   return (
     <div className={styles['container']}>
       <Form form={form} name="basic" labelCol={{ span: 5 }} wrapperCol={{ span: 19 }} onFinish={onSubmit} autoComplete="off">
@@ -89,7 +89,7 @@ export function SettingJuejin() {
           <TextArea rows={4} placeholder="Input your cookie" />
         </Form.Item>
         <Form.Item label="分组设置">
-          <GroupSetting ref={groupSettingRef} cardList={cardList} groupList={config.groupList} />
+          <GroupSetting ref={groupSettingRef} cardList={JuejinCardList} groupList={config.groupList} />
         </Form.Item>
         <Form.Item label="刷新间隔时间" name="refreshTime">
           <TimePicker />

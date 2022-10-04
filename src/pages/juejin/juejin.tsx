@@ -4,9 +4,8 @@ import styles from './style.module.scss';
 import { CountdownDisplay } from '../common/countdown-display/countdown-display';
 import { DataCard } from '../common/data-card/data-card';
 import { getCount, getUser } from '../../request/juejin/juejin.request';
-import _ from 'lodash';
 import { Group } from '../setting/common/group-setting/group-setting';
-import { JuejinConfig } from '../setting/setting-juejin/setting-juejin';
+import { JuejinCardList, JuejinConfig } from '../setting/setting-juejin/setting-juejin';
 
 const key = 'juejin';
 const broadcastChannel = new BroadcastChannel(key);
@@ -35,37 +34,52 @@ export function JueJin() {
   }, []);
 
   useEffect(() => {
-    // if (config.notify) {
-    //   ['reply', 'system'].forEach(type => {
-    //     let target = dataCardList.find(v => v.type === type);
-    //     let currentValue: number;
-    //     let title: string;
-    //     if (type === 'reply') {
-    //       currentValue = countData['3'];
-    //       title = '评论消息';
-    //     } else if (type === 'system') {
-    //       currentValue = countData['4'];
-    //       title = '系统消息';
-    //     }
-    //     // 初始化执行时, 未请求过数据, 导致初始化的值都是空的
-    //     if (_.isNil(currentValue)) {
-    //       return;
-    //     }
-    //     if (target) {
-    //       if (currentValue > target.value) {
-    //         window.electron.ipcRenderer.send('notify', { title: `掘金 - ${title}`, url: 'https://juejin.cn/notification' });
-    //       }
-    //       target.value = currentValue;
-    //     } else {
-    //       target = {
-    //         type,
-    //         value: currentValue,
-    //       };
-    //       dataCardList.push(target);
-    //     }
-    //   });
-    //   window.electron.store.set(`${key}-data`, { ...storageData, dataCardList });
-    // }
+    if (Object.keys(countData).length === 0) {
+      return;
+    }
+    const typeList: string[] = [];
+    groupList.forEach(group =>
+      group.cardList.forEach(card => {
+        if (card.notify) {
+          typeList.push(card.type);
+        }
+      }),
+    );
+    const tempDataCardList: JuejinConfig['dataCardList'] = [
+      {
+        type: 'reply',
+        value: countData['3'],
+      },
+      {
+        type: 'like',
+        value: countData['1'],
+      },
+      {
+        type: 'follow',
+        value: countData['2'],
+      },
+      {
+        type: 'system',
+        value: countData['4'],
+      },
+      {
+        type: 'job',
+        value: countData['5'],
+      },
+    ];
+    window.electron.store.set(`${key}-data`, { ...storageData, dataCardList: tempDataCardList });
+    // 第一次运行项目的话, dataCardList 为空数组
+    if (dataCardList.length === 0) {
+      return;
+    }
+    tempDataCardList.forEach((tempDataCard, index) => {
+      const dataCard = dataCardList[index];
+      const needNotify = typeList.some(v => v === tempDataCard.type);
+      if (tempDataCard.value > dataCard.value && needNotify) {
+        const title = JuejinCardList.find(v => v.value === tempDataCard.type).label;
+        window.electron.ipcRenderer.send('notify', { title: `掘金 - ${title}`, url: 'https://juejin.cn/notification' });
+      }
+    });
   }, [countData]);
 
   useEffect(() => {
