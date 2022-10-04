@@ -38,46 +38,28 @@ export function JueJin() {
       return;
     }
     const typeList: string[] = [];
+    const tempDataCardList: JuejinConfig['dataCardList'] = [];
     groupList.forEach(group =>
       group.cardList.forEach(card => {
         if (card.notify) {
           typeList.push(card.type);
+          const data = getDataCardInfo(card.type);
+          tempDataCardList.push({
+            type: data.type,
+            value: data.totalValue,
+          });
         }
       }),
     );
-    const tempDataCardList: JuejinConfig['dataCardList'] = [
-      {
-        type: 'reply',
-        value: countData['3'],
-      },
-      {
-        type: 'like',
-        value: countData['1'],
-      },
-      {
-        type: 'follow',
-        value: countData['2'],
-      },
-      {
-        type: 'system',
-        value: countData['4'],
-      },
-      {
-        type: 'job',
-        value: countData['5'],
-      },
-    ];
     window.electron.store.set(`${key}-data`, { ...storageData, dataCardList: tempDataCardList });
-    // 第一次运行项目的话, dataCardList 为空数组
-    if (dataCardList.length === 0) {
-      return;
-    }
-    tempDataCardList.forEach((tempDataCard, index) => {
-      const dataCard = dataCardList[index];
-      const needNotify = typeList.some(v => v === tempDataCard.type);
-      if (tempDataCard.value > dataCard.value && needNotify) {
-        const title = JuejinCardList.find(v => v.value === tempDataCard.type).label;
-        window.electron.ipcRenderer.send('notify', { title: `掘金 - ${title}`, url: 'https://juejin.cn/notification' });
+    tempDataCardList.forEach(tempDataCard => {
+      const dataCard = dataCardList.find(v => v.type === tempDataCard.type);
+      if (dataCard) {
+        const needNotify = typeList.some(v => v === tempDataCard.type);
+        if (needNotify && tempDataCard.value > dataCard.value) {
+          const title = JuejinCardList.find(v => v.value === tempDataCard.type).label;
+          window.electron.ipcRenderer.send('notify', { title: `掘金 - ${title}`, url: 'https://member.bilibili.com/platform/home' });
+        }
       }
     });
   }, [countData]);
@@ -93,6 +75,8 @@ export function JueJin() {
       message.error('鉴权失败, 请打开『偏好设置』设置cookie!');
     }
   }, [retryTimes]);
+
+  const beingInit = () => Object.keys(countData).length === 0;
 
   const setDefaultTitle = () => window.electron.ipcRenderer.send(`${key}-set-title`, '掘金');
 
@@ -141,7 +125,7 @@ export function JueJin() {
   const initGroupComponents = () => {
     const res: JSX.Element[] = [];
     groupList.forEach((group, index) => {
-      const cardComponents = getCardComponents(group.cardList);
+      const cardComponents = getDataCardComponents(group.cardList);
       res.push(
         <div key={index}>
           <span className={styles['group-label']}>{group.label}</span>
@@ -154,24 +138,31 @@ export function JueJin() {
     return res;
   };
 
-  const getCardComponents = (cardList: Group['cardList']) => {
+  const getDataCardInfo = (type: string) => {
+    const target = JuejinCardList.find(v => v.value === type);
+    let dataSource: object;
+    if (['reply', 'like', 'follow', 'system', 'job'].includes(type)) {
+      dataSource = countData;
+    }
+    const changeValue = target.changeValue.reduce((pre, cur) => pre + dataSource[cur], 0);
+    const totalValue = target.totalValue.reduce((pre, cur) => pre + dataSource[cur], 0);
+    return {
+      type,
+      title: target.label,
+      changeValue: changeValue,
+      // totalValue 在 'message' 类型下, 可能为 NaN
+      totalValue: totalValue || 0,
+    };
+  };
+
+  const getDataCardComponents = (cardList: Group['cardList']) => {
     const res: JSX.Element[] = [];
+    if (beingInit()) {
+      return res;
+    }
     cardList.forEach(card => {
-      if (card.type.includes('reply')) {
-        res.push(<DataCard key="reply" title="评论消息" changeValue={0} totalValue={countData['3']}></DataCard>);
-      }
-      if (card.type.includes('like')) {
-        res.push(<DataCard key="like" title="点赞消息" changeValue={0} totalValue={countData['1']}></DataCard>);
-      }
-      if (card.type.includes('follow')) {
-        res.push(<DataCard key="follow" title="关注消息" changeValue={0} totalValue={countData['2']}></DataCard>);
-      }
-      if (card.type.includes('system')) {
-        res.push(<DataCard key="system" title="系统消息" changeValue={0} totalValue={countData['4']}></DataCard>);
-      }
-      if (card.type.includes('job')) {
-        res.push(<DataCard key="job" title="职位沟通" changeValue={0} totalValue={countData['5']}></DataCard>);
-      }
+      const data = getDataCardInfo(card.type);
+      res.push(<DataCard key={data.type} title={data.title} changeValue={data.changeValue} totalValue={data.totalValue}></DataCard>);
     });
     return res;
   };

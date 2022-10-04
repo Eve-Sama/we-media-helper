@@ -33,82 +33,36 @@ export function Bilibili() {
   }, []);
 
   useEffect(() => {
-    if (Object.keys(messageData).length === 0) {
+    if (beingInit()) {
       return;
     }
     const typeList: string[] = [];
+    const tempDataCardList: BilibiliConfig['dataCardList'] = [];
     groupList.forEach(group =>
       group.cardList.forEach(card => {
         if (card.notify) {
           typeList.push(card.type);
+          const data = getDataCardInfo(card.type);
+          tempDataCardList.push({
+            type: data.type,
+            value: data.totalValue,
+          });
         }
       }),
     );
-    const tempDataCardList: BilibiliConfig['dataCardList'] = [
-      {
-        type: 'fan',
-        value: statData.total_fans,
-      },
-      {
-        type: 'click',
-        value: statData.total_click,
-      },
-      {
-        type: 'totalReply',
-        value: statData.total_reply,
-      },
-      {
-        type: 'dm',
-        value: statData.total_dm,
-      },
-      {
-        type: 'totalLike',
-        value: statData.total_like,
-      },
-      {
-        type: 'share',
-        value: statData.total_share,
-      },
-      {
-        type: 'favorite',
-        value: statData.total_fav,
-      },
-      {
-        type: 'coin',
-        value: statData.total_coin,
-      },
-      {
-        type: 'reply',
-        value: unreadData.reply,
-      },
-      {
-        type: 'at',
-        value: unreadData.at,
-      },
-      {
-        type: 'like',
-        value: unreadData.like,
-      },
-      {
-        type: 'systemMessage',
-        value: unreadData.sys_msg,
-      },
-      {
-        type: 'message',
-        value: messageData.follow_unread + messageData.unfollow_unread,
-      },
-    ];
     window.electron.store.set(`${key}-data`, { ...storageData, dataCardList: tempDataCardList });
-    // 第一次运行项目的话, dataCardList 为空数组
-    if (dataCardList.length === 0) {
-      return;
-    }
-    tempDataCardList.forEach((tempDataCard, index) => {
-      const dataCard = dataCardList[index];
-      const needNotify = typeList.some(v => v === tempDataCard.type);
-      if (tempDataCard.value > dataCard.value && needNotify) {
-        const title = BilibiliCardList.find(v => v.value === tempDataCard.type).label;
-        window.electron.ipcRenderer.send('notify', { title: `哔哩哔哩 - ${title}`, url: 'https://member.bilibili.com/platform/home' });
+    tempDataCardList.forEach(tempDataCard => {
+      const dataCard = dataCardList.find(v => v.type === tempDataCard.type);
+      /**
+       * 需要判断 dataCard 是否存在. 因为存在一种场景, 当打开了B站面板与设置面板时, 设置面板的 dataCardList 始终是不会变化的, 而B站面板会在每次请求结束后重新设置 dataCardList
+       * 这就导致, B站面板的 dataCardList 会变而设置面板的 dataCardList 不会变. 那就有可能导致保存配置而触发的重渲染时, tempDataCardList 与 dataCardList 长度可能不一样
+       */
+      if (dataCard) {
+        const needNotify = typeList.some(v => v === tempDataCard.type);
+        if (needNotify && tempDataCard.value > dataCard.value) {
+          const title = BilibiliCardList.find(v => v.value === tempDataCard.type).label;
+          window.electron.ipcRenderer.send('notify', { title: `哔哩哔哩 - ${title}`, url: 'https://member.bilibili.com/platform/home' });
+        }
       }
     });
   }, [messageData]);
@@ -124,6 +78,8 @@ export function Bilibili() {
       message.error('鉴权失败, 请打开『偏好设置』设置cookie!');
     }
   }, [retryTimes]);
+
+  const beingInit = () => Object.keys(messageData).length === 0;
 
   const setDefaultTitle = () => window.electron.ipcRenderer.send(`${key}-set-title`, '哔哩哔哩');
 
@@ -188,7 +144,7 @@ export function Bilibili() {
   const initGroupComponents = () => {
     const res: JSX.Element[] = [];
     groupList.forEach((group, index) => {
-      const cardComponents = getCardComponents(group.cardList);
+      const cardComponents = getDataCardComponents(group.cardList);
       res.push(
         <div key={index}>
           <span className={styles['group-label']}>{group.label}</span>
@@ -201,48 +157,35 @@ export function Bilibili() {
     return res;
   };
 
-  const getCardComponents = (cardList: Group['cardList']) => {
+  const getDataCardInfo = (type: string) => {
+    const target = BilibiliCardList.find(v => v.value === type);
+    let dataSource: object;
+    if (['fan', 'click', 'totalReply', 'dm', 'totalLike', 'share', 'favorite', 'coin'].includes(type)) {
+      dataSource = statData;
+    } else if (['reply', 'at', 'like', 'systemMessage'].includes(type)) {
+      dataSource = unreadData;
+    } else if (['message'].includes(type)) {
+      dataSource = messageData;
+    }
+    const changeValue = target.changeValue.reduce((pre, cur) => pre + dataSource[cur], 0);
+    const totalValue = target.totalValue.reduce((pre, cur) => pre + dataSource[cur], 0);
+    return {
+      type,
+      title: target.label,
+      changeValue: changeValue,
+      // totalValue 在 'message' 类型下, 可能为 NaN
+      totalValue: totalValue || 0,
+    };
+  };
+
+  const getDataCardComponents = (cardList: Group['cardList']) => {
     const res: JSX.Element[] = [];
+    if (beingInit()) {
+      return res;
+    }
     cardList.forEach(card => {
-      if (card.type.includes('fan')) {
-        res.push(<DataCard key="fan" title="净增粉丝" changeValue={statData.incr_fans} totalValue={statData.total_fans}></DataCard>);
-      }
-      if (card.type.includes('click')) {
-        res.push(<DataCard key="click" title="播放量" changeValue={statData.incr_click} totalValue={statData.total_click}></DataCard>);
-      }
-      if (card.type.includes('totalReply')) {
-        res.push(<DataCard key="totalReply" title="评论" changeValue={statData.incr_reply} totalValue={statData.total_reply}></DataCard>);
-      }
-      if (card.type.includes('dm')) {
-        res.push(<DataCard key="dm" title="弹幕" changeValue={statData.incr_dm} totalValue={statData.total_dm}></DataCard>);
-      }
-      if (card.type.includes('totalLike')) {
-        res.push(<DataCard key="totalLike" title="点赞" changeValue={statData.inc_like} totalValue={statData.total_like}></DataCard>);
-      }
-      if (card.type.includes('share')) {
-        res.push(<DataCard key="share" title="分享" changeValue={statData.inc_share} totalValue={statData.total_share}></DataCard>);
-      }
-      if (card.type.includes('favorite')) {
-        res.push(<DataCard key="favorite" title="收藏" changeValue={statData.inc_fav} totalValue={statData.total_fav}></DataCard>);
-      }
-      if (card.type.includes('coin')) {
-        res.push(<DataCard key="coin" title="投币" changeValue={statData.inc_coin} totalValue={statData.total_coin}></DataCard>);
-      }
-      if (card.type.includes('reply')) {
-        res.push(<DataCard key="reply" title="回复我的" changeValue={0} totalValue={unreadData.reply}></DataCard>);
-      }
-      if (card.type.includes('at')) {
-        res.push(<DataCard key="at" title="@我的" changeValue={0} totalValue={unreadData.at}></DataCard>);
-      }
-      if (card.type.includes('like')) {
-        res.push(<DataCard key="like" title="收到的赞" changeValue={0} totalValue={unreadData.like}></DataCard>);
-      }
-      if (card.type.includes('systemMessage')) {
-        res.push(<DataCard key="systemMessage" title="系统消息" changeValue={0} totalValue={unreadData.sys_msg}></DataCard>);
-      }
-      if (card.type.includes('message')) {
-        res.push(<DataCard key="message" title="我的消息" changeValue={0} totalValue={messageData.follow_unread + messageData.unfollow_unread}></DataCard>);
-      }
+      const data = getDataCardInfo(card.type);
+      res.push(<DataCard key={data.type} title={data.title} changeValue={data.changeValue} totalValue={data.totalValue}></DataCard>);
     });
     return res;
   };

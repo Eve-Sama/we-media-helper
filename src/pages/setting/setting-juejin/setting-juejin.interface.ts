@@ -40,9 +40,9 @@ export const JuejinDefaultConfig: JuejinConfig = {
 };
 
 export const JuejinCardList = [
-  { label: '评论消息', value: 'reply' },
-  { label: '点赞消息', value: 'like' },
-  { label: '关注消息', value: 'follow' },
-  { label: '系统消息', value: 'system' },
-  { label: '职位沟通', value: 'job' },
+  { label: '评论消息', value: 'reply', changeValue: [], totalValue: ['3'] },
+  { label: '点赞消息', value: 'like', changeValue: [], totalValue: ['1'] },
+  { label: '关注消息', value: 'follow', changeValue: [], totalValue: ['2'] },
+  { label: '系统消息', value: 'system', changeValue: [], totalValue: ['4'] },
+  { label: '职位沟通', value: 'job', changeValue: [], totalValue: ['5'] },
 ];

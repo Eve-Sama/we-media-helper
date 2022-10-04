@@ -29,7 +29,7 @@ export interface GroupSettingRef {
 }
 
 interface GroupSettingProps {
-  cardList: Array<{ label: string; value: string }>;
+  cardList: Array<{ label: string; value: string; changeValue: string[]; totalValue: string[] }>;
   groupList: Group[];
 }
 
