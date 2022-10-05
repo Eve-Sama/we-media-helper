@@ -1,8 +1,9 @@
 import { Button, Divider, Form, Input, Switch, TimePicker } from 'antd';
 import moment, { Moment } from 'moment';
 import { useEffect, useRef, useState } from 'react';
-import { GroupSetting, GroupSettingRef } from '../common/group-setting/group-setting';
-import { BilibiliDefaultConfig, BilibiliConfig, BilibiliCardList } from './setting-bilibili.interface';
+import { GroupSetting } from '../common/group-setting/group-setting';
+import { GroupSettingRef } from '../common/group-setting/group.interface';
+import { BilibiliDefaultConfig, BilibiliConfig, BilibiliCardGroupList } from './setting-bilibili.interface';
 import styles from './style.module.scss';
 
 const { TextArea } = Input;
@@ -46,7 +47,7 @@ export function SettingBilibili() {
           <TextArea rows={4} placeholder="Input your cookie" />
         </Form.Item>
         <Form.Item label="分组设置">
-          <GroupSetting ref={groupSettingRef} cardList={BilibiliCardList} groupList={config.groupList} />
+          <GroupSetting ref={groupSettingRef} cardGroupList={BilibiliCardGroupList} groupList={config.groupList} />
         </Form.Item>
         <Form.Item label="刷新间隔时间" name="refreshTime">
           <TimePicker />

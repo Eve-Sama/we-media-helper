@@ -3,47 +3,28 @@ import { forwardRef, useImperativeHandle, useState } from 'react';
 import styles from './style.module.scss';
 import { v4 as uuidv4 } from 'uuid';
 import _ from 'lodash';
-const { Option } = Select;
-
-export interface Group {
-  label: string;
-  cardList: Array<{
-    /** 统计数据类型 */
-    type: string;
-    /** 数据有新增时, 弹窗提醒 */
-    notify: boolean;
-  }>;
-  uuid: string;
-  /** 每一行的列数 */
-  columnNum: number;
-}
-
-export interface GroupSettingRef {
-  getData: () => Group[];
-  /**
-   * @todo 遇到个场景问题, 暂时不知道怎么解决.
-   * GroupSetting 通过 props 拿到了 groupList, 再创建了一个 state groupListData. 之后在本组件内无论怎么操作, 修改的都是 groupListData 而不是 groupList.
-   * 那么当父组件想要重置 groupList 的时候, 好像只能通过手动调用子组件方法来重置.
-   */
-  setGroupListData: React.Dispatch<React.SetStateAction<Group[]>>;
-}
-
-interface GroupSettingProps {
-  cardList: Array<{ label: string; value: string; changeValue: string[]; totalValue: string[] }>;
-  groupList: Group[];
-}
+import { GroupSettingRef, Group, GroupSettingProps } from './group.interface';
+import { combileArrayBy } from '../../../../common/utils-function';
+const { Option, OptGroup } = Select;
 
 export const GroupSetting = forwardRef<GroupSettingRef, GroupSettingProps>((props, ref) => {
-  const { cardList, groupList } = props;
+  const { cardGroupList, groupList } = props;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [groupListData, setGroupListData] = useState(groupList);
   const [modalAction, setModalAction] = useState<'add' | 'edit'>();
   const [form] = Form.useForm();
+  const datacardList = combileArrayBy(cardGroupList, 'children');
 
-  const children: React.ReactNode[] = [];
-  cardList.forEach(v => {
-    children.push(<Option key={v.value}>{v.label}</Option>);
+  const groupElementList: React.ReactNode[] = [];
+  cardGroupList.forEach(group => {
+    const childElementList: React.ReactNode[] = [];
+    group.children.forEach(child => childElementList.push(<Option key={child.value}>{child.label}</Option>));
+    groupElementList.push(
+      <OptGroup key={group.group} label={group.group}>
+        {childElementList}
+      </OptGroup>,
+    );
   });
 
   useImperativeHandle(ref, () => ({
@@ -96,7 +77,7 @@ export const GroupSetting = forwardRef<GroupSettingRef, GroupSettingProps>((prop
     groupListData.forEach((item, groupIndex) => {
       const tagContent = item.cardList.map((card, cardIndex) => (
         <Tag key={cardIndex} className={styles['tag']} onClick={() => toggleNotify(item.uuid, card.type)}>
-          <span>{cardList.find(v => v.value === card.type).label}</span>
+          <span>{datacardList.find(v => v.value === card.type).label}</span>
           <span className={styles['notify']} style={{ background: card.notify ? '#87d068' : 'gray' }}></span>
         </Tag>
       ));
@@ -164,7 +145,7 @@ export const GroupSetting = forwardRef<GroupSettingRef, GroupSettingProps>((prop
           </Form.Item>
           <Form.Item label="卡片列表" name="cardList" rules={[{ required: true, validator: cardListValidator }]}>
             <Select mode="multiple" allowClear style={{ width: '100%' }} placeholder="每个数据统计类别都是独立的卡片">
-              {children}
+              {groupElementList}
             </Select>
           </Form.Item>
           <Form.Item label="单行卡片数" name="columnNum" rules={[{ required: true, message: '卡片数不可为空' }]}>

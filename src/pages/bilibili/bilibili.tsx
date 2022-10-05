@@ -4,8 +4,9 @@ import { Spin, message } from 'antd';
 import styles from './style.module.scss';
 import { CountdownDisplay } from '../common/countdown-display/countdown-display';
 import { DataCard } from '../common/data-card/data-card';
-import { Group } from '../setting/common/group-setting/group-setting';
-import { BilibiliCardList, BilibiliConfig } from '../setting/setting-bilibili/setting-bilibili.interface';
+import { Group } from '../setting/common/group-setting/group.interface';
+import { BilibiliCardGroupList, BilibiliConfig } from '../setting/setting-bilibili/setting-bilibili.interface';
+import { combileArrayBy } from '../../common/utils-function';
 
 const key = 'bilibili';
 const broadcastChannel = new BroadcastChannel(key);
@@ -22,6 +23,7 @@ export function Bilibili() {
   const dataCardList = storageData.dataCardList;
   const groupList = storageData.config.groupList;
   const config = storageData.config;
+  const bilibiliCardList = combileArrayBy(BilibiliCardGroupList, 'children');
 
   useEffect(function listenBrodcast() {
     broadcastChannel.onmessage = v => {
@@ -61,7 +63,7 @@ export function Bilibili() {
         if (dataCard) {
           const needNotify = typeList.some(v => v === tempDataCard.type);
           if (needNotify && tempDataCard.value > dataCard.value) {
-            const title = BilibiliCardList.find(v => v.value === tempDataCard.type).label;
+            const title = bilibiliCardList.find(v => v.value === tempDataCard.type).label;
             window.electron.ipcRenderer.send('notify', { title: `哔哩哔哩 - ${title}`, url: 'https://member.bilibili.com/platform/home' });
           }
         }
@@ -164,7 +166,7 @@ export function Bilibili() {
   };
 
   const getDataCardInfo = (type: string) => {
-    const target = BilibiliCardList.find(v => v.value === type);
+    const target = bilibiliCardList.find(v => v.value === type);
     let dataSource: object;
     if (['fan', 'click', 'totalReply', 'dm', 'totalLike', 'share', 'favorite', 'coin'].includes(type)) {
       dataSource = statData;

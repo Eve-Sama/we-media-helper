@@ -1,4 +1,4 @@
-import { Group } from '../common/group-setting/group-setting';
+import { DataCardGroup, Group } from '../common/group-setting/group.interface';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface JuejinConfig {
@@ -39,10 +39,15 @@ export const JuejinDefaultConfig: JuejinConfig = {
   dataCardList: [],
 };
 
-export const JuejinCardList = [
-  { label: '评论消息', value: 'reply', changeValue: [], totalValue: ['3'] },
-  { label: '点赞消息', value: 'like', changeValue: [], totalValue: ['1'] },
-  { label: '关注消息', value: 'follow', changeValue: [], totalValue: ['2'] },
-  { label: '系统消息', value: 'system', changeValue: [], totalValue: ['4'] },
-  { label: '职位沟通', value: 'job', changeValue: [], totalValue: ['5'] },
+export const JuejinCardGroupList: DataCardGroup[] = [
+  {
+    group: '实时交互',
+    children: [
+      { label: '评论消息', value: 'reply', changeValue: [], totalValue: ['3'] },
+      { label: '点赞消息', value: 'like', changeValue: [], totalValue: ['1'] },
+      { label: '关注消息', value: 'follow', changeValue: [], totalValue: ['2'] },
+      { label: '系统消息', value: 'system', changeValue: [], totalValue: ['4'] },
+      { label: '职位沟通', value: 'job', changeValue: [], totalValue: ['5'] },
+    ],
+  },
 ];

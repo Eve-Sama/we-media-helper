@@ -4,8 +4,9 @@ import styles from './style.module.scss';
 import { CountdownDisplay } from '../common/countdown-display/countdown-display';
 import { DataCard } from '../common/data-card/data-card';
 import { getCount, getUser } from '../../request/juejin/juejin.request';
-import { Group } from '../setting/common/group-setting/group-setting';
-import { JuejinConfig, JuejinCardList } from '../setting/setting-juejin/setting-juejin.interface';
+import { Group } from '../setting/common/group-setting/group.interface';
+import { JuejinConfig, JuejinCardGroupList } from '../setting/setting-juejin/setting-juejin.interface';
+import { combileArrayBy } from '../../common/utils-function';
 
 const key = 'juejin';
 const broadcastChannel = new BroadcastChannel(key);
@@ -20,6 +21,7 @@ export function JueJin() {
   const dataCardList = storageData.dataCardList;
   const groupList = storageData.config.groupList;
   const config = storageData.config;
+  const juejinCardList = combileArrayBy(JuejinCardGroupList, 'children');
 
   useEffect(function listenBrodcast() {
     broadcastChannel.onmessage = v => {
@@ -55,7 +57,7 @@ export function JueJin() {
         if (dataCard) {
           const needNotify = typeList.some(v => v === tempDataCard.type);
           if (needNotify && tempDataCard.value > dataCard.value) {
-            const title = JuejinCardList.find(v => v.value === tempDataCard.type).label;
+            const title = juejinCardList.find(v => v.value === tempDataCard.type).label;
             window.electron.ipcRenderer.send('notify', { title: `掘金 - ${title}`, url: 'https://member.bilibili.com/platform/home' });
           }
         }
@@ -142,7 +144,7 @@ export function JueJin() {
   };
 
   const getDataCardInfo = (type: string) => {
-    const target = JuejinCardList.find(v => v.value === type);
+    const target = juejinCardList.find(v => v.value === type);
     let dataSource: object;
     if (['reply', 'like', 'follow', 'system', 'job'].includes(type)) {
       dataSource = countData;

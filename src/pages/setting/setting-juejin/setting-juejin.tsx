@@ -1,8 +1,9 @@
 import { Button, Divider, Form, Input, Switch, TimePicker } from 'antd';
 import moment, { Moment } from 'moment';
 import { useEffect, useRef, useState } from 'react';
-import { GroupSettingRef, GroupSetting } from '../common/group-setting/group-setting';
-import { JuejinDefaultConfig, JuejinConfig, JuejinCardList } from './setting-juejin.interface';
+import { GroupSetting } from '../common/group-setting/group-setting';
+import { GroupSettingRef } from '../common/group-setting/group.interface';
+import { JuejinDefaultConfig, JuejinConfig, JuejinCardGroupList } from './setting-juejin.interface';
 import styles from './style.module.scss';
 
 const { TextArea } = Input;
@@ -46,7 +47,7 @@ export function SettingJuejin() {
           <TextArea rows={4} placeholder="Input your cookie" />
         </Form.Item>
         <Form.Item label="分组设置">
-          <GroupSetting ref={groupSettingRef} cardList={JuejinCardList} groupList={config.groupList} />
+          <GroupSetting ref={groupSettingRef} cardGroupList={JuejinCardGroupList} groupList={config.groupList} />
         </Form.Item>
         <Form.Item label="刷新间隔时间" name="refreshTime">
           <TimePicker />
