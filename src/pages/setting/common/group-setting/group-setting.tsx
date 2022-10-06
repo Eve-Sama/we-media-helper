@@ -1,5 +1,5 @@
 import { Form, Input, InputNumber, List, Modal, Popconfirm, Select, Tag } from 'antd';
-import { forwardRef, useImperativeHandle, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import styles from './style.module.scss';
 import { v4 as uuidv4 } from 'uuid';
 import _ from 'lodash';
@@ -14,7 +14,7 @@ export const GroupSetting = forwardRef<GroupSettingRef, GroupSettingProps>((prop
   const [groupListData, setGroupListData] = useState(groupList);
   const [modalAction, setModalAction] = useState<'add' | 'edit'>();
   const [form] = Form.useForm();
-  const datacardList = combileArrayBy(cardGroupList, 'children');
+  const dataCardList = combileArrayBy(cardGroupList, 'children');
 
   const groupElementList: React.ReactNode[] = [];
   cardGroupList.forEach(group => {
@@ -31,6 +31,13 @@ export const GroupSetting = forwardRef<GroupSettingRef, GroupSettingProps>((prop
     getData,
     setGroupListData,
   }));
+
+  useEffect(function checkCardGroupValid() {
+    const invalid = dataCardList.some(card => dataCardList.filter(v => v.value === card.value).length > 1);
+    if (invalid) {
+      throw new Error('dataCardList中, 不允许有相同的value值!');
+    }
+  }, []);
 
   const getData = () => {
     return groupListData;
@@ -77,7 +84,7 @@ export const GroupSetting = forwardRef<GroupSettingRef, GroupSettingProps>((prop
     groupListData.forEach((item, groupIndex) => {
       const tagContent = item.cardList.map((card, cardIndex) => (
         <Tag key={cardIndex} className={styles['tag']} onClick={() => toggleNotify(item.uuid, card.type)}>
-          <span>{datacardList.find(v => v.value === card.type).label}</span>
+          <span>{dataCardList.find(v => v.value === card.type).label}</span>
           <span className={styles['notify']} style={{ background: card.notify ? '#87d068' : 'gray' }}></span>
         </Tag>
       ));

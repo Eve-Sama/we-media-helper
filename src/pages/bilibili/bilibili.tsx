@@ -61,8 +61,7 @@ export function Bilibili() {
          * 这就导致, B站面板的 dataCardList 会变而设置面板的 dataCardList 不会变. 那就有可能导致保存配置而触发的重渲染时, tempDataCardList 与 dataCardList 长度可能不一样
          */
         if (dataCard) {
-          const needNotify = typeList.some(v => v === tempDataCard.type);
-          if (needNotify && tempDataCard.value > dataCard.value) {
+          if (tempDataCard.value > dataCard.value) {
             const title = bilibiliCardList.find(v => v.value === tempDataCard.type).label;
             window.electron.ipcRenderer.send('notify', { title: `哔哩哔哩 - ${title}`, url: 'https://member.bilibili.com/platform/home' });
           }

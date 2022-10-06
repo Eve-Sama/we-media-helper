@@ -41,6 +41,15 @@ export const JuejinDefaultConfig: JuejinConfig = {
 
 export const JuejinCardGroupList: DataCardGroup[] = [
   {
+    group: '数据总量',
+    children: [
+      { label: '点赞总量', value: 'likeTotal', changeValue: [], totalValue: ['got_digg_count'] },
+      { label: '阅读总量', value: 'read', changeValue: [], totalValue: ['got_view_count'] },
+      { label: '掘力值', value: 'power', changeValue: [], totalValue: ['power'] },
+      { label: '粉丝总量', value: 'fan', changeValue: [], totalValue: ['follower_count'] },
+    ],
+  },
+  {
     group: '实时交互',
     children: [
       { label: '评论消息', value: 'reply', changeValue: [], totalValue: ['3'] },

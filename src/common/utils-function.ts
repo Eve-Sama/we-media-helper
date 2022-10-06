@@ -8,6 +8,6 @@
               const target = combileArrayBy(arr, 'chidlren'); // [1, 2, 3, 4, 5, 6]         
             ```
  */
-export function combileArrayBy<T>(array: T[], key: keyof T) {
+export function combileArrayBy<T extends any[], K extends keyof T[number]>(array: T, key: K): T[number][K] {
   return array.map(v => v[key]).reduce((pre, cur) => pre.concat(cur), []);
 }

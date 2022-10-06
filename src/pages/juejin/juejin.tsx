@@ -3,7 +3,7 @@ import { Spin, message } from 'antd';
 import styles from './style.module.scss';
 import { CountdownDisplay } from '../common/countdown-display/countdown-display';
 import { DataCard } from '../common/data-card/data-card';
-import { getCount, getUser } from '../../request/juejin/juejin.request';
+import { getCount, getUser, getUserBaiscInfo } from '../../request/juejin/juejin.request';
 import { Group } from '../setting/common/group-setting/group.interface';
 import { JuejinConfig, JuejinCardGroupList } from '../setting/setting-juejin/setting-juejin.interface';
 import { combileArrayBy } from '../../common/utils-function';
@@ -13,6 +13,7 @@ const broadcastChannel = new BroadcastChannel(key);
 
 export function JueJin() {
   const [countData, setCountData] = useState<any>({});
+  const [basicInfoData, setBasicInfoData] = useState<any>({});
   const [loading, setLoading] = useState(true);
   const [retryTimes, setRetryTimes] = useState(0);
   const countdownRef = useRef<{ startCountdown: () => void }>(null);
@@ -34,7 +35,7 @@ export function JueJin() {
 
   useEffect(
     function notify() {
-      if (Object.keys(countData).length === 0) {
+      if (beingInit()) {
         return;
       }
       const typeList: string[] = [];
@@ -54,9 +55,12 @@ export function JueJin() {
       window.electron.store.set(`${key}-data`, { ...storageData, dataCardList: tempDataCardList });
       tempDataCardList.forEach(tempDataCard => {
         const dataCard = dataCardList.find(v => v.type === tempDataCard.type);
+        /**
+         * 需要判断 dataCard 是否存在. 因为存在一种场景, 当打开了B站面板与设置面板时, 设置面板的 dataCardList 始终是不会变化的, 而B站面板会在每次请求结束后重新设置 dataCardList
+         * 这就导致, B站面板的 dataCardList 会变而设置面板的 dataCardList 不会变. 那就有可能导致保存配置而触发的重渲染时, tempDataCardList 与 dataCardList 长度可能不一样
+         */
         if (dataCard) {
-          const needNotify = typeList.some(v => v === tempDataCard.type);
-          if (needNotify && tempDataCard.value > dataCard.value) {
+          if (tempDataCard.value > dataCard.value) {
             const title = juejinCardList.find(v => v.value === tempDataCard.type).label;
             window.electron.ipcRenderer.send('notify', { title: `掘金 - ${title}`, url: 'https://member.bilibili.com/platform/home' });
           }
@@ -88,12 +92,12 @@ export function JueJin() {
   const loadData = () => {
     setLoading(true);
     setRetryTimes(0);
-    Promise.all([getCount(), getUser()])
+    Promise.all([getCount(), getUser(), getUserBaiscInfo()])
       .then(
         v => {
           let showError = false;
-          // 处理统计数据
-          const [tempCountData, tempUserData] = v;
+          // 处理实时交互数据
+          const [tempCountData, tempUserData, tempUserBasicInfoData] = v;
           const responseCountData = tempCountData.data;
           if (responseCountData.err_no === 0) {
             setCountData(responseCountData.data.count);
@@ -109,6 +113,15 @@ export function JueJin() {
             setDefaultTitle();
             showError = true;
           }
+          // 处理统计数据
+          const responseUserBasicInfoData = tempUserBasicInfoData.data;
+          if (responseUserBasicInfoData.err_no === 0) {
+            setBasicInfoData(responseUserBasicInfoData.data);
+          } else {
+            setBasicInfoData({});
+            showError = true;
+          }
+
           // 统一报错
           if (showError) {
             handleRequestError();
@@ -148,6 +161,8 @@ export function JueJin() {
     let dataSource: object;
     if (['reply', 'like', 'follow', 'system', 'job'].includes(type)) {
       dataSource = countData;
+    } else if (['likeTotal', 'read', 'power', 'fan'].includes(type)) {
+      dataSource = basicInfoData;
     }
     const changeValue = target.changeValue.reduce((pre, cur) => pre + dataSource[cur], 0);
     const totalValue = target.totalValue.reduce((pre, cur) => pre + dataSource[cur], 0);
