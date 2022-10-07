@@ -63,7 +63,7 @@ export function Bilibili() {
         if (dataCard) {
           if (tempDataCard.value > dataCard.value) {
             const title = bilibiliCardList.find(v => v.value === tempDataCard.type).label;
-            window.electron.ipcRenderer.send('notify', { title: `哔哩哔哩 - ${title}`, url: 'https://member.bilibili.com/platform/home' });
+            window.electron.ipcRenderer.send('notify', { title: `哔哩哔哩 - ${title}`, url: 'https://message.bilibili.com/#/reply' });
           }
         }
       });

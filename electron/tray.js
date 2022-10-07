@@ -41,36 +41,31 @@ function initTray() {
       click: () =>
         trayClick('setting/bilibili', {
           width: 800,
-          minWidth: 800,
-          maxWidth: 800,
-          height: 1300,
-          resizable: true,
+          height: 700,
+          resizable: false,
           fullscreenable: false,
           title: '偏好设置',
         }),
     },
     { type: 'separator' },
+    // {
+    //   label: '更多',
+    //   submenu: [{}],
+    // },
     {
-      label: '更多',
+      label: '作者',
       submenu: [
         {
-          label: '作者',
-          submenu: [
-            {
-              label: 'B站',
-              click: () => shell.openExternal('https://space.bilibili.com/29191310'),
-            },
-            {
-              label: '掘金',
-              click: () => shell.openExternal('https://juejin.cn/user/2700056290417133'),
-            },
-          ],
+          label: 'B站',
+          click: () => shell.openExternal('https://space.bilibili.com/29191310'),
         },
         {
-          label: '关于软件',
-          click: () => {
-            // trayClick('about', '关于软件');
-          },
+          label: '掘金',
+          click: () => shell.openExternal('https://juejin.cn/user/2700056290417133'),
+        },
+        {
+          label: '知乎',
+          click: () => shell.openExternal('https://www.zhihu.com/people/Eve.AngularJS'),
         },
       ],
     },

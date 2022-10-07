@@ -62,7 +62,7 @@ export function JueJin() {
         if (dataCard) {
           if (tempDataCard.value > dataCard.value) {
             const title = juejinCardList.find(v => v.value === tempDataCard.type).label;
-            window.electron.ipcRenderer.send('notify', { title: `掘金 - ${title}`, url: 'https://member.bilibili.com/platform/home' });
+            window.electron.ipcRenderer.send('notify', { title: `掘金 - ${title}`, url: 'https://juejin.cn/notification' });
           }
         }
       });
