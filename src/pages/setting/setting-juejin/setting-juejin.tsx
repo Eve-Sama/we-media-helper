@@ -55,18 +55,17 @@ export function SettingJuejin() {
         <Form.Item label="显示倒计时" name="showCountdown" valuePropName="checked" tooltip={{ title: () => '只影响显示, 不影响倒计时刷新功能' }}>
           <Switch />
         </Form.Item>
-        <Form.Item label="动态通知" name="notify" valuePropName="checked">
-          <Switch />
-        </Form.Item>
       </Form>
-      <Divider></Divider>
-      <div className={styles['btn-container']}>
-        <Button type="primary" onClick={() => form.submit()}>
-          应用
-        </Button>
-        <Button type="default" onClick={() => resetConfig()}>
-          恢复默认
-        </Button>
+      <div className="footer-container">
+        <Divider></Divider>
+        <div className={styles['btn-container']}>
+          <Button type="primary" onClick={() => form.submit()}>
+            应用
+          </Button>
+          <Button type="default" onClick={() => resetConfig()}>
+            恢复默认
+          </Button>
+        </div>
       </div>
     </div>
   );
