@@ -20,6 +20,29 @@ export const JuejinDefaultConfig: JuejinConfig = {
     showCountdown: true,
     groupList: [
       {
+        label: '基础数据',
+        cardList: [
+          {
+            type: 'likeTotal',
+            notify: false,
+          },
+          {
+            type: 'read',
+            notify: false,
+          },
+          {
+            type: 'power',
+            notify: false,
+          },
+          {
+            type: 'fan',
+            notify: false,
+          },
+        ],
+        uuid: uuidv4(),
+        columnNum: 4,
+      },
+      {
         label: '消息通知',
         cardList: [
           {
