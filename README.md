@@ -1,7 +1,27 @@
-## platform-listener
-(研发中)间隔特定时间抓取B站、掘金等多平台数据.
+## 业务背景
+
+![image-20221016203726186](https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210162037214.png)
+
+该软件只用于解决我自己的痛点. 因为我经常在B站、掘金发布一些技术相关的作品, 有些社区朋友会给我留言和我互动. 但是一直以来都没有特别好的渠道能够第一时间获取评论动态. 只能访问站点才能知道, 这非常的不方便. 因此写了个软件, 每隔一定时间自动抓取数据, 并且可以自定义很多内容, 直接看图吧.
+
+<img src="https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210162029786.png" alt="image-20221016202949743" style="zoom:50%;" />
+
+<img src="https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210162030809.png" alt="image-20221016203003789" style="zoom:50%;" />
+
+这是数据大屏界面, 目前只实现了掘金和B站, 其他的站点暂时没有精力实现. 我们可以在偏好设置中, 进行相关设置.
+
+<img src="https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210162031268.png" alt="image-20221016203140231" style="zoom:50%;" />
+
+<img src="https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210162032234.png" alt="image-20221016203205201" style="zoom:50%;" />
+
+卡片中的绿点, 就是有新的数据更新时, 进行桌面通知.
+
+<img src="https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210162034542.png" alt="image-20221016203446518" style="zoom:50%;" />
+
+注意! 目前只能在本地开发模式使用, 未发布dmg or exe, 因为打包构建目前存在一点问题无法解决,详情可见: [Cannot find module 'electron-store' when packup DMG via electron](https://stackoverflow.com/questions/74086169/cannot-find-module-electron-store-when-packup-dmg-via-electron)
 
 ## roadmap
+
  - [x] 自定义卡片通知.
  - [x] 自定义列数.
  - [x] 设置恢复默认配置.
@@ -9,8 +29,10 @@
  - [ ] 将 Electron 改版为 TypeScript 版本(试过2次了, 老是会出问题).
  - [ ] 分组排序.
  - [ ] 卡片排序.
- - [ ] 制作欢迎页
+ - [ ] 制作欢迎页.
  - [ ] 为各个窗口设置合适的尺寸大小.
+ - [ ] 自定义通知音效(QQ、微信、系统跟随、剑三等).
+ - [ ] 区分开发与生产环境, 用于设置一些默认配置, 如console
 
 ## 本地开发
 
@@ -18,7 +40,8 @@
 npm run start
 ```
 
-目前本地开发都是正常的, 一键启动.
+目前本地开发都是正常的, 一键启动. 很舒服
+
 ## 打包流程(存在问题, 简单记录下, 方便后期尝试)
 
 执行`npm run build:web`, 会生成一个`build`目录, 拷贝`package.json`与`electron`文件夹至`build`中. 修改图标路径
@@ -33,11 +56,12 @@ browserWindow.loadURL(xxx)
 ```
 之后再执行
 ```bash
+cd build
 npx electron-packager . --overwrite
 npx electron-installer-dmg ./platform-listener-darwin-arm64/platform-listener.app platform-listener --overwrite
 ```
 
 ### 打包 Mac DMG 遇到的问题
 
- - cannot find module 'electron-store' require stack
- - browserWindow.loadURL 的地址怎么写都无法正常访问页面
+ - cannot find module 'electron-store' require stack(前文的stack overflow链接)
+ - browserWindow.loadURL 的地址怎么写都无法正常访问页面(也许用哈希路由可以解决, 尚未验证)

@@ -19,7 +19,7 @@ const items: MenuProps['items'] = [
 ];
 
 export function Setting() {
-  const pathname = location.pathname;
+  const pathname = location.hash;
   const navigate = useNavigate();
 
   const onClick: MenuProps['onClick'] = v => {
