@@ -73,14 +73,23 @@ export function Bilibili() {
 
   useEffect(
     function retryRequest() {
-      if (retryTimes > 0 && retryTimes < 3) {
-        message.error(`鉴权失败, 3秒后将重试(${retryTimes}/3).`);
-        setTimeout(() => {
-          loadData();
-        }, 3 * 1000);
-      }
-      if (retryTimes === 3) {
-        message.error('鉴权失败, 请打开『偏好设置』设置cookie!');
+      console.log(retryTimes, `retryTimes`);
+      switch (retryTimes) {
+        case 0:
+          break;
+        case 1:
+        case 2:
+          message.error(`鉴权失败, 3秒后将重试(${retryTimes}/3).`);
+          setTimeout(() => {
+            loadData();
+          }, 3 * 1000);
+          break;
+        case 3:
+          message.error('鉴权失败, 请打开『偏好设置』设置cookie!');
+          break;
+        default:
+          message.error('鉴权失败, 请打开『偏好设置』设置cookie!');
+          break;
       }
     },
     [retryTimes],
@@ -92,7 +101,6 @@ export function Bilibili() {
 
   const loadData = () => {
     setLoading(true);
-    setRetryTimes(0);
     Promise.all([getStat(), getAccount(), getUnread(), getMessage()])
       .then(
         v => {
