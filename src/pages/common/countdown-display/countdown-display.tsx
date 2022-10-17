@@ -1,5 +1,5 @@
 import { Divider, Statistic } from 'antd';
-import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import { forwardRef, useImperativeHandle, useState } from 'react';
 import styles from './style.module.scss';
 import { useDebounceFn } from 'ahooks';
 
@@ -12,11 +12,10 @@ export interface CountdownDisplayRef {
 
 interface CountdownDisplayProps {
   loadData: () => void;
-  refreshTime: string;
 }
 
 export const CountdownDisplay = forwardRef<CountdownDisplayRef, CountdownDisplayProps>((props, ref) => {
-  const { loadData, refreshTime } = props;
+  const { loadData } = props;
 
   const [countdownValue, setCountdownValue] = useState<number>(0);
   const [mode, setMode] = useState<'normal' | 'error'>('normal');
@@ -39,10 +38,6 @@ export const CountdownDisplay = forwardRef<CountdownDisplayRef, CountdownDisplay
     setMode: (mode: 'error' | 'normal') => setMode(mode),
     startCountdown: (refreshTime: string) => startCountdown(refreshTime),
   }));
-
-  useEffect(() => {
-    startCountdown(refreshTime);
-  }, []);
 
   return (
     <div className={styles['container']}>

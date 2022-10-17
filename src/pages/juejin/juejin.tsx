@@ -18,16 +18,26 @@ export function JueJin() {
   const [retryTimes, setRetryTimes] = useState(0);
   const countdownRef = useRef<CountdownDisplayRef>(null);
 
-  const storageData = window.electron.store.get(`${key}-data`) as JuejinConfig;
-  const dataCardList = storageData.dataCardList;
-  const groupList = storageData.config.groupList;
-  const config = storageData.config;
+  let storageData: JuejinConfig;
+  let dataCardList: JuejinConfig['dataCardList'];
+  let groupList: JuejinConfig['config']['groupList'];
+  let config: JuejinConfig['config'];
   const juejinCardList = combileArrayBy(JuejinCardGroupList, 'children');
   const maxRequestTimes = 3;
 
+  const updateStorageData = () => {
+    storageData = window.electron.store.get(`${key}-data`) as JuejinConfig;
+    dataCardList = storageData.dataCardList;
+    groupList = storageData.config.groupList;
+    config = storageData.config;
+  };
+  updateStorageData();
+
   useEffect(function listenBrodcast() {
+    setLoading(true);
     broadcastChannel.onmessage = v => {
       if (v.data === `${key}-init`) {
+        updateStorageData();
         loadData();
       }
     };
@@ -203,7 +213,7 @@ export function JueJin() {
   return (
     <div className={styles['container']}>
       <div style={{ display: config.showCountdown ? 'flex' : 'none' }}>
-        <CountdownDisplay loadData={loadData} refreshTime={config.refreshTime} ref={countdownRef} />
+        <CountdownDisplay loadData={loadData} ref={countdownRef} />
       </div>
       <Spin tip="Loading..." spinning={loading}>
         <div className={styles['group-container']}>{initGroupComponents()}</div>

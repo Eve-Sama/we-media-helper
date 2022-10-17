@@ -19,16 +19,26 @@ export function Bilibili() {
   const [retryTimes, setRetryTimes] = useState(0);
   const countdownRef = useRef<CountdownDisplayRef>(null);
 
-  const storageData = window.electron.store.get(`${key}-data`) as BilibiliConfig;
-  const dataCardList = storageData.dataCardList;
-  const groupList = storageData.config.groupList;
-  const config = storageData.config;
+  let storageData: BilibiliConfig;
+  let dataCardList: BilibiliConfig['dataCardList'];
+  let groupList: BilibiliConfig['config']['groupList'];
+  let config: BilibiliConfig['config'];
   const bilibiliCardList = combileArrayBy(BilibiliCardGroupList, 'children');
   const maxRequestTimes = 3;
 
+  const updateStorageData = () => {
+    storageData = window.electron.store.get(`${key}-data`) as BilibiliConfig;
+    dataCardList = storageData.dataCardList;
+    groupList = storageData.config.groupList;
+    config = storageData.config;
+  };
+  updateStorageData();
+
   useEffect(function listenBrodcast() {
+    setLoading(true);
     broadcastChannel.onmessage = v => {
       if (v.data === `${key}-init`) {
+        updateStorageData();
         loadData();
       }
     };
@@ -212,7 +222,7 @@ export function Bilibili() {
   return (
     <div className={styles['bilibili-container']}>
       <div style={{ display: config.showCountdown ? 'flex' : 'none' }}>
-        <CountdownDisplay loadData={loadData} refreshTime={config.refreshTime} ref={countdownRef} />
+        <CountdownDisplay loadData={loadData} ref={countdownRef} />
       </div>
       <Spin tip="Loading..." spinning={loading}>
         <div className={styles['group-container']}>{initGroupComponents()}</div>
