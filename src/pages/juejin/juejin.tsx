@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Spin, message } from 'antd';
 import styles from './style.module.scss';
-import { CountdownDisplay } from '../common/countdown-display/countdown-display';
+import { CountdownDisplay, CountdownDisplayRef } from '../common/countdown-display/countdown-display';
 import { DataCard } from '../common/data-card/data-card';
 import { getCount, getUser, getUserBaiscInfo } from '../../request/juejin/juejin.request';
 import { Group } from '../setting/common/group-setting/group.interface';
@@ -16,13 +16,14 @@ export function JueJin() {
   const [basicInfoData, setBasicInfoData] = useState<any>({});
   const [loading, setLoading] = useState(true);
   const [retryTimes, setRetryTimes] = useState(0);
-  const countdownRef = useRef<{ startCountdown: () => void }>(null);
+  const countdownRef = useRef<CountdownDisplayRef>(null);
 
   const storageData = window.electron.store.get(`${key}-data`) as JuejinConfig;
   const dataCardList = storageData.dataCardList;
   const groupList = storageData.config.groupList;
   const config = storageData.config;
   const juejinCardList = combileArrayBy(JuejinCardGroupList, 'children');
+  const maxRequestTimes = 3;
 
   useEffect(function listenBrodcast() {
     broadcastChannel.onmessage = v => {
@@ -72,14 +73,22 @@ export function JueJin() {
 
   useEffect(
     function retryRequest() {
-      if (retryTimes > 0 && retryTimes < 3) {
-        message.error(`鉴权失败, 3秒后将重试(${retryTimes}/3).`);
-        setTimeout(() => {
-          loadData();
-        }, 3 * 1000);
-      }
-      if (retryTimes === 3) {
-        message.error('鉴权失败, 请打开『偏好设置』设置cookie!');
+      switch (retryTimes) {
+        case 0:
+          break;
+        case 1:
+        case 2:
+          message.error(`鉴权失败, 3秒后将重试(${retryTimes}/3).`);
+          setTimeout(() => {
+            loadData();
+          }, 3 * 1000);
+          break;
+        case 3:
+          message.error('鉴权失败, 请打开『偏好设置』设置cookie!');
+          break;
+        default:
+          message.error('鉴权失败, 请打开『偏好设置』设置cookie!');
+          break;
       }
     },
     [retryTimes],
@@ -125,9 +134,12 @@ export function JueJin() {
           // 统一报错
           if (showError) {
             handleRequestError();
+            countdownRef.current?.setMode('error');
+            countdownRef.current?.startCountdown('0:0:0');
           } else {
             setRetryTimes(0);
-            countdownRef.current?.startCountdown();
+            countdownRef.current?.setMode('normal');
+            countdownRef.current?.startCountdown(config.refreshTime);
           }
         },
         () => handleRequestError(),
@@ -136,8 +148,10 @@ export function JueJin() {
   };
 
   const handleRequestError: () => void = () => {
-    setRetryTimes(retryTimes + 1);
-    setDefaultTitle();
+    if (retryTimes < maxRequestTimes) {
+      setRetryTimes(retryTimes + 1);
+      setDefaultTitle();
+    }
   };
 
   const initGroupComponents = () => {

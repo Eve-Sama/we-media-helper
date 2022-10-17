@@ -3,5 +3,39 @@
   .countdown-container {
     cursor: pointer;
     user-select: none;
+    .nomal {
+      :global(.ant-statistic-content-value) {
+        color: rgba(0, 0, 0, 0.85);
+      }
+    }
+    .error {
+      :global(.ant-statistic-content-value) {
+        color: #ff4d4f;
+        animation-name: animation;
+        animation-direction: alternate;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+        animation-duration: 1.5s;
+        @keyframes animation {
+          0% {
+            transform: scale(0.9);
+            opacity: 0.1;
+          }
+          25% {
+            opacity: 0.25;
+          }
+          50% {
+            opacity: 0.5;
+          }
+          75% {
+            opacity: 0.75;
+          }
+          100% {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+      }
+    }
   }
 }

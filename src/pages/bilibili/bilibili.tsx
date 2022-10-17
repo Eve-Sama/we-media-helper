@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { getAccount, getMessage, getStat, getUnread } from '../../request';
 import { Spin, message } from 'antd';
 import styles from './style.module.scss';
-import { CountdownDisplay } from '../common/countdown-display/countdown-display';
+import { CountdownDisplayRef, CountdownDisplay } from '../common/countdown-display/countdown-display';
 import { DataCard } from '../common/data-card/data-card';
 import { Group } from '../setting/common/group-setting/group.interface';
 import { BilibiliCardGroupList, BilibiliConfig } from '../setting/setting-bilibili/setting-bilibili.interface';
@@ -17,13 +17,14 @@ export function Bilibili() {
   const [messageData, setMessageData] = useState<any>({});
   const [loading, setLoading] = useState(true);
   const [retryTimes, setRetryTimes] = useState(0);
-  const countdownRef = useRef<{ startCountdown: () => void }>(null);
+  const countdownRef = useRef<CountdownDisplayRef>(null);
 
   const storageData = window.electron.store.get(`${key}-data`) as BilibiliConfig;
   const dataCardList = storageData.dataCardList;
   const groupList = storageData.config.groupList;
   const config = storageData.config;
   const bilibiliCardList = combileArrayBy(BilibiliCardGroupList, 'children');
+  const maxRequestTimes = 3;
 
   useEffect(function listenBrodcast() {
     broadcastChannel.onmessage = v => {
@@ -73,16 +74,13 @@ export function Bilibili() {
 
   useEffect(
     function retryRequest() {
-      console.log(retryTimes, `retryTimes`);
       switch (retryTimes) {
         case 0:
           break;
         case 1:
         case 2:
           message.error(`鉴权失败, 3秒后将重试(${retryTimes}/3).`);
-          setTimeout(() => {
-            loadData();
-          }, 3 * 1000);
+          setTimeout(loadData, 3 * 1000);
           break;
         case 3:
           message.error('鉴权失败, 请打开『偏好设置』设置cookie!');
@@ -141,9 +139,12 @@ export function Bilibili() {
           // 统一报错
           if (showError) {
             handleRequestError();
+            countdownRef.current?.setMode('error');
+            countdownRef.current?.startCountdown('0:0:0');
           } else {
             setRetryTimes(0);
-            countdownRef.current?.startCountdown();
+            countdownRef.current?.setMode('normal');
+            countdownRef.current?.startCountdown(config.refreshTime);
           }
         },
         () => handleRequestError(),
@@ -152,8 +153,10 @@ export function Bilibili() {
   };
 
   const handleRequestError: () => void = () => {
-    setRetryTimes(retryTimes + 1);
-    setDefaultTitle();
+    if (retryTimes < maxRequestTimes) {
+      setRetryTimes(retryTimes + 1);
+      setDefaultTitle();
+    }
   };
 
   const initGroupComponents = () => {
