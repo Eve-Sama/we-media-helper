@@ -75,12 +75,15 @@ export function Bilibili() {
   useEffect(
     function retryRequest() {
       switch (retryTimes) {
+        /** @todo: 这个0是初始化导致的执行, 后面可以看看有没有办法避开 */
         case 0:
           break;
         case 1:
         case 2:
           message.error(`鉴权失败, 3秒后将重试(${retryTimes}/3).`);
-          setTimeout(loadData, 3 * 1000);
+          if (retryTimes < maxRequestTimes) {
+            setTimeout(loadData, 3 * 1000);
+          }
           break;
         case 3:
           message.error('鉴权失败, 请打开『偏好设置』设置cookie!');
@@ -153,10 +156,8 @@ export function Bilibili() {
   };
 
   const handleRequestError: () => void = () => {
-    if (retryTimes < maxRequestTimes) {
-      setRetryTimes(retryTimes + 1);
-      setDefaultTitle();
-    }
+    setRetryTimes(retryTimes + 1);
+    setDefaultTitle();
   };
 
   const initGroupComponents = () => {
