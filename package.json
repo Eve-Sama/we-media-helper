@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "cross-env BROWSER=none react-scripts start & electron .",
-    "build":"npm run build:packager && npm run build:dmg",
+    "build": "npm run build:packager && npm run build:dmg",
     "build:web": "cross-env BUILD_PATH=dist/web react-scripts build",
     "build:packager": "electron-packager ./dist/web 'Platform Listener' --platform=darwin --arch=arm64 --icon=build/icon/app.icns --overwrite=true --out=dist/electron",
     "build:dmg": "electron-installer-dmg ./dist/electron/'Platform Listener'-darwin-arm64/'Platform Listener'.app platform-listener-arm64 --overwrite --out=dist/electron"
@@ -39,6 +39,7 @@
     "@types/react-dom": "^18.0.6",
     "@types/uuid": "^8.3.4",
     "electron": "^21.1.0",
+    "electron-builder": "^23.6.0",
     "electron-installer-dmg": "^4.0.0",
     "electron-packager": "^16.0.0",
     "eslint": "^8.18.0",

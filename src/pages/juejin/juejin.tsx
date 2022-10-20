@@ -113,48 +113,50 @@ export function JueJin() {
     setLoading(true);
     setRetryTimes(0);
     Promise.all([getCount(), getUser(), getUserBaiscInfo()])
-      .then(
-        v => {
-          let showError = false;
-          // 处理实时交互数据
-          const [tempCountData, tempUserData, tempUserBasicInfoData] = v;
-          const responseCountData = tempCountData.data;
-          if (responseCountData.err_no === 0) {
-            setCountData(responseCountData.data.count);
-          } else {
-            setCountData({});
-            showError = true;
-          }
-          // 处理账户信息
-          const responseUserData = tempUserData.data;
-          if (responseUserData.err_no === 0) {
-            window.electron.ipcRenderer.send(`${key}-set-title`, `掘金 - ${responseUserData.data.user_name}`);
-          } else {
-            setDefaultTitle();
-            showError = true;
-          }
-          // 处理统计数据
-          const responseUserBasicInfoData = tempUserBasicInfoData.data;
-          if (responseUserBasicInfoData.err_no === 0) {
-            setBasicInfoData(responseUserBasicInfoData.data);
-          } else {
-            setBasicInfoData({});
-            showError = true;
-          }
+      .then(v => {
+        let showError = false;
+        // 处理实时交互数据
+        const [tempCountData, tempUserData, tempUserBasicInfoData] = v;
+        const responseCountData = tempCountData.data;
+        if (responseCountData.err_no === 0) {
+          setCountData(responseCountData.data.count);
+        } else {
+          setCountData({});
+          showError = true;
+        }
+        // 处理账户信息
+        const responseUserData = tempUserData.data;
+        if (responseUserData.err_no === 0) {
+          window.electron.ipcRenderer.send(`${key}-set-title`, `掘金 - ${responseUserData.data.user_name}`);
+        } else {
+          setDefaultTitle();
+          showError = true;
+        }
+        // 处理统计数据
+        const responseUserBasicInfoData = tempUserBasicInfoData.data;
+        if (responseUserBasicInfoData.err_no === 0) {
+          setBasicInfoData(responseUserBasicInfoData.data);
+        } else {
+          setBasicInfoData({});
+          showError = true;
+        }
 
-          // 统一报错
-          if (showError) {
-            handleRequestError();
-            countdownRef.current?.setMode('error');
-            countdownRef.current?.startCountdown('0:0:0');
-          } else {
-            setRetryTimes(0);
-            countdownRef.current?.setMode('normal');
-            countdownRef.current?.startCountdown(config.refreshTime);
-          }
-        },
-        () => handleRequestError(),
-      )
+        // 统一报错
+        if (showError) {
+          handleRequestError();
+          countdownRef.current?.setMode('error');
+          countdownRef.current?.startCountdown('0:0:0');
+        } else {
+          setRetryTimes(0);
+          countdownRef.current?.setMode('normal');
+          countdownRef.current?.startCountdown(config.refreshTime);
+        }
+      })
+      .catch(() => {
+        handleRequestError();
+        countdownRef.current?.setMode('error');
+        countdownRef.current?.startCountdown('0:0:0');
+      })
       .finally(() => setLoading(false));
   };
 

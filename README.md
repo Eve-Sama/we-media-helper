@@ -61,6 +61,7 @@
  - [ ] 为各个窗口设置合适的尺寸大小.
  - [ ] 自定义通知音效(QQ、微信、系统跟随、剑三等).
  - [ ] 区分开发与生产环境, 用于设置一些默认配置, 如console
+ - [ ] 使用`electron-builder`代替`electron-packager`+`electron-installer-dmg`
 
 ## 本地开发
 

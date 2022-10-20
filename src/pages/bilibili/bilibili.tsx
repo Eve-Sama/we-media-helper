@@ -113,55 +113,57 @@ export function Bilibili() {
   const loadData = () => {
     setLoading(true);
     Promise.all([getStat(), getAccount(), getUnread(), getMessage()])
-      .then(
-        v => {
-          let showError = false;
-          // 处理统计数据
-          const [tempStatData, tempAccountData, tempUnreadData, tempMessageData] = v;
-          const responseTempStatData = tempStatData.data;
-          if (responseTempStatData.code === 0) {
-            setStatData(responseTempStatData.data);
-          } else {
-            setStatData({});
-            showError = true;
-          }
-          // 处理账户信息
-          const responseTempAccountData = tempAccountData.data;
-          if (responseTempAccountData.code === 0) {
-            window.electron.ipcRenderer.send(`${key}-set-title`, `哔哩哔哩 - ${responseTempAccountData.data.uname}`);
-          } else {
-            setDefaultTitle();
-            showError = true;
-          }
-          // 获取回复条数
-          const responseTempUnreadData = tempUnreadData.data;
-          if (responseTempUnreadData.code === 0) {
-            setUnreadData(responseTempUnreadData.data);
-          } else {
-            setUnreadData({});
-            showError = true;
-          }
-          // 获取私信条数
-          const responseTempMessageData = tempMessageData.data;
-          if (responseTempMessageData.code === 0) {
-            setMessageData(responseTempMessageData.data);
-          } else {
-            setMessageData({});
-            showError = true;
-          }
-          // 统一报错
-          if (showError) {
-            handleRequestError();
-            countdownRef.current?.setMode('error');
-            countdownRef.current?.startCountdown('0:0:0');
-          } else {
-            setRetryTimes(0);
-            countdownRef.current?.setMode('normal');
-            countdownRef.current?.startCountdown(config.refreshTime);
-          }
-        },
-        () => handleRequestError(),
-      )
+      .then(v => {
+        let showError = false;
+        // 处理统计数据
+        const [tempStatData, tempAccountData, tempUnreadData, tempMessageData] = v;
+        const responseTempStatData = tempStatData.data;
+        if (responseTempStatData.code === 0) {
+          setStatData(responseTempStatData.data);
+        } else {
+          setStatData({});
+          showError = true;
+        }
+        // 处理账户信息
+        const responseTempAccountData = tempAccountData.data;
+        if (responseTempAccountData.code === 0) {
+          window.electron.ipcRenderer.send(`${key}-set-title`, `哔哩哔哩 - ${responseTempAccountData.data.uname}`);
+        } else {
+          setDefaultTitle();
+          showError = true;
+        }
+        // 获取回复条数
+        const responseTempUnreadData = tempUnreadData.data;
+        if (responseTempUnreadData.code === 0) {
+          setUnreadData(responseTempUnreadData.data);
+        } else {
+          setUnreadData({});
+          showError = true;
+        }
+        // 获取私信条数
+        const responseTempMessageData = tempMessageData.data;
+        if (responseTempMessageData.code === 0) {
+          setMessageData(responseTempMessageData.data);
+        } else {
+          setMessageData({});
+          showError = true;
+        }
+        // 统一报错
+        if (showError) {
+          handleRequestError();
+          countdownRef.current?.setMode('error');
+          countdownRef.current?.startCountdown('0:0:0');
+        } else {
+          setRetryTimes(0);
+          countdownRef.current?.setMode('normal');
+          countdownRef.current?.startCountdown(config.refreshTime);
+        }
+      })
+      .catch(() => {
+        handleRequestError();
+        countdownRef.current?.setMode('error');
+        countdownRef.current?.startCountdown('0:0:0');
+      })
       .finally(() => setLoading(false));
   };
 
