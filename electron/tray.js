@@ -3,7 +3,7 @@ const path = require('path');
 const { trayClick } = require('./window');
 
 function initTray() {
-  const trayMenu = new Tray(path.join(__dirname, '../public/antv_16x16.png'));
+  const trayMenu = new Tray(path.join(__dirname, '../public/menu-icon.png'));
   const contextMenu = Menu.buildFromTemplate([
     {
       label: '监听器',

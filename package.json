@@ -1,6 +1,6 @@
 {
   "name": "platform-listener",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "private": true,
   "main": "electron/main.js",
   "description": "Listen some imformation",
@@ -8,22 +8,19 @@
     "name": "Eve-Sama",
     "url": "https://github.com/Eve-Sama"
   },
-  "mac": {
-    "icon": "./public/antv.icns"
-  },
-  "win": {
-    "icon": "./public/antv.icon"
-  },
   "scripts": {
     "start": "cross-env BROWSER=none react-scripts start & electron .",
-    "build:web": "react-scripts build",
-    "eject": "react-scripts eject"
+    "build":"npm run build:packager && npm run build:dmg",
+    "build:web": "cross-env BUILD_PATH=dist/web react-scripts build",
+    "build:packager": "electron-packager ./dist/web 'Platform Listener' --platform=darwin --arch=arm64 --icon=build/icon/app.icns --overwrite=true --out=dist/electron",
+    "build:dmg": "electron-installer-dmg ./dist/electron/'Platform Listener'-darwin-arm64/'Platform Listener'.app platform-listener-arm64 --overwrite --out=dist/electron"
   },
   "dependencies": {
     "ahooks": "^3.7.1",
     "antd": "^4.23.1",
     "axios-esm": "^1.0.0",
     "cross-env": "^7.0.3",
+    "dayjs": "^1.11.5",
     "electron-store": "^8.1.0",
     "http-proxy-middleware": "^2.0.6",
     "lodash": "^4.17.21",

@@ -1,5 +1,6 @@
 const { BrowserWindow } = require('electron');
 const path = require('path');
+const url = require('url');
 
 const windowMap = new Map();
 
@@ -14,7 +15,14 @@ function createWindow(routePath, windowOptions = {}) {
     },
     ...windowOptions,
   });
-  browserWindow.loadURL(`http://localhost:3000/#/${routePath}`);
+  browserWindow.loadURL(
+    url.format({
+      pathname: 'localhost:3000',
+      protocol: 'http:',
+      slashes: true,
+      hash: `/${routePath}`,
+    }),
+  );
   // browserWindow.webContents.openDevTools();
   browserWindow.addListener('closed', () => windowMap.delete(routePath));
   windowMap.set(routePath, browserWindow);
