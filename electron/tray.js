@@ -1,9 +1,10 @@
-const { Tray, Menu, shell } = require('electron');
+const { Tray, Menu, shell, app } = require('electron');
 const path = require('path');
 const { trayClick } = require('./window');
 
 function initTray() {
-  const trayMenu = new Tray(path.join(__dirname, '../public/menu-icon.png'));
+  const menuIcon = app.isPackaged ? '../menu-icon.png' : '../public/menu-icon.png';
+  const trayMenu = new Tray(path.join(__dirname, menuIcon));
   const contextMenu = Menu.buildFromTemplate([
     {
       label: '监听器',

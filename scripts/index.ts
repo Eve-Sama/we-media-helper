@@ -65,7 +65,7 @@ export function _createPackageJson(cb: Function): void {
         };
         const sourcePackage: string = file.contents.toString();
         targetPackage.version = JSON.parse(sourcePackage).version;
-        file.contents = Buffer.from(JSON.stringify(targetPackage));
+        file.contents = Buffer.from(JSON.stringify(targetPackage, null, 2) + '\n');
         this.push(file);
         cb();
       }),
@@ -74,9 +74,14 @@ export function _createPackageJson(cb: Function): void {
   cb();
 }
 
-export function _createNodemodules(cb: Function): void {
+export function _createNodeModules(cb: Function): void {
   const files = ['atomically', '.bin', '.yarn-integrity', 'ajv', 'ajv-formats', 'conf', 'dayjs', 'debounce-fn', 'dot-prop', 'electron-store', 'env-paths', 'fast-deep-equal', 'find-up', 'is-obj', 'json-schema-traverse', 'json-schema-typed', 'locate-path', 'lru-cache', 'mimic-fn', 'onetime', 'p-limit', 'p-locate', 'p-try', 'path-exists', 'pkg-up', 'punycode', 'require-from-string', 'semver', 'type-fest', 'uri-js', 'uuid', 'yallist'];
   files.forEach(v => src(`./node_modules/${v}/**/*`).pipe(dest(`./dist/web/node_modules/${v}`)));
+  cb();
+}
+
+export function _createElectronFiles(cb: Function): void {
+  src(`./electron/**/*`).pipe(dest(`./dist/web/electron`));
   cb();
 }
 

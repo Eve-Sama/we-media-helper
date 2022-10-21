@@ -1,4 +1,4 @@
-const { BrowserWindow } = require('electron');
+const { BrowserWindow, app } = require('electron');
 const path = require('path');
 const url = require('url');
 
@@ -15,15 +15,26 @@ function createWindow(routePath, windowOptions = {}) {
     },
     ...windowOptions,
   });
-  browserWindow.loadURL(
-    url.format({
-      pathname: 'localhost:3000',
-      protocol: 'http:',
-      slashes: true,
-      hash: `/${routePath}`,
-    }),
-  );
-  // browserWindow.webContents.openDevTools();
+  if (app.isPackaged) {
+    browserWindow.loadURL(
+      url.format({
+        pathname: path.join(__dirname, `/../index.html`),
+        protocol: 'file:',
+        slashes: true,
+        hash: `/${routePath}`,
+      }),
+    );
+  } else {
+    browserWindow.loadURL(
+      url.format({
+        pathname: 'localhost:3000',
+        protocol: 'http:',
+        slashes: true,
+        hash: `/${routePath}`,
+      }),
+    );
+    browserWindow.webContents.openDevTools();
+  }
   browserWindow.addListener('closed', () => windowMap.delete(routePath));
   windowMap.set(routePath, browserWindow);
 }
