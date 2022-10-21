@@ -60,8 +60,14 @@
  - [ ] 制作欢迎页.
  - [ ] 为各个窗口设置合适的尺寸大小.
  - [ ] 自定义通知音效(QQ、微信、系统跟随、剑三等).
- - [ ] 区分开发与生产环境, 用于设置一些默认配置, 如console
- - [ ] 使用`electron-builder`代替`electron-packager`+`electron-installer-dmg`
+ - [ ] 区分开发与生产环境, 用于设置一些默认配置, 如console.
+ - [ ] 使用`electron-builder`代替`electron-packager`+`electron-installer-dmg`.
+ - [ ] 引入`gulp`, 命令式解决构建流程.
+ - [ ] 消息通知的绿点增加文案说明.
+ - [ ] 恢复默认不能重置cookies.
+ - [ ] 超链接、卡片与链接绑定, 而不是写死, 通过设置项开启或关闭.
+ - [ ] icon增加黑暗模式.
+ - [ ] 提高代码抽象度, 复用业务逻辑.
 
 ## 本地开发
 

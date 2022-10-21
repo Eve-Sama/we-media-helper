@@ -1,6 +1,6 @@
 {
   "name": "platform-listener",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "main": "electron/main.js",
   "description": "Listen some imformation",
@@ -10,10 +10,12 @@
   },
   "scripts": {
     "start": "cross-env BROWSER=none react-scripts start & electron .",
-    "build": "npm run build:packager && npm run build:dmg",
+    "build": "npm run build:packager-m1 && npm run build:dmg-m1 && npm run build:packager-intel && npm run build:dmg-intel",
     "build:web": "cross-env BUILD_PATH=dist/web react-scripts build",
-    "build:packager": "electron-packager ./dist/web 'Platform Listener' --platform=darwin --arch=arm64 --icon=build/icon/app.icns --overwrite=true --out=dist/electron",
-    "build:dmg": "electron-installer-dmg ./dist/electron/'Platform Listener'-darwin-arm64/'Platform Listener'.app platform-listener-arm64 --overwrite --out=dist/electron"
+    "build:packager-m1": "electron-packager ./dist/web 'Platform Listener' --platform=darwin --arch=arm64 --icon=build/icon/app.icns --overwrite=true --out=dist/electron",
+    "build:dmg-m1": "electron-installer-dmg ./dist/electron/'Platform Listener'-darwin-arm64/'Platform Listener'.app platform-listener-m1 --overwrite --out=dist/electron",
+    "build:packager-intel": "electron-packager ./dist/web 'Platform Listener' --platform=darwin --arch=x64 --icon=build/icon/app.icns --overwrite=true --out=dist/electron",
+    "build:dmg-intel": "electron-installer-dmg ./dist/electron/'Platform Listener'-darwin-x64/'Platform Listener'.app platform-listener-intel --overwrite --out=dist/electron"
   },
   "dependencies": {
     "ahooks": "^3.7.1",
