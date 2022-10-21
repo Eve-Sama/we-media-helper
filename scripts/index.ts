@@ -1,6 +1,7 @@
-import { series } from 'gulp';
+import { dest, series, src } from 'gulp';
 import { exec } from 'child_process';
 import ansiColors from 'ansi-colors';
+import through from 'through2';
 
 function _buildPackageForM1(cb: Function): void {
   const child_process = exec(`electron-packager ./dist/web 'Platform Listener' --platform=darwin --arch=arm64 --icon=scripts/assets/icons/dock.icns --overwrite=true --out=dist/electron`);
@@ -12,6 +13,7 @@ function _buildPackageForM1(cb: Function): void {
     }
   });
 }
+
 function _buildDmgForM1(cb: Function): void {
   const child_process = exec(`electron-installer-dmg ./dist/electron/'Platform Listener'-darwin-arm64/'Platform Listener'.app platform-listener-m1 --overwrite --out=dist/electron`);
   child_process.on('close', code => {
@@ -34,6 +36,7 @@ function _buildPackageForIntel(cb: Function): void {
     }
   });
 }
+
 function _buildDmgForIntel(cb: Function): void {
   const child_process = exec(`electron-installer-dmg ./dist/electron/'Platform Listener'-darwin-x64/'Platform Listener'.app platform-listener-intel --overwrite --out=dist/electron`);
   child_process.on('close', code => {
@@ -44,6 +47,31 @@ function _buildDmgForIntel(cb: Function): void {
       console.log(`${ansiColors.bold.green('Platform Listener for Intel has been built!')}`);
     }
   });
+}
+
+export function _createPackageJson(cb: Function): void {
+  const files = ['./package.json'];
+  src(files)
+    .pipe(
+      through.obj(function (file, _encode, cb) {
+        const targetPackage = {
+          version: '0.0.0',
+          main: 'electron/main.js',
+          dependencies: {
+            dayjs: '^1.11.5',
+            'electron-store': '^8.1.0',
+            uuid: '^9.0.0',
+          },
+        };
+        const sourcePackage: string = file.contents.toString();
+        targetPackage.version = JSON.parse(sourcePackage).version;
+        file.contents = Buffer.from(JSON.stringify(targetPackage));
+        this.push(file);
+        cb();
+      }),
+    )
+    .pipe(dest('./dist/web'));
+  cb();
 }
 
 export const buildM1 = series(_buildPackageForM1, _buildDmgForM1);
