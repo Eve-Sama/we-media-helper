@@ -9,11 +9,9 @@
   },
   "scripts": {
     "start": "cross-env BROWSER=none react-scripts start & electron .",
-    "build:web": "cross-env BUILD_PATH=dist/web react-scripts build",
-    "build": "gulp build",
+    "build:all": "gulp build:all",
     "build:m1": "gulp build:m1",
-    "build:intel": "gulp build:intel",
-    "test": "gulp test"
+    "build:intel": "gulp build:intel"
   },
   "dependencies": {
     "ahooks": "^3.7.1",
