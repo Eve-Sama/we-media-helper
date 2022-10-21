@@ -1,7 +1,7 @@
 import { task } from 'gulp';
-import { build, buildIntel, buildM1, _createPackageJson } from './scripts';
+import { build, buildIntel, buildM1, _createNodemodules } from './scripts';
 
 task('build', build);
 task('build:m1', buildM1);
 task('build:intel', buildIntel);
-task('createPackageJson', _createPackageJson);
+task('test', _createNodemodules);
