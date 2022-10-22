@@ -25,14 +25,10 @@ function setCookie() {
 function initEvent() {
   setCookie();
 
-  ipcMain.on('bilibili-set-title', (_, message) => {
-    const browserWindow = windowMap.get('bilibili');
-    browserWindow.setTitle(message);
-  });
-
-  ipcMain.on('juejin-set-title', (_, message) => {
-    const browserWindow = windowMap.get('juejin');
-    browserWindow.setTitle(message);
+  ipcMain.on('set-title', (_, message) => {
+    const { key, title } = message;
+    const browserWindow = windowMap.get(key);
+    browserWindow.setTitle(title);
   });
 
   ipcMain.on('notify', (_, message) => {

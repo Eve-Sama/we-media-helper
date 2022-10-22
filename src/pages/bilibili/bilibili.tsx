@@ -108,7 +108,7 @@ export function Bilibili() {
 
   const beingInit = () => Object.keys(messageData).length === 0;
 
-  const setDefaultTitle = () => window.electron.ipcRenderer.send(`${key}-set-title`, '哔哩哔哩');
+  const setDefaultTitle = () => window.electron.ipcRenderer.send('set-title', { key, title: '哔哩哔哩' });
 
   const loadData = () => {
     setLoading(true);
@@ -127,7 +127,7 @@ export function Bilibili() {
         // 处理账户信息
         const responseTempAccountData = tempAccountData.data;
         if (responseTempAccountData.code === 0) {
-          window.electron.ipcRenderer.send(`${key}-set-title`, `哔哩哔哩 - ${responseTempAccountData.data.uname}`);
+          window.electron.ipcRenderer.send('set-title', { key, title: `哔哩哔哩 - ${responseTempAccountData.data.uname}` });
         } else {
           setDefaultTitle();
           showError = true;

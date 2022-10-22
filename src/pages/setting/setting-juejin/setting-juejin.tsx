@@ -1,9 +1,10 @@
 import { Button, Divider, Form, Input, Switch, TimePicker } from 'antd';
 import moment, { Moment } from 'moment';
 import { useEffect, useRef } from 'react';
+import { StorageData } from '../../common/template/template.interface';
 import { GroupSetting } from '../common/group-setting/group-setting';
 import { GroupSettingRef } from '../common/group-setting/group.interface';
-import { JuejinDefaultConfig, JuejinConfig, JuejinCardGroupList } from './setting-juejin.interface';
+import { JuejinDefaultConfig, JuejinCardGroupList } from './setting-juejin.interface';
 import styles from './style.module.scss';
 
 const { TextArea } = Input;
@@ -11,7 +12,7 @@ const key = 'juejin';
 const broadcastChannel = new BroadcastChannel('juejin');
 
 export function SettingJuejin() {
-  const storageData = (window.electron.store.get(`${key}-data`) || JuejinDefaultConfig) as JuejinConfig;
+  const storageData = (window.electron.store.get(`${key}-data`) || JuejinDefaultConfig) as StorageData;
   const config = storageData.config;
   const groupSettingRef = useRef<GroupSettingRef>(null);
   const [form] = Form.useForm();
