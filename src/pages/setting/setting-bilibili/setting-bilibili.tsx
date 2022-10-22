@@ -1,6 +1,6 @@
 import { Button, Divider, Form, Input, Switch, TimePicker } from 'antd';
 import moment, { Moment } from 'moment';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { GroupSetting } from '../common/group-setting/group-setting';
 import { GroupSettingRef } from '../common/group-setting/group.interface';
 import { BilibiliDefaultConfig, BilibiliConfig, BilibiliCardGroupList } from './setting-bilibili.interface';
@@ -12,7 +12,7 @@ const broadcastChannel = new BroadcastChannel(key);
 
 export function SettingBilibili() {
   const storageData = (window.electron.store.get(`${key}-data`) || BilibiliDefaultConfig) as BilibiliConfig;
-  const [config, setConfig] = useState<BilibiliConfig['config']>(storageData.config);
+  const config = storageData.config;
   const groupSettingRef = useRef<GroupSettingRef>(null);
   const [form] = Form.useForm();
 
@@ -35,9 +35,9 @@ export function SettingBilibili() {
 
   const resetConfig = () => {
     const refreshTime = moment(BilibiliDefaultConfig.config.refreshTime, 'HH:mm:ss');
-    form.setFieldsValue({ ...BilibiliDefaultConfig.config, refreshTime });
+    const cookie = form.getFieldValue('cookie');
+    form.setFieldsValue({ ...BilibiliDefaultConfig.config, cookie, refreshTime });
     groupSettingRef.current.setGroupListData(BilibiliDefaultConfig.config.groupList);
-    setConfig({ ...BilibiliDefaultConfig.config });
   };
 
   return (

@@ -1,6 +1,6 @@
 import { Button, Divider, Form, Input, Switch, TimePicker } from 'antd';
 import moment, { Moment } from 'moment';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { GroupSetting } from '../common/group-setting/group-setting';
 import { GroupSettingRef } from '../common/group-setting/group.interface';
 import { JuejinDefaultConfig, JuejinConfig, JuejinCardGroupList } from './setting-juejin.interface';
@@ -12,7 +12,7 @@ const broadcastChannel = new BroadcastChannel('juejin');
 
 export function SettingJuejin() {
   const storageData = (window.electron.store.get(`${key}-data`) || JuejinDefaultConfig) as JuejinConfig;
-  const [config, setConfig] = useState<JuejinConfig['config']>(storageData.config);
+  const config = storageData.config;
   const groupSettingRef = useRef<GroupSettingRef>(null);
   const [form] = Form.useForm();
 
@@ -35,9 +35,9 @@ export function SettingJuejin() {
 
   const resetConfig = () => {
     const refreshTime = moment(JuejinDefaultConfig.config.refreshTime, 'HH:mm:ss');
-    form.setFieldsValue({ ...JuejinDefaultConfig.config, refreshTime });
+    const cookie = form.getFieldValue('cookie');
+    form.setFieldsValue({ ...JuejinDefaultConfig.config, cookie, refreshTime });
     groupSettingRef.current.setGroupListData(JuejinDefaultConfig.config.groupList);
-    setConfig({ ...JuejinDefaultConfig.config });
   };
 
   return (
