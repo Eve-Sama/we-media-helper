@@ -13,7 +13,11 @@ function _createPackageJson(cb: Function): void {
     .pipe(
       through.obj(function (file, _encode, cb) {
         const targetPackage = {
-          version: '0.0.0',
+          name: null,
+          version: null,
+          description: null,
+          author: null,
+          productName: null,
           main: 'electron/main.js',
           dependencies: {
             dayjs: '^1.11.5',
@@ -22,7 +26,12 @@ function _createPackageJson(cb: Function): void {
           },
         };
         const sourcePackage: string = file.contents.toString();
-        targetPackage.version = JSON.parse(sourcePackage).version;
+        const obj = JSON.parse(sourcePackage);
+        targetPackage.name = obj.name;
+        targetPackage.version = obj.version;
+        targetPackage.description = obj.description;
+        targetPackage.author = obj.author;
+        targetPackage.productName = obj.productName;
         file.contents = Buffer.from(JSON.stringify(targetPackage, null, 2) + '\n');
         this.push(file);
         cb();
