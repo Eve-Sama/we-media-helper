@@ -46,7 +46,7 @@ export function SettingJuejin() {
         <Form.Item label="cookie" name="cookie">
           <TextArea rows={4} placeholder="Input your cookie" />
         </Form.Item>
-        <Form.Item label="分组设置">
+        <Form.Item label="分组设置" tooltip={{ title: () => '卡片上的绿点表示是否开启系统通知. 当开启时, 该卡片的数据量有新增时, 会进行系统通知. 可以点击卡片切换系统通知状态.' }}>
           <GroupSetting ref={groupSettingRef} cardGroupList={JuejinCardGroupList} groupList={config.groupList} />
         </Form.Item>
         <Form.Item label="刷新间隔时间" name="refreshTime">

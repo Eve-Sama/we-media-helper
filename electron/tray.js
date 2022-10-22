@@ -3,7 +3,8 @@ const path = require('path');
 const { trayClick } = require('./window');
 
 function initTray() {
-  const menuIcon = app.isPackaged ? '../menu-icon.png' : '../public/menu-icon.png';
+  const root = 'scripts/assets/icons';
+  const menuIcon = app.isPackaged ? `../../${root}/menu-icon-dev.png` : `../${root}/menu-icon-dev.png`;
   const trayMenu = new Tray(path.join(__dirname, menuIcon));
   const contextMenu = Menu.buildFromTemplate([
     {
