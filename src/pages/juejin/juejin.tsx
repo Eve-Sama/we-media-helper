@@ -3,6 +3,7 @@ import { JuejinCardGroupList } from '../setting/setting-juejin/setting-juejin.in
 import { useTemplate } from '../common/template/template';
 import { Count, UserBasicInfo } from '../../request/juejin/juejin.interface';
 import { useEffect } from 'react';
+import { DataCardGroup } from '../setting/common/group-setting/group.interface';
 
 export function JueJin() {
   const key = 'juejin';
@@ -10,7 +11,7 @@ export function JueJin() {
   let countData: Count;
   let basicInfoData: UserBasicInfo;
 
-  const { cardList, getRenderDOM, analyzeRequest, analyzeDataCard, forceUpdate } = useTemplate({ key, cardGroupList: JuejinCardGroupList, title: '掘金' });
+  const { getRenderDOM, analyzeRequest, analyzeDataCard, forceUpdate } = useTemplate({ key, cardGroupList: JuejinCardGroupList, title: '掘金' });
 
   useEffect(() => {
     analyzeRequest([getCount, getUser, getUserBaiscInfo], data => {
@@ -45,7 +46,7 @@ export function JueJin() {
   }, []);
 
   useEffect(() => {
-    analyzeDataCard((type: string) => {
+    analyzeDataCard((type: string, cardList: DataCardGroup['children']) => {
       const target = cardList.find(v => v.value === type);
       let dataSource: object;
       if (['reply', 'like', 'follow', 'system', 'job'].includes(type)) {

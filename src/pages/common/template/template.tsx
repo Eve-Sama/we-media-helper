@@ -83,7 +83,7 @@ export function useTemplate(options: TemplateOptions) {
   /** 解析卡片字段 */
   const analyzeDataCard: AnalyzeDataCard = callback => {
     setGetDataCardInfo(() => (type: string) => {
-      const { target, dataSource } = callback(type);
+      const { target, dataSource } = callback(type, cardList);
       const changeValue = target.changeValue.reduce((pre, cur) => pre + (dataSource || {})[cur], 0);
       const totalValue = target.totalValue.reduce((pre, cur) => pre + (dataSource || {})[cur], 0);
       return {
@@ -207,5 +207,5 @@ export function useTemplate(options: TemplateOptions) {
     );
   };
 
-  return { cardList, getRenderDOM, analyzeRequest, analyzeDataCard, forceUpdate };
+  return { getRenderDOM, analyzeRequest, analyzeDataCard, forceUpdate };
 }

@@ -1,9 +1,10 @@
 import { Button, Divider, Form, Input, Switch, TimePicker } from 'antd';
 import moment, { Moment } from 'moment';
 import { useEffect, useRef } from 'react';
+import { StorageData } from '../../common/template/template.interface';
 import { GroupSetting } from '../common/group-setting/group-setting';
 import { GroupSettingRef } from '../common/group-setting/group.interface';
-import { BilibiliDefaultConfig, BilibiliConfig, BilibiliCardGroupList } from './setting-bilibili.interface';
+import { BilibiliDefaultConfig, BilibiliCardGroupList } from './setting-bilibili.interface';
 import styles from './style.module.scss';
 
 const { TextArea } = Input;
@@ -11,7 +12,7 @@ const key = 'bilibili';
 const broadcastChannel = new BroadcastChannel(key);
 
 export function SettingBilibili() {
-  const storageData = (window.electron.store.get(`${key}-data`) || BilibiliDefaultConfig) as BilibiliConfig;
+  const storageData = (window.electron.store.get(`${key}-data`) || BilibiliDefaultConfig) as StorageData;
   const config = storageData.config;
   const groupSettingRef = useRef<GroupSettingRef>(null);
   const [form] = Form.useForm();
@@ -25,7 +26,7 @@ export function SettingBilibili() {
     [config],
   );
 
-  const onSubmit = (values: BilibiliConfig['config']) => {
+  const onSubmit = (values: StorageData['config']) => {
     const groupList = groupSettingRef.current.getData();
     Object.assign(config, { ...values, groupList });
     config.refreshTime = (values.refreshTime as unknown as Moment).format('HH:mm:ss');

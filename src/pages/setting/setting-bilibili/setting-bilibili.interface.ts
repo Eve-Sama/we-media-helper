@@ -1,19 +1,8 @@
+import { DataCardGroup } from '../common/group-setting/group.interface';
 import { v4 as uuidv4 } from 'uuid';
-import { DataCardGroup, Group } from '../common/group-setting/group.interface';
+import { StorageData } from '../../common/template/template.interface';
 
-export interface BilibiliConfig {
-  /** 偏好设置 */
-  config: {
-    cookie: string;
-    refreshTime: string;
-    showCountdown: boolean;
-    groupList: Group[];
-  };
-  /** 卡片最新数据, 用于推送提醒 */
-  dataCardList: Array<{ type: string; value: number }>;
-}
-
-export const BilibiliDefaultConfig: BilibiliConfig = {
+export const BilibiliDefaultConfig: StorageData = {
   config: {
     cookie: '',
     refreshTime: '00:00:30',

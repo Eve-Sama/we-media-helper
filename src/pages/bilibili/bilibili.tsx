@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { getAccount, getMessage, getStat, getUnread } from '../../request';
 import { Message, Stat, Unread } from '../../request/bilibili/bilibili.interface';
 import { useTemplate } from '../common/template/template';
+import { DataCardGroup } from '../setting/common/group-setting/group.interface';
 import { BilibiliCardGroupList } from '../setting/setting-bilibili/setting-bilibili.interface';
 
 export function Bilibili() {
@@ -11,7 +12,7 @@ export function Bilibili() {
   let unreadData: Unread;
   let messageData: Message;
 
-  const { cardList, getRenderDOM, analyzeRequest, analyzeDataCard, forceUpdate } = useTemplate({ key, cardGroupList: BilibiliCardGroupList, title: '哔哩哔哩' });
+  const { getRenderDOM, analyzeRequest, analyzeDataCard, forceUpdate } = useTemplate({ key, cardGroupList: BilibiliCardGroupList, title: '哔哩哔哩' });
 
   useEffect(() => {
     analyzeRequest([getStat, getAccount, getUnread, getMessage], data => {
@@ -55,7 +56,7 @@ export function Bilibili() {
   }, []);
 
   useEffect(() => {
-    analyzeDataCard((type: string) => {
+    analyzeDataCard((type: string, cardList: DataCardGroup['children']) => {
       const target = cardList.find(v => v.value === type);
       let dataSource: object;
       if (['fan', 'click', 'totalReply', 'dm', 'totalLike', 'share', 'favorite', 'coin'].includes(type)) {

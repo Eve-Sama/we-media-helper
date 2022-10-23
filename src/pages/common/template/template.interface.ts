@@ -30,4 +30,4 @@ type UnionToTuple<U> = [U] extends [never] ? [] : [...UnionToTuple<Exclude<U, Un
  * @see https://segmentfault.com/q/1010000042243980
  */
 export type AnalyzeRequest = <T extends ReadonlyArray<() => AxiosPromise>>(request: T, callback: (data: UnionToTuple<Awaited<ReturnType<T[number]>>>) => boolean) => void;
-export type AnalyzeDataCard = (callback: (type: string) => { target: DataCardGroup['children'][number]; dataSource: object }) => void;
+export type AnalyzeDataCard = (callback: (type: string, cardList: DataCardGroup['children']) => { target: DataCardGroup['children'][number]; dataSource: object }) => void;
