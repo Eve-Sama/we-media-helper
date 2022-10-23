@@ -1,4 +1,4 @@
-.juejin-container {
+.template-container {
   padding-top: 24px;
   .group-container {
     .group-label {
@@ -12,7 +12,6 @@
       border-radius: 2px;
       background: #fff;
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
       column-gap: 16px;
       row-gap: 16px;
     }

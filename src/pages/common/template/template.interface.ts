@@ -1,3 +1,4 @@
+import { AxiosPromise } from 'axios-esm';
 import { DataCardGroup, Group } from '../../setting/common/group-setting/group.interface';
 
 export interface TemplateOptions {
@@ -7,17 +8,6 @@ export interface TemplateOptions {
   cardGroupList: DataCardGroup[];
   /** 窗口的标题 */
   title: string;
-  /** 卡片的解析数据逻辑 */
-  getDataCardInfo: (type: string) => {
-    type: string;
-    title: string;
-    changeValue: any;
-    totalValue: any;
-  };
-  /** 样式文件 */
-  styles: {
-    readonly [key: string]: string;
-  };
 }
 
 export interface StorageData {
@@ -32,4 +22,12 @@ export interface StorageData {
   dataCardList: Array<{ type: string; value: number }>;
 }
 
-export type AnalyzeRequest = <T extends readonly unknown[] | []>(request: T, callback: (data: { -readonly [P in keyof T]: Awaited<T[P]> }) => boolean) => void;
+type UnionToIntersection<U> = (U extends any ? (a: (k: U) => void) => void : never) extends (a: infer I) => void ? I : never;
+type UnionLast<U> = UnionToIntersection<U> extends (a: infer I) => void ? I : never;
+type UnionToTuple<U> = [U] extends [never] ? [] : [...UnionToTuple<Exclude<U, UnionLast<U>>>, UnionLast<U>];
+/**
+ * 下面俩类型是我手动慢慢推导的, 上面三行网上查的
+ * @see https://segmentfault.com/q/1010000042243980
+ */
+export type AnalyzeRequest = <T extends ReadonlyArray<() => AxiosPromise>>(request: T, callback: (data: UnionToTuple<Awaited<ReturnType<T[number]>>>) => boolean) => void;
+export type AnalyzeDataCard = (callback: (type: string) => { target: DataCardGroup['children'][number]; dataSource: object }) => void;
