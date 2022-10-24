@@ -16,13 +16,15 @@ export function SettingBilibili() {
   const groupSettingRef = useRef<GroupSettingRef>(null);
   const [form] = Form.useForm();
 
-  useEffect(function listenBrodcast() {
-    broadcastChannel.onmessage = v => {
-      if (v.data === `${key}-storage-data-changed`) {
-        const newStorageData = window.electron.store.get(`${key}-data`) as StorageData;
-        storageData.dataCardList = newStorageData.dataCardList;
-      }
-    };
+  useEffect(() => {
+    (function listenBrodcast() {
+      broadcastChannel.onmessage = v => {
+        if (v.data === `${key}-storage-data-changed`) {
+          const newStorageData = window.electron.store.get(`${key}-data`) as StorageData;
+          storageData.dataCardList = newStorageData.dataCardList;
+        }
+      };
+    })();
   }, []);
 
   useEffect(

@@ -36,11 +36,21 @@ export function useTemplate(options: TemplateOptions) {
   const cardList = combileArrayBy(cardGroupList, 'children') as unknown as DataCardGroup['children'];
   let storageData = window.electron.store.get(`${key}-data`) as StorageData;
 
-  useEffect(function verifyDataCard() {
-    const hasDuplicate = _.uniqBy(cardList, 'value').length !== cardList.length;
-    if (hasDuplicate) {
-      throw new Error(`The input variable 'cardGroupList' exist duplicate type in different 'cardList'!`);
-    }
+  useEffect(() => {
+    (function verifyDataCard() {
+      const hasDuplicate = _.uniqBy(cardList, 'value').length !== cardList.length;
+      if (hasDuplicate) {
+        throw new Error(`The input variable 'cardGroupList' exist duplicate type in different 'cardList'!`);
+      }
+    })();
+    (function listenBrodcast() {
+      broadcastChannel.onmessage = v => {
+        if (v.data === `${key}-setting-changed`) {
+          updateStorageData();
+          loadDataRef.current();
+        }
+      };
+    })();
   }, []);
 
   useEffect(
@@ -66,15 +76,6 @@ export function useTemplate(options: TemplateOptions) {
     },
     [retryTimes],
   );
-
-  useEffect(function listenBrodcast() {
-    broadcastChannel.onmessage = v => {
-      if (v.data === `${key}-setting-changed`) {
-        updateStorageData();
-        loadDataRef.current();
-      }
-    };
-  }, []);
 
   const setDefaultTitle = () => window.electron.ipcRenderer.send('set-title', { key, title });
 
