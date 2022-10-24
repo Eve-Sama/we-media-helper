@@ -65,6 +65,8 @@ export function Bilibili() {
         dataSource = unreadData;
       } else if (['message'].includes(type)) {
         dataSource = messageData;
+      } else {
+        throw new Error(`Can not find type of card: ${type}`);
       }
       return { target, dataSource };
     });

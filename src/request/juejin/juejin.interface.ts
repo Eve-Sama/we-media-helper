@@ -1,5 +1,6 @@
 export interface JuejinResponse<T> {
   err_no: number;
+  err_message: 'success';
   data: T;
 }
 export interface Count {
@@ -12,9 +13,10 @@ export interface Count {
     3: number;
     /** 系统消息 */
     4: number;
-    /** 职位沟通 */
-    5: number;
+    /** 私信 */
+    7: number;
   };
+  total: number;
 }
 
 export interface User {

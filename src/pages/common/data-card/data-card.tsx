@@ -5,13 +5,19 @@ interface DataCardProps {
   changeValue: number;
   totalValue: number;
   url: string;
+  text: string;
+  color: string;
 }
 
 export function DataCard(props: DataCardProps) {
-  const { title, changeValue = 0, totalValue = 0, url } = props;
+  const { title, changeValue = 0, totalValue = 0, url, text, color } = props;
 
   const getFormaValue = (value: number): string => {
-    return value.toLocaleString();
+    if (text.length > 0) {
+      return text;
+    } else {
+      return value.toLocaleString();
+    }
   };
 
   const changeValueComponent: () => JSX.Element = () => {
@@ -39,7 +45,9 @@ export function DataCard(props: DataCardProps) {
         <div className={styles['title']}>{title}</div>
         {changeValueComponent()}
       </div>
-      <div className={styles['total-value']}>{getFormaValue(totalValue)}</div>
+      <div className={styles['total-value']}>
+        <span style={{ color: color ? color : 'unset' }}>{getFormaValue(totalValue)}</span>
+      </div>
     </div>
   );
 }

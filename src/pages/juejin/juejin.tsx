@@ -8,7 +8,7 @@ import { DataCardGroup } from '../setting/common/group-setting/group.interface';
 export function JueJin() {
   const key = 'juejin';
 
-  let countData: Count;
+  let countData: Count['count'];
   let basicInfoData: UserBasicInfo;
 
   const { getRenderDOM, analyzeRequest, analyzeDataCard, forceUpdate } = useTemplate({ key, cardGroupList: JuejinCardGroupList, title: '掘金' });
@@ -20,7 +20,7 @@ export function JueJin() {
       const [tempCountData, tempUserData, tempUserBasicInfoData] = data;
       const responseCountData = tempCountData.data;
       if (responseCountData.err_no === 0) {
-        countData = responseCountData.data;
+        countData = responseCountData.data.count;
       } else {
         countData = null;
         showError = true;
@@ -49,10 +49,12 @@ export function JueJin() {
     analyzeDataCard((type: string, cardList: DataCardGroup['children']) => {
       const target = cardList.find(v => v.value === type);
       let dataSource: object;
-      if (['reply', 'like', 'follow', 'system', 'job'].includes(type)) {
+      if (['reply', 'like', 'follow', 'system', 'job', 'message'].includes(type)) {
         dataSource = countData;
       } else if (['likeTotal', 'read', 'power', 'fan'].includes(type)) {
         dataSource = basicInfoData;
+      } else {
+        throw new Error(`Can not find type of card: ${type}`);
       }
       return { target, dataSource };
     });

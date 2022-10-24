@@ -7,7 +7,7 @@ export const BilibiliDefaultConfig: StorageData = {
     cookie: '',
     refreshTime: '00:00:30',
     showCountdown: true,
-    enableJumpLink: true,
+    enableJumpLink: false,
     groupList: [
       {
         label: '基础数据',

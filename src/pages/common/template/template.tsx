@@ -24,6 +24,7 @@ export function useTemplate(options: TemplateOptions) {
       title: string;
       changeValue: number;
       totalValue: number;
+      deprecated: boolean;
     }
   >();
   const countdownRef = useRef<CountdownDisplayRef>(null);
@@ -85,6 +86,7 @@ export function useTemplate(options: TemplateOptions) {
   const analyzeDataCard: AnalyzeDataCard = callback => {
     setGetDataCardInfo(() => (type: string) => {
       const { target, dataSource } = callback(type, allCardList);
+      const deprecated = dataSource && target.totalValue.some(v => isNaN(dataSource[v]));
       const changeValue = target.changeValue.reduce((pre, cur) => pre + (dataSource || {})[cur], 0);
       const totalValue = target.totalValue.reduce((pre, cur) => pre + (dataSource || {})[cur], 0);
       return {
@@ -92,6 +94,7 @@ export function useTemplate(options: TemplateOptions) {
         title: target.label,
         changeValue: changeValue || 0,
         totalValue: totalValue || 0,
+        deprecated,
       };
     });
   };
@@ -168,6 +171,19 @@ export function useTemplate(options: TemplateOptions) {
     updateStorageData();
   };
 
+  /** 感觉这个地方有优化的空间. 当页面开着的时候, 删除过期的卡片可选项, 会报错. 所以写了这个函数用来在每次渲染的时候提前把数据恢复到正确的样子. 但是这种概率极低. 建议是启动应用时做一次就可以了, 还没想好如何脱离业务层去实现这个, 之后再看 */
+  const deleteDeprecatedCard = () => {
+    storageData.config.groupList.forEach(group => {
+      const validCardList: Group['cardList'] = [];
+      group.cardList.forEach(card => {
+        if (allCardList.some(optionalCard => optionalCard.value === card.type)) {
+          validCardList.push(card);
+        }
+      });
+      group.cardList = validCardList;
+    });
+  };
+
   const getDataCardComponents = (cardList: Group['cardList']) => {
     const res: JSX.Element[] = [];
     cardList.forEach(card => {
@@ -178,7 +194,13 @@ export function useTemplate(options: TemplateOptions) {
       if (storageData.config.enableJumpLink) {
         url = targetCard.url;
       }
-      res.push(<DataCard key={type} title={title} changeValue={changeValue} totalValue={totalValue} url={url}></DataCard>);
+      let text = '';
+      let color = null;
+      if (data.deprecated) {
+        text = '字段异常!';
+        color = 'red';
+      }
+      res.push(<DataCard key={type} title={title} changeValue={changeValue} totalValue={totalValue} url={url} text={text} color={color}></DataCard>);
     });
     return res;
   };
@@ -203,6 +225,7 @@ export function useTemplate(options: TemplateOptions) {
     if (!canRender) {
       return <></>;
     }
+    deleteDeprecatedCard();
     return (
       <div className={styles['template-container']}>
         <div style={{ display: storageData.config.showCountdown ? 'flex' : 'none' }}>
