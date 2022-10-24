@@ -13,25 +13,33 @@ const broadcastChannel = new BroadcastChannel('juejin');
 
 export function SettingJuejin() {
   const storageData = (window.electron.store.get(`${key}-data`) || JuejinDefaultConfig) as StorageData;
-  const config = storageData.config;
   const groupSettingRef = useRef<GroupSettingRef>(null);
   const [form] = Form.useForm();
+
+  useEffect(function listenBrodcast() {
+    broadcastChannel.onmessage = v => {
+      if (v.data === `${key}-storage-data-changed`) {
+        const newStorageData = window.electron.store.get(`${key}-data`) as StorageData;
+        storageData.dataCardList = newStorageData.dataCardList;
+      }
+    };
+  }, []);
 
   useEffect(
     function initForm() {
       // TimePicker 只接受 moment 类型的时间
-      const refreshTime = moment(config.refreshTime, 'HH:mm:ss');
-      form.setFieldsValue({ ...config, refreshTime });
+      const refreshTime = moment(storageData.config.refreshTime, 'HH:mm:ss');
+      form.setFieldsValue({ ...storageData.config, refreshTime });
     },
-    [config],
+    [storageData.config],
   );
 
   const onSubmit = (values: any) => {
     const groupList = groupSettingRef.current.getData();
-    Object.assign(config, { ...values, groupList });
-    config.refreshTime = (values.refreshTime as unknown as Moment).format('HH:mm:ss');
-    window.electron.store.set(`${key}-data`, { ...storageData, config });
-    broadcastChannel.postMessage(`${key}-init`);
+    Object.assign(storageData.config, { ...values, groupList });
+    storageData.config.refreshTime = (values.refreshTime as unknown as Moment).format('HH:mm:ss');
+    window.electron.store.set(`${key}-data`, { ...storageData, config: storageData.config });
+    broadcastChannel.postMessage(`${key}-setting-changed`);
   };
 
   const resetConfig = () => {
@@ -48,7 +56,7 @@ export function SettingJuejin() {
           <TextArea rows={4} placeholder="Input your cookie" />
         </Form.Item>
         <Form.Item label="分组设置" tooltip={{ title: () => '卡片上的绿点表示是否开启系统通知. 当开启时, 该卡片的数据量有新增时, 会进行系统通知. 可以点击卡片切换系统通知状态.' }}>
-          <GroupSetting ref={groupSettingRef} cardGroupList={JuejinCardGroupList} groupList={config.groupList} />
+          <GroupSetting ref={groupSettingRef} cardGroupList={JuejinCardGroupList} groupList={storageData.config.groupList} />
         </Form.Item>
         <Form.Item label="刷新间隔时间" name="refreshTime">
           <TimePicker />

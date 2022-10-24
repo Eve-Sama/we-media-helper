@@ -10,6 +10,7 @@ import _ from 'lodash';
 
 export function useTemplate(options: TemplateOptions) {
   const { key, cardGroupList, title } = options;
+  const broadcastChannel = new BroadcastChannel(key);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_ignore, forceUpdate] = useReducer(x => x + 1, 0);
@@ -67,8 +68,8 @@ export function useTemplate(options: TemplateOptions) {
   );
 
   useEffect(function listenBrodcast() {
-    new BroadcastChannel(key).onmessage = v => {
-      if (v.data === `${key}-init`) {
+    broadcastChannel.onmessage = v => {
+      if (v.data === `${key}-setting-changed`) {
         updateStorageData();
         loadDataRef.current();
       }
@@ -162,6 +163,7 @@ export function useTemplate(options: TemplateOptions) {
       }
     });
     window.electron.store.set(`${key}-data`, { ...storageData, dataCardList: tempDataCardList });
+    broadcastChannel.postMessage(`${key}-storage-data-changed`);
     updateStorageData();
   };
 
