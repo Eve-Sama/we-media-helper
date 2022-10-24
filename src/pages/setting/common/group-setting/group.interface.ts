@@ -28,5 +28,5 @@ export interface GroupSettingProps {
 
 export interface DataCardGroup {
   group: string;
-  children: Array<{ label: string; value: string; changeValue: string[]; totalValue: string[] }>;
+  children: Array<{ label: string; value: string; changeValue: string[]; totalValue: string[]; url: string }>;
 }

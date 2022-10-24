@@ -34,10 +34,13 @@ function initEvent() {
   ipcMain.on('notify', (_, message) => {
     const { title, url } = message;
     const notification = new Notification({ title, body: '数据发生变动' });
-    if (url) {
-      notification.on('click', () => shell.openExternal(url));
-    }
+    notification.on('click', () => shell.openExternal(url));
     notification.show();
+  });
+
+  ipcMain.on('openURL', (_, message) => {
+    const { url } = message;
+    shell.openExternal(url);
   });
 }
 

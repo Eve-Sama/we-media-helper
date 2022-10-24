@@ -33,12 +33,12 @@ export function useTemplate(options: TemplateOptions) {
   getDataCardInfoRef.current = getDataCardInfo;
 
   /** 全部卡片列表 */
-  const cardList = combileArrayBy(cardGroupList, 'children') as unknown as DataCardGroup['children'];
+  const allCardList = combileArrayBy(cardGroupList, 'children') as unknown as DataCardGroup['children'];
   let storageData = window.electron.store.get(`${key}-data`) as StorageData;
 
   useEffect(() => {
     (function verifyDataCard() {
-      const hasDuplicate = _.uniqBy(cardList, 'value').length !== cardList.length;
+      const hasDuplicate = _.uniqBy(allCardList, 'value').length !== allCardList.length;
       if (hasDuplicate) {
         throw new Error(`The input variable 'cardGroupList' exist duplicate type in different 'cardList'!`);
       }
@@ -84,7 +84,7 @@ export function useTemplate(options: TemplateOptions) {
   /** 解析卡片字段 */
   const analyzeDataCard: AnalyzeDataCard = callback => {
     setGetDataCardInfo(() => (type: string) => {
-      const { target, dataSource } = callback(type, cardList);
+      const { target, dataSource } = callback(type, allCardList);
       const changeValue = target.changeValue.reduce((pre, cur) => pre + (dataSource || {})[cur], 0);
       const totalValue = target.totalValue.reduce((pre, cur) => pre + (dataSource || {})[cur], 0);
       return {
@@ -158,14 +158,29 @@ export function useTemplate(options: TemplateOptions) {
        */
       if (dataCard) {
         if (tempDataCard.value > dataCard.value) {
-          const cardTitle = cardList.find(v => v.value === tempDataCard.type).label;
-          window.electron.ipcRenderer.send('notify', { title: `${title} - ${cardTitle}`, url: 'https://juejin.cn/notification' });
+          const card = allCardList.find(v => v.value === tempDataCard.type);
+          window.electron.ipcRenderer.send('notify', { title: `${title} - ${card.label}`, url: card.url });
         }
       }
     });
     window.electron.store.set(`${key}-data`, { ...storageData, dataCardList: tempDataCardList });
     broadcastChannel.postMessage(`${key}-storage-data-changed`);
     updateStorageData();
+  };
+
+  const getDataCardComponents = (cardList: Group['cardList']) => {
+    const res: JSX.Element[] = [];
+    cardList.forEach(card => {
+      const data = getDataCardInfoRef.current(card.type);
+      const { type, title, changeValue, totalValue } = data;
+      const targetCard = allCardList.find(v => v.value === card.type);
+      let url = '';
+      if (storageData.config.enableJumpLink) {
+        url = targetCard.url;
+      }
+      res.push(<DataCard key={type} title={title} changeValue={changeValue} totalValue={totalValue} url={url}></DataCard>);
+    });
+    return res;
   };
 
   const initGroupComponents = () => {
@@ -180,15 +195,6 @@ export function useTemplate(options: TemplateOptions) {
           </div>
         </div>,
       );
-    });
-    return res;
-  };
-
-  const getDataCardComponents = (cardList: Group['cardList']) => {
-    const res: JSX.Element[] = [];
-    cardList.forEach(card => {
-      const data = getDataCardInfoRef.current(card.type);
-      res.push(<DataCard key={data.type} title={data.title} changeValue={data.changeValue} totalValue={data.totalValue}></DataCard>);
     });
     return res;
   };

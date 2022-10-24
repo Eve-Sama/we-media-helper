@@ -17,6 +17,7 @@ export interface StorageData {
     refreshTime: string;
     showCountdown: boolean;
     groupList: Group[];
+    enableJumpLink: boolean;
   };
   /** 卡片最新数据, 用于推送提醒 */
   dataCardList: Array<{ type: string; value: number }>;
@@ -30,4 +31,4 @@ type UnionToTuple<U> = [U] extends [never] ? [] : [...UnionToTuple<Exclude<U, Un
  * @see https://segmentfault.com/q/1010000042243980
  */
 export type AnalyzeRequest = <T extends ReadonlyArray<() => AxiosPromise>>(request: T, callback: (data: UnionToTuple<Awaited<ReturnType<T[number]>>>) => boolean) => void;
-export type AnalyzeDataCard = (callback: (type: string, cardList: DataCardGroup['children']) => { target: DataCardGroup['children'][number]; dataSource: object }) => void;
+export type AnalyzeDataCard = (callback: (type: string, allCardList: DataCardGroup['children']) => { target: DataCardGroup['children'][number]; dataSource: object }) => void;

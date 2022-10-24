@@ -7,6 +7,7 @@ export const JuejinDefaultConfig: StorageData = {
     cookie: '',
     refreshTime: '00:00:30',
     showCountdown: true,
+    enableJumpLink: true,
     groupList: [
       {
         label: '基础数据',
@@ -55,20 +56,20 @@ export const JuejinCardGroupList: DataCardGroup[] = [
   {
     group: '数据总量',
     children: [
-      { label: '点赞总量', value: 'likeTotal', changeValue: [], totalValue: ['got_digg_count'] },
-      { label: '阅读总量', value: 'read', changeValue: [], totalValue: ['got_view_count'] },
-      { label: '掘力值', value: 'power', changeValue: [], totalValue: ['power'] },
-      { label: '粉丝总量', value: 'fan', changeValue: [], totalValue: ['follower_count'] },
+      { label: '点赞总量', value: 'likeTotal', changeValue: [], totalValue: ['got_digg_count'], url: 'https://juejin.cn/notification' },
+      { label: '阅读总量', value: 'read', changeValue: [], totalValue: ['got_view_count'], url: 'https://juejin.cn/notification' },
+      { label: '掘力值', value: 'power', changeValue: [], totalValue: ['power'], url: 'https://juejin.cn/notification' },
+      { label: '粉丝总量', value: 'fan', changeValue: [], totalValue: ['follower_count'], url: 'https://juejin.cn/notification' },
     ],
   },
   {
     group: '实时交互',
     children: [
-      { label: '评论消息', value: 'reply', changeValue: [], totalValue: ['3'] },
-      { label: '点赞消息', value: 'like', changeValue: [], totalValue: ['1'] },
-      { label: '关注消息', value: 'follow', changeValue: [], totalValue: ['2'] },
-      { label: '系统消息', value: 'system', changeValue: [], totalValue: ['4'] },
-      { label: '职位沟通', value: 'job', changeValue: [], totalValue: ['5'] },
+      { label: '评论消息', value: 'reply', changeValue: [], totalValue: ['3'], url: 'https://juejin.cn/notification' },
+      { label: '点赞消息', value: 'like', changeValue: [], totalValue: ['1'], url: 'https://juejin.cn/notification/digg' },
+      { label: '关注消息', value: 'follow', changeValue: [], totalValue: ['2'], url: 'https://juejin.cn/notification/follow' },
+      { label: '系统消息', value: 'system', changeValue: [], totalValue: ['4'], url: 'https://juejin.cn/notification/system' },
+      { label: '职位沟通', value: 'job', changeValue: [], totalValue: ['5'], url: 'https://juejin.cn/notification' },
     ],
   },
 ];

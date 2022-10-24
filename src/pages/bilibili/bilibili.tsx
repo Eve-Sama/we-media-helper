@@ -56,8 +56,8 @@ export function Bilibili() {
   }, []);
 
   useEffect(() => {
-    analyzeDataCard((type: string, cardList: DataCardGroup['children']) => {
-      const target = cardList.find(v => v.value === type);
+    analyzeDataCard((type: string, allCardList: DataCardGroup['children']) => {
+      const target = allCardList.find(v => v.value === type);
       let dataSource: object;
       if (['fan', 'click', 'totalReply', 'dm', 'totalLike', 'share', 'favorite', 'coin'].includes(type)) {
         dataSource = statData;

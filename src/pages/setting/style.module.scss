@@ -1,14 +1,16 @@
 .setting-container {
   display: flex;
+  height: 100vh;
   .setting-menu {
     height: 100vh;
-    >ul {
+    > ul {
       height: 100vh;
     }
   }
   .setting-content {
     flex: 1;
     display: flex;
-    margin: 16px 16px 0px;
+    padding: 16px 10px 0px 0px;
+    overflow: auto;
   }
 }

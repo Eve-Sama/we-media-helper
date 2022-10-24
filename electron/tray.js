@@ -42,7 +42,7 @@ function initTray() {
       label: '偏好设置',
       click: () =>
         trayClick('setting/bilibili', {
-          width: 800,
+          width: 850,
           height: 700,
           resizable: false,
           fullscreenable: false,

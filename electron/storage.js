@@ -13,6 +13,7 @@ function _initBilibiliSetting() {
         cookie: '',
         refreshTime: '00:00:30',
         showCountdown: true,
+        enableJumpLink: true,
         groupList: [
           {
             label: '基础数据',
@@ -93,6 +94,7 @@ function _initJueJinSetting() {
         cookie: '',
         refreshTime: '00:00:30',
         showCountdown: true,
+        enableJumpLink: true,
         groupList: [
           {
             label: '基础数据',

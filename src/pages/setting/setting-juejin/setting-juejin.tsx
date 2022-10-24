@@ -66,6 +66,9 @@ export function SettingJuejin() {
         <Form.Item label="显示倒计时" name="showCountdown" valuePropName="checked" tooltip={{ title: () => '只影响显示, 不影响倒计时刷新功能' }}>
           <Switch />
         </Form.Item>
+        <Form.Item label="卡片跳转链接" name="enableJumpLink" valuePropName="checked" tooltip={{ title: () => '开启时, 点击卡片可以跳转到相关链接' }}>
+          <Switch />
+        </Form.Item>
       </Form>
       <div className="footer-container">
         <Divider></Divider>
