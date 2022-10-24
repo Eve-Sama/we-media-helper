@@ -45,7 +45,6 @@ export function useTemplate(options: TemplateOptions) {
   useEffect(
     function retryRequest() {
       switch (retryTimes) {
-        /** @todo: 这个0是初始化导致的执行, 后面可以看看有没有办法避开 */
         case 0:
           break;
         case 1:
@@ -53,7 +52,7 @@ export function useTemplate(options: TemplateOptions) {
           message.error(`鉴权失败, 3秒后将重试(${retryTimes}/3).`);
           const maxRequestTimes = 3;
           if (retryTimes < maxRequestTimes) {
-            setTimeout(loadData, 3 * 1000);
+            setTimeout(loadDataRef.current, 3 * 1000);
           }
           break;
         case 3:
@@ -127,6 +126,13 @@ export function useTemplate(options: TemplateOptions) {
     notify();
   };
 
+  const handleRequestError = () => {
+    setRetryTimes(retryTimes => retryTimes + 1);
+    setDefaultTitle();
+    countdownRef.current?.setMode('error');
+    countdownRef.current?.startCountdown('0:0:0');
+  };
+
   const notify = () => {
     const typeList: string[] = [];
     const tempDataCardList: StorageData['dataCardList'] = [];
@@ -157,13 +163,6 @@ export function useTemplate(options: TemplateOptions) {
     });
     window.electron.store.set(`${key}-data`, { ...storageData, dataCardList: tempDataCardList });
     updateStorageData();
-  };
-
-  const handleRequestError = () => {
-    setRetryTimes(retryTimes + 1);
-    setDefaultTitle();
-    countdownRef.current?.setMode('error');
-    countdownRef.current?.startCountdown('0:0:0');
   };
 
   const initGroupComponents = () => {
