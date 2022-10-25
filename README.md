@@ -1,56 +1,82 @@
-## 业务背景
+<p align="center">
+    <img width="230" src="https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210251258890.png">
+</p>
+<h1 align="center">
+Platform Listener
+</h1>
+<p align="center">
+自媒体大数据平台, 定时获取你的个人账号数据, 关键信息及时通知, 让你轻松开启多线程模式!
+</p>
 
-像B站、掘金这类网站, 评论都是通过站内信进行通知的. 这会导致用户的留言, 往往要等到我打开站点的时候才能得到回复, 我无法实时得知最新的留言数据, 如果使用轮训则过于麻烦. 因此, 我开发了这款"Platform Listener", 顾名思义, 主要是用于监听平台数据的, 不止是留言等需要互动的消息, 账号的基础数据也可以一并展示, 如粉丝量、播放量等. 目前仅支持Mac系统, Windows因为我自己没有需求, 所以一直也没配置, 欢迎来个PR.
+<p align="center">
+<img src="https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210251418921.png">
+<p>
 
-## 使用介绍
+## ✨ 特性
 
-在[这里](https://github.com/Eve-Sama/platform-listener/releases)下载`platform-listener-arm64.dmg`, 双击进行安装.
+- 抓取你个人账号的创作数据, 海量数据一览无余.
+- 自定义定时刷新, 最新的数据向你奔赴而来.
+- 自定义卡片通知, 让留言等关键信息, 第一时间向你报道.
+- 自定义分组标题、卡片、列数等各种参数, 你的数据大屏你做主.
+- 支持M1、Intel芯片的Mac, 暂不支持Windows.
 
-![image-20221020175754527](https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210220052964.png)
+## 📦 使用介绍
 
-将`Platform Listener`拖入`Applications`即可. 运行后, 并不会弹出任何窗口. 但是在菜单栏将会出现一个新的图标.
+### 1. 下载并安装
 
-![](https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210220052979.png)
+在[这里](https://github.com/Eve-Sama/platform-listener/releases)下载适配设备的安装包进行安装. 双击进运行后, 并不会弹出任何窗口. 但是在`菜单栏`将会出现一个新的图标.
+
+![](https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210251255805.png)
+
+### 2. 设置cookie
 
 点击`偏好设置`进入设置界面, 我们以B站设置为例.
 
-![image-20221020180032653](https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210220052063.png)
+![image-20221025142009847](https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210251420883.png)
 
-整体界面是这个样子, 你需要输入对应站点的`cookie`, 随便找个请求拷贝下即可. 注意一个知识点, 请求只有和域名一致时才会携带`cookie`, 而一般站点都有一些非自己域名的请求, 所以并非所有请求都有`cookie`, 注意看下域名.
+整体界面是这个样子, 你需要输入对应站点的`cookie`, 随便找个请求拷贝下即可.
 
-![image-20221020180531650](https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210220052139.png)
+> 请求只有和域名一致时才会携带`cookie`, 而一般站点都有一些非自己域名的请求, 所以并非所有请求都有`cookie`, 注意看下域名.
+
+![image-20221025142418338](https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210251424376.png)
+
+需要注意, `cookie`都会有过期的情况. 不同站点过期时间不一样. 一旦过期, 将会出现鉴权错误. 你只需要在偏好设置中重新设置最新的`cookie`即可. 
+
+![image-20221025143814358](https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210251438398.png)
+
+### 3. 设置分组
 
 在分组设置中, 可以设置需要的卡片.
 
-![image-20221020181014618](https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210220052198.png)
+![image-20221025142729355](https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210251427375.png)
+
+### 4. 设置通知
+
+分组的卡片有个绿色的点. **这个绿点可以通过点击进行开启和关闭. 当绿点亮时, 系统将认为该数据需要在数量变多时进行系统通知**. 如你原先的留言是0条, 定时刷新后得到了1条数据, 则进行系统通知. 通常建议只有交互类型的数据才开启, 对于粉丝量等积累型数据不必开启.
+
+![image-20221020181116497](https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210251255298.png)
+
+为了能够正常进行系统通知, 请确保在系统中开启了相应的通知权限.
+
+![image-20221025143900864](https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210251439904.png)
+
+### 5. 开启数据大屏
 
 之后再打开B站的监听器
 
-![image-20221020180615092](https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210220052252.png)
+![image-20221020180615092](https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210251255148.png)
 
-<img src="https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210220052335.png" alt="image-20221020180713862" style="zoom:50%;" />
+建议将大数据面板放在多余的显示器上, 逼格拉满, 闲时瞄一眼岂不妙哉?
 
-此时你就会看到你账号的相关数据. 在刚才的偏好设置中, 我们的卡片有个绿色的点.
+![image-20221025141837889](https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210251429127.png)
 
-![image-20221020181116497](https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210220052368.png)
+当开启了通知的卡片有数据新增时, 软件会进行系统通知, 点击图标即可跳转到相应的网页进行查看.
 
-这个绿点可以通过点击进行开启和关闭. 当绿点亮时, 系统将认为该数据需要在数量变多时进行系统通知, 如你原先的留言是0条, 定时刷新后得到了1条数据, 则进行系统通知. 通常建议只有交互类型的数据才开启, 对于粉丝量等积累型数据不必开启.
+![image-20221025145200686](https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210251452726.png)
 
-<img src="https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210220052435.png" alt="image-20221020211943529" style="zoom:50%;" />
+## 🔨路线图
 
-为了能够正常通知, 你需要确保在系统中开启了相应的通知权限.
-
-<img src="https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210220052603.png" alt="image-20221020212321209" style="zoom:50%;" />
-
-需要注意, `cookie`都会有过期的情况. 不同站点过期时间不一样. 一旦过期, 将会出现鉴权错误.
-
-<img src="https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210220052646.png" alt="image-20221020212522442" style="zoom:50%;" />
-
-你只需要在偏好设置中重新设置最新的`cookie`即可. 
-
-## roadmap
-
-### feat
+### 💪feat
 
  - [ ] 将 Electron 改版为 TypeScript 版本(试过2次了, 老是会出问题).
  - [ ] 制作欢迎页.
@@ -61,15 +87,18 @@
  - [ ] icon增加黑暗模式.
  - [ ] 设置界面的footer可以抽象.
  - [ ] 整理下构建相关的静态资源和文件结构.
+ - [ ] 整理下B站和掘金的展示页和设置页目录结构.
 
-## FAQ
+### 🐛fix
+
+## 🙋FAQ
 
 ### 卡片上显示'字段异常!'是什么意思?
 
-<img src="https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210242209691.png" alt="image-20221024220901662" style="zoom:50%;" />
+![image-20221025145052415](https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210251450458.png)
 
 因为系统读取的是人家的接口, 因此, 一旦接口发生改动, 将导致可能读不到字段.
-```json
+```javascript
 {
   data: {
     vme50: true
@@ -90,15 +119,19 @@
  - 字段位置变了
  - 字段被删除了
 
-不论哪一种, 都将导致该字段显示`字段异常`. 建议暂时取消该卡片. 如果是第一种情况, 我会尽快修改读取逻辑, 发布新版本后就正常了. 而如果是第二种情况, 我会在`偏好设置`中删除该卡片选项, 并自动从你已保存的配置中删除该卡片, 并发布新版本.
+不论哪一种, 都将导致该字段显示`字段异常`. 建议暂时取消该卡片. 如果是第一种情况, 我会尽快修改读取逻辑, 发布新版本后就正常了. 而如果是第二种情况, 我会在新版本的`偏好设置`中删除该卡片选项, 并自动从你已保存的配置中删除该卡片.
 
-## 本地开发
+### 为什么开启了卡片跳转链接, 但有些卡片点击后无反应?
+
+因为不是所有卡片都有相应的页面的. 如掘金的点赞总量, 该字段的相关接口在个人主页. 但是主页的URL是需要拼接你的`uid`的. 而本软件遵循`克制`的原则开发, 能不+功能就不+功能, 以保持简洁性. 因此当相关主页`URL`依赖额外参数时, 不提供跳转链接.
+
+## 🧑‍💻本地开发
 
 ```bash
 npm run start
 ```
 
-## 打包流程
+## 🚀打包流程
 
 你可以一键打包目前支持的全部平台, 也可以单独构建某个特定的平台, 详情查看`package.json`
 
@@ -106,7 +139,8 @@ npm run start
 npm run build:all
 ```
 
-<img src="https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210220121857.png" alt="image-20221022012151818" style="zoom:50%;" />
+![image-20221025145108561](https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210251451594.png)
 
 最终产生的安装文件位于`dist/electron`
+
 
