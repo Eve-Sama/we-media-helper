@@ -1,5 +1,5 @@
 import axios, { AxiosPromise } from 'axios-esm';
-import { Count, JuejinResponse, User, UserBasicInfo } from './juejin.interface';
+import { Count, JuejinResponse, User, UserBasicInfo } from './request-juejin.interface';
 
 export function getCount(): AxiosPromise<JuejinResponse<Count>> {
   return axios({

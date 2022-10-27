@@ -1,11 +1,11 @@
 import { Button, Divider, Form, Input, Switch, TimePicker } from 'antd';
 import moment, { Moment } from 'moment';
 import { useEffect, useRef } from 'react';
-import { GroupSettingRef } from '../../../setting/common/group-setting/group.interface';
-import { StorageData } from '../template.interface';
-import { SettingTemplateOptions } from './template.interface';
+import { GroupSetting } from '../../group-setting/group-setting';
+import { GroupSettingRef } from '../../group-setting/group.interface';
+import { StorageData } from '../display-template/template.interface';
+import { SettingTemplateOptions } from './setting-template.interface';
 import styles from './style.module.scss';
-import { GroupSetting } from '../../../setting/common/group-setting/group-setting';
 
 const { TextArea } = Input;
 

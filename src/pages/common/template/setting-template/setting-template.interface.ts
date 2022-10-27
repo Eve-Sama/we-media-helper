@@ -1,5 +1,5 @@
-import { DataCardGroup } from '../../../setting/common/group-setting/group.interface';
-import { StorageData } from '../template.interface';
+import { DataCardGroup } from '../../group-setting/group.interface';
+import { StorageData } from '../display-template/template.interface';
 
 export interface SettingTemplateOptions {
   /** 模块标识符, 如 juejin、bilibili */

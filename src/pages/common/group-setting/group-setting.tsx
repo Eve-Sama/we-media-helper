@@ -4,7 +4,7 @@ import styles from './style.module.scss';
 import { v4 as uuidv4 } from 'uuid';
 import _ from 'lodash';
 import { GroupSettingRef, Group, GroupSettingProps } from './group.interface';
-import { combileArrayBy } from '../../../../common/utils-function';
+import { combileArrayBy } from '../../../common/utils-function';
 const { Option, OptGroup } = Select;
 
 export const GroupSetting = forwardRef<GroupSettingRef, GroupSettingProps>((props, ref) => {

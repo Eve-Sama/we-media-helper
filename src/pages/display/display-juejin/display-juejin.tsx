@@ -1,9 +1,9 @@
-import { getCount, getUser, getUserBaiscInfo } from '../../request/juejin/juejin.request';
-import { JuejinOptionalCardGroupList } from '../setting/setting-juejin/setting-juejin.interface';
-import { useTemplate } from '../common/template/template';
-import { Count, UserBasicInfo } from '../../request/juejin/juejin.interface';
 import { useEffect } from 'react';
-import { DataCardGroup } from '../setting/common/group-setting/group.interface';
+import { Count, UserBasicInfo } from '../../../request/request-juejin/request-juejin.interface';
+import { getCount, getUser, getUserBaiscInfo } from '../../../request/request-juejin/request-juejin.request';
+import { DataCardGroup } from '../../common/group-setting/group.interface';
+import { useTemplate } from '../../common/template/display-template/template';
+import { JuejinOptionalCardGroupList } from '../../setting/setting-juejin/setting-juejin.interface';
 
 export function JueJin() {
   const key = 'juejin';

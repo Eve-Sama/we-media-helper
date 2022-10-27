@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
-import { getAccount, getMessage, getStat, getUnread } from '../../request';
-import { Message, Stat, Unread } from '../../request/bilibili/bilibili.interface';
-import { useTemplate } from '../common/template/template';
-import { DataCardGroup } from '../setting/common/group-setting/group.interface';
-import { BilibiliOptionalCardGroupList } from '../setting/setting-bilibili/setting-bilibili.interface';
+import { Stat, Unread, Message } from '../../../request/request-bilibili/request-bilibili.interface';
+import { getStat, getAccount, getUnread, getMessage } from '../../../request/request-bilibili/request-bilibili.request';
+import { DataCardGroup } from '../../common/group-setting/group.interface';
+import { useTemplate } from '../../common/template/display-template/template';
+import { BilibiliOptionalCardGroupList } from '../../setting/setting-bilibili/setting-bilibili.interface';
 
 export function Bilibili() {
   const key = 'bilibili';

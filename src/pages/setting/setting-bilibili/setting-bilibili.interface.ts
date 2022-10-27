@@ -1,6 +1,6 @@
-import { DataCardGroup } from '../common/group-setting/group.interface';
 import { v4 as uuidv4 } from 'uuid';
-import { StorageData } from '../../common/template/template.interface';
+import { DataCardGroup } from '../../common/group-setting/group.interface';
+import { StorageData } from '../../common/template/display-template/template.interface';
 
 export const BilibiliDefaultConfig: StorageData = {
   config: {

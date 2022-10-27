@@ -1,12 +1,12 @@
 import { useEffect, useReducer, useRef, useState } from 'react';
-import { combileArrayBy } from '../../../common/utils-function';
-import { CountdownDisplay, CountdownDisplayRef } from '../countdown-display/countdown-display';
 import { AnalyzeDataCard, AnalyzeRequest, StorageData, TemplateOptions } from './template.interface';
 import { message, Spin } from 'antd';
-import { DataCard } from '../data-card/data-card';
-import { DataCardGroup, Group } from '../../setting/common/group-setting/group.interface';
 import styles from './style.module.scss';
 import _ from 'lodash';
+import { combileArrayBy } from '../../../../common/utils-function';
+import { CountdownDisplayRef, CountdownDisplay } from '../../countdown-display/countdown-display';
+import { DataCard } from '../../data-card/data-card';
+import { DataCardGroup, Group } from '../../group-setting/group.interface';
 
 export function useTemplate(options: TemplateOptions) {
   const { key, cardGroupList, title } = options;

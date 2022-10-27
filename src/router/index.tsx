@@ -1,7 +1,7 @@
 import { RouteObject } from 'react-router-dom';
-import { Bilibili } from '../pages/bilibili/bilibili';
+import { Bilibili } from '../pages/display/display-bilibili/display-bilibili';
+import { JueJin } from '../pages/display/display-juejin/display-juejin';
 import { Home } from '../pages/home/home';
-import { JueJin } from '../pages/juejin/juejin';
 import { Setting } from '../pages/setting/setting';
 import { SettingBilibili } from '../pages/setting/setting-bilibili/setting-bilibili';
 import { SettingJuejin } from '../pages/setting/setting-juejin/setting-juejin';

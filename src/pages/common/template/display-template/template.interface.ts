@@ -1,5 +1,5 @@
 import { AxiosPromise } from 'axios-esm';
-import { DataCardGroup, Group } from '../../setting/common/group-setting/group.interface';
+import { DataCardGroup, Group } from '../../group-setting/group.interface';
 
 export interface TemplateOptions {
   /** 模块标识符, 如 juejin、bilibili */

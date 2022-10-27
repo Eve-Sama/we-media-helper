@@ -1,4 +1,4 @@
-import { useSettingTemplate } from '../../common/template/setting/template';
+import { useSettingTemplate } from '../../common/template/setting-template/setting-template';
 import { JuejinDefaultConfig, JuejinOptionalCardGroupList } from './setting-juejin.interface';
 
 export function SettingJuejin() {
