@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { Count, UserBasicInfo } from '../../../request/request-juejin/request-juejin.interface';
 import { getCount, getUser, getUserBaiscInfo } from '../../../request/request-juejin/request-juejin.request';
 import { DataCardGroup } from '../../common/group-setting/group.interface';
-import { useTemplate } from '../../common/template/display-template/template';
+import { useTemplate } from '../../common/template/display-template/display-template';
 import { JuejinOptionalCardGroupList } from '../../setting/setting-juejin/setting-juejin.interface';
 
 export function JueJin() {

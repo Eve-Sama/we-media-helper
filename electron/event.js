@@ -1,7 +1,8 @@
 const { session, ipcMain, Notification, shell } = require('electron');
+const Store = require('electron-store');
+
 const { windowMap } = require('./window');
 
-const Store = require('electron-store');
 const store = new Store();
 
 function setCookie() {
@@ -18,6 +19,7 @@ function setCookie() {
   session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
     fn('juejin', details);
     fn('bilibili', details);
+    fn('zhihu', details);
     callback({ cancel: false, requestHeaders: details.requestHeaders });
   });
 }

@@ -24,7 +24,6 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'warn',
     'import/no-duplicates': 'error',
     'import/no-unused-modules': 'error',
-    'import/no-unassigned-import': 'error',
     'import/order': [
       'error',
       {

@@ -6,11 +6,11 @@ import { combileArrayBy } from '../../../../common/utils-function';
 import { CountdownDisplayRef, CountdownDisplay } from '../../countdown-display/countdown-display';
 import { DataCard } from '../../data-card/data-card';
 import { DataCardGroup, Group } from '../../group-setting/group.interface';
+import { AnalyzeDataCard, AnalyzeRequest, StorageData, TemplateOptions } from './display-template.interface';
 import styles from './style.module.scss';
-import { AnalyzeDataCard, AnalyzeRequest, StorageData, TemplateOptions } from './template.interface';
 
 export function useTemplate(options: TemplateOptions) {
-  const { key, cardGroupList, title } = options;
+  const { key, cardGroupList, title, defaultConfig } = options;
   const broadcastChannel = new BroadcastChannel(key);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -36,7 +36,7 @@ export function useTemplate(options: TemplateOptions) {
 
   /** 全部卡片列表 */
   const allCardList = combileArrayBy(cardGroupList, 'children') as unknown as DataCardGroup['children'];
-  let storageData = window.electron.store.get(`${key}-data`) as StorageData;
+  let storageData = (window.electron.store.get(`${key}-data`) || defaultConfig) as StorageData;
 
   useEffect(() => {
     (function verifyDataCard() {

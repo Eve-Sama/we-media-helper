@@ -1,5 +1,7 @@
 const { Tray, Menu, shell, app } = require('electron');
+
 const path = require('path');
+
 const { trayClick } = require('./window');
 
 function initTray() {
@@ -31,6 +33,18 @@ function initTray() {
               resizable: true,
               fullscreenable: false,
               title: '掘金',
+            });
+          },
+        },
+        {
+          label: '知乎',
+          click: () => {
+            trayClick('zhihu', {
+              width: 980,
+              height: 1270,
+              resizable: true,
+              fullscreenable: false,
+              title: '知乎',
             });
           },
         },

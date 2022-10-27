@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { Stat, Unread, Message } from '../../../request/request-bilibili/request-bilibili.interface';
 import { getStat, getAccount, getUnread, getMessage } from '../../../request/request-bilibili/request-bilibili.request';
 import { DataCardGroup } from '../../common/group-setting/group.interface';
-import { useTemplate } from '../../common/template/display-template/template';
+import { useTemplate } from '../../common/template/display-template/display-template';
 import { BilibiliOptionalCardGroupList } from '../../setting/setting-bilibili/setting-bilibili.interface';
 
 export function Bilibili() {

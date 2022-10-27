@@ -2,9 +2,10 @@ import { Button, Divider, Form, Input, Switch, TimePicker } from 'antd';
 import moment, { Moment } from 'moment';
 import { useEffect, useRef } from 'react';
 
+import { combileArrayBy } from '../../../../common/utils-function';
 import { GroupSetting } from '../../group-setting/group-setting';
-import { GroupSettingRef } from '../../group-setting/group.interface';
-import { StorageData } from '../display-template/template.interface';
+import { DataCardGroup, GroupSettingRef } from '../../group-setting/group.interface';
+import { StorageData } from '../display-template/display-template.interface';
 import { SettingTemplateOptions } from './setting-template.interface';
 import styles from './style.module.scss';
 
@@ -20,6 +21,14 @@ export function useSettingTemplate(options: SettingTemplateOptions) {
   const storageData = (window.electron.store.get(`${key}-data`) || defaultConfig) as StorageData;
 
   useEffect(() => {
+    (function verifyDefaultDataCard() {
+      const allOptionalCardList = combileArrayBy(cardGroupList, 'children') as unknown as DataCardGroup['children'];
+      const allDefaultCardList = combileArrayBy(defaultConfig.config.groupList, 'cardList') as unknown as StorageData['config']['groupList'][number]['cardList'];
+      const notMatched = allDefaultCardList.some(defaultItem => !allOptionalCardList.find(optionalItem => optionalItem.value === defaultItem.type));
+      if (notMatched) {
+        throw new Error(`The input variable 'defaultConfig' exist some types doesn't match value of 'cardGroupList'!`);
+      }
+    })();
     (function listenBrodcast() {
       broadcastChannel.onmessage = v => {
         if (v.data === `${key}-storage-data-changed`) {

@@ -9,6 +9,7 @@ export interface TemplateOptions {
   cardGroupList: DataCardGroup[];
   /** 窗口的标题 */
   title: string;
+  defaultConfig?: StorageData;
 }
 
 export interface StorageData {

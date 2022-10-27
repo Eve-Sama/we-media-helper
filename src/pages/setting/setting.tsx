@@ -1,6 +1,6 @@
-import type { MenuProps } from 'antd';
-import { Menu } from 'antd';
+import { Menu, MenuProps } from 'antd';
 import { Outlet, useNavigate } from 'react-router-dom';
+
 import styles from './style.module.scss';
 
 const items: MenuProps['items'] = [
@@ -15,6 +15,10 @@ const items: MenuProps['items'] = [
   {
     label: '掘金',
     key: 'juejin',
+  },
+  {
+    label: '知乎',
+    key: 'zhihu',
   },
 ];
 
