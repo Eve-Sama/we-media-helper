@@ -15,28 +15,36 @@ export function Zhihu() {
   const { getRenderDOM, analyzeRequest, analyzeDataCard, forceUpdate } = useTemplate({ key, cardGroupList: ZhihuOptionalCardGroupList, defaultConfig: ZhihuDefaultConfig, title: '知乎' });
 
   useEffect(() => {
-    analyzeRequest([getBaiscInfo, getMessage], data => {
-      let showError = false;
-      // 处理基础信息
-      const [tempBasicInfo, tempMessage] = data;
-      const responseCountData = tempBasicInfo.data;
-      if (responseCountData.pv) {
-        basicInfo = tempBasicInfo.data;
-      } else {
+    analyzeRequest(
+      [getBaiscInfo, getMessage],
+      data => {
+        let showError = false;
+        // 处理基础信息
+        const [tempBasicInfo, tempMessage] = data;
+        const responseBasicInfoData = tempBasicInfo.data;
+        if (responseBasicInfoData.pv && !(responseBasicInfoData.pv === 6454813784 && responseBasicInfoData.share === 5244324)) {
+          basicInfo = tempBasicInfo.data;
+        } else {
+          basicInfo = null;
+          showError = true;
+        }
+        // 处理账户信息
+        const responseMessage = tempMessage.data;
+        if (responseMessage.name) {
+          window.electron.ipcRenderer.send('set-title', { key, title: `知乎 - ${responseMessage.name}` });
+          message = responseMessage;
+        } else {
+          message = null;
+          showError = true;
+        }
+        forceUpdate();
+        return showError;
+      },
+      () => {
         basicInfo = null;
-        showError = true;
-      }
-      // 处理账户信息
-      const responseUserData = tempMessage.data;
-      if (responseUserData.name) {
-        window.electron.ipcRenderer.send('set-title', { key, title: `知乎 - ${responseUserData.name}` });
-        message = responseUserData;
-      } else {
-        showError = true;
-      }
-      forceUpdate();
-      return showError;
-    });
+        message = null;
+      },
+    );
   }, []);
 
   useEffect(() => {

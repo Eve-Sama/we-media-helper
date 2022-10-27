@@ -101,19 +101,22 @@ export function useTemplate(options: TemplateOptions) {
   };
 
   /** 解析接口的逻辑 */
-  const analyzeRequest: AnalyzeRequest = (requestList, callback) => {
+  const analyzeRequest: AnalyzeRequest = (requestList, thenCallback, catchCallback) => {
     setLoadData(() => () => {
       setLoading(true);
       Promise.all(requestList.map(v => v()))
         .then(v => {
-          const showError = callback(v as any);
+          const showError = thenCallback(v as any);
           if (showError) {
             handleRequestError();
           } else {
             handleRequestSuccess();
           }
         })
-        .catch(() => handleRequestError())
+        .catch(() => {
+          catchCallback();
+          handleRequestError();
+        })
         .finally(() => setLoading(false));
     });
   };
