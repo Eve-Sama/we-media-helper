@@ -1,4 +1,5 @@
 import axios, { AxiosPromise } from 'axios-esm';
+
 import { Account, BilibiliResponse, Message, Stat, Unread } from './request-bilibili.interface';
 
 export function getStat(): AxiosPromise<BilibiliResponse<Stat>> {

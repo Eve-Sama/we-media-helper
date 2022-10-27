@@ -1,10 +1,11 @@
 import { Form, Input, InputNumber, List, Modal, Popconfirm, Select, Tag } from 'antd';
-import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
-import styles from './style.module.scss';
-import { v4 as uuidv4 } from 'uuid';
 import _ from 'lodash';
-import { GroupSettingRef, Group, GroupSettingProps } from './group.interface';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+
 import { combileArrayBy } from '../../../common/utils-function';
+import { GroupSettingRef, Group, GroupSettingProps } from './group.interface';
+import styles from './style.module.scss';
 const { Option, OptGroup } = Select;
 
 export const GroupSetting = forwardRef<GroupSettingRef, GroupSettingProps>((props, ref) => {

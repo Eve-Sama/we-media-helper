@@ -1,7 +1,8 @@
+import { useDebounceFn } from 'ahooks';
 import { Divider, Statistic } from 'antd';
 import { forwardRef, useImperativeHandle, useState } from 'react';
+
 import styles from './style.module.scss';
-import { useDebounceFn } from 'ahooks';
 
 const { Countdown } = Statistic;
 
