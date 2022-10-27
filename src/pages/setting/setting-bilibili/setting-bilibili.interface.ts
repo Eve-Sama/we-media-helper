@@ -76,7 +76,7 @@ export const BilibiliDefaultConfig: StorageData = {
   dataCardList: [],
 };
 
-export const BilibiliCardGroupList: DataCardGroup[] = [
+export const BilibiliOptionalCardGroupList: DataCardGroup[] = [
   {
     group: '数据总量',
     children: [

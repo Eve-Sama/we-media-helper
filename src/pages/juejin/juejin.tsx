@@ -1,5 +1,5 @@
 import { getCount, getUser, getUserBaiscInfo } from '../../request/juejin/juejin.request';
-import { JuejinCardGroupList } from '../setting/setting-juejin/setting-juejin.interface';
+import { JuejinOptionalCardGroupList } from '../setting/setting-juejin/setting-juejin.interface';
 import { useTemplate } from '../common/template/template';
 import { Count, UserBasicInfo } from '../../request/juejin/juejin.interface';
 import { useEffect } from 'react';
@@ -11,7 +11,7 @@ export function JueJin() {
   let countData: Count['count'];
   let basicInfoData: UserBasicInfo;
 
-  const { getRenderDOM, analyzeRequest, analyzeDataCard, forceUpdate } = useTemplate({ key, cardGroupList: JuejinCardGroupList, title: '掘金' });
+  const { getRenderDOM, analyzeRequest, analyzeDataCard, forceUpdate } = useTemplate({ key, cardGroupList: JuejinOptionalCardGroupList, title: '掘金' });
 
   useEffect(() => {
     analyzeRequest([getCount, getUser, getUserBaiscInfo], data => {

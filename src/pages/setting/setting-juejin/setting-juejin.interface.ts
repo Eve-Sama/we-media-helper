@@ -56,7 +56,7 @@ export const JuejinDefaultConfig: StorageData = {
   dataCardList: [],
 };
 
-export const JuejinCardGroupList: DataCardGroup[] = [
+export const JuejinOptionalCardGroupList: DataCardGroup[] = [
   {
     group: '数据总量',
     children: [
