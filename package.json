@@ -1,6 +1,6 @@
 {
   "name": "platform-listener",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "electron/main.js",
   "description": "Listen some imformation",
   "author": {
