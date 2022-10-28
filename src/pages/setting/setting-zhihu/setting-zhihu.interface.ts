@@ -13,6 +13,8 @@ export const ZhihuOptionalCardGroupList: DataCardGroup[] = [
       { label: '评论总量', value: 'comment', changeValue: [], totalValue: ['comment'], url: 'https://www.zhihu.com/creator/analytics/work/all' },
       { label: '收藏总量', value: 'collect', changeValue: [], totalValue: ['collect'], url: 'https://www.zhihu.com/creator/analytics/work/all' },
       { label: '分享总量', value: 'share', changeValue: [], totalValue: ['share'], url: 'https://www.zhihu.com/creator/analytics/work/all' },
+      { label: '关注者总数', value: 'total_follow', changeValue: [], totalValue: ['total_follow'], url: 'https://www.zhihu.com/creator/followers' },
+      { label: '活跃关注者', value: 'active_follow', changeValue: ['pre_follow'], totalValue: ['active_follow'], url: 'https://www.zhihu.com/creator/followers' },
     ],
   },
   {
@@ -32,15 +34,15 @@ export const ZhihuDefaultConfig: StorageData = {
         label: '基础数据',
         cardList: [
           {
+            type: 'total_follow',
+            notify: false,
+          },
+          {
+            type: 'active_follow',
+            notify: false,
+          },
+          {
             type: 'pv',
-            notify: false,
-          },
-          {
-            type: 'play',
-            notify: false,
-          },
-          {
-            type: 'like_and_reaction',
             notify: false,
           },
           {

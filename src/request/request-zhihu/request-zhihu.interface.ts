@@ -24,3 +24,14 @@ export interface Message {
   name: string;
   messages_count: number;
 }
+
+export interface Follow {
+  List: Array<{
+    /** 关注者总数 */
+    total_follow: 8107;
+    /** 活跃关注者 */
+    active_follow: 2033;
+    /** 昨日关注者变化 */
+    pre_follow: -1;
+  }>;
+}
