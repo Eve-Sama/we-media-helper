@@ -1,13 +1,15 @@
 import { dest, series, src } from 'gulp';
-import { exec } from 'child_process';
 import through from 'through2';
+
+import { exec } from 'child_process';
+
 import { consoleMessage, errorHandle } from './utils';
 
-function _buildReact(cb: Function): void {
+function _buildReact(cb: () => void): void {
   exec(`cross-env BUILD_PATH=dist/web react-scripts build`, error => errorHandle(error, cb));
 }
 
-function _createPackageJson(cb: Function): void {
+function _createPackageJson(cb: () => void): void {
   const files = ['./package.json'];
   src(files)
     .pipe(
@@ -32,7 +34,7 @@ function _createPackageJson(cb: Function): void {
         targetPackage.description = obj.description;
         targetPackage.author = obj.author;
         targetPackage.productName = obj.productName;
-        file.contents = Buffer.from(JSON.stringify(targetPackage, null, 2) + '\n');
+        file.contents = Buffer.from(`${JSON.stringify(targetPackage, null, 2)}\n`);
         this.push(file);
         cb();
       }),
@@ -41,30 +43,30 @@ function _createPackageJson(cb: Function): void {
   cb();
 }
 
-function _createNodeModules(cb: Function): void {
+function _createNodeModules(cb: () => void): void {
   const files = ['atomically', '.bin', '.yarn-integrity', 'ajv', 'ajv-formats', 'conf', 'dayjs', 'debounce-fn', 'dot-prop', 'electron-store', 'env-paths', 'fast-deep-equal', 'find-up', 'is-obj', 'json-schema-traverse', 'json-schema-typed', 'locate-path', 'lru-cache', 'mimic-fn', 'onetime', 'p-limit', 'p-locate', 'p-try', 'path-exists', 'pkg-up', 'punycode', 'require-from-string', 'semver', 'type-fest', 'uri-js', 'uuid', 'yallist'];
   files.forEach(v => src(`./node_modules/${v}/**/*`).pipe(dest(`./dist/web/node_modules/${v}`)));
   cb();
 }
 
-function _createElectronFiles(cb: Function): void {
+function _createElectronFiles(cb: () => void): void {
   src(`./electron/**/*`).pipe(dest(`./dist/web/electron`));
   cb();
 }
 
-function _buildPackageForM1(cb: Function): void {
+function _buildPackageForM1(cb: () => void): void {
   exec(`electron-packager ./dist/web 'Platform Listener' --platform=darwin --arch=arm64 --icon=scripts/assets/icons/dock.icns --overwrite=true --out=dist/electron`, error => errorHandle(error, cb));
 }
 
-function _buildDmgForM1(cb: Function): void {
+function _buildDmgForM1(cb: () => void): void {
   exec(`electron-installer-dmg ./dist/electron/'Platform Listener'-darwin-arm64/'Platform Listener'.app platform-listener-m1 --overwrite --out=dist/electron`, error => errorHandle(error, cb));
 }
 
-function _buildPackageForIntel(cb: Function): void {
+function _buildPackageForIntel(cb: () => void): void {
   exec(`electron-packager ./dist/web 'Platform Listener' --platform=darwin --arch=x64 --icon=scripts/assets/icons/dock.icns --overwrite=true --out=dist/electron`, error => errorHandle(error, cb));
 }
 
-function _buildDmgForIntel(cb: Function): void {
+function _buildDmgForIntel(cb: () => void): void {
   exec(`electron-installer-dmg ./dist/electron/'Platform Listener'-darwin-x64/'Platform Listener'.app platform-listener-intel --overwrite --out=dist/electron`, error => errorHandle(error, cb));
 }
 
