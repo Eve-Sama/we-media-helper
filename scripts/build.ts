@@ -5,6 +5,8 @@ import { exec } from 'child_process';
 
 import { consoleMessage, errorHandle } from './utils';
 
+const output = './dist/electron';
+
 function _buildReact(cb: () => void): void {
   exec(`cross-env BUILD_PATH=dist/web react-scripts build`, error => errorHandle(error, cb));
 }
@@ -55,27 +57,27 @@ function _createElectronFiles(cb: () => void): void {
 }
 
 function _buildPackageForM1(cb: () => void): void {
-  exec(`electron-packager ./dist/web 'Platform Listener' --platform=darwin --arch=arm64 --icon=scripts/assets/icons/mac-dock.icns --overwrite=true --out=dist/electron`, error => errorHandle(error, cb));
+  exec(`electron-packager ./dist/web 'Platform Listener' --platform=darwin --arch=arm64 --icon=scripts/assets/icons/mac-dock.icns --overwrite=true --out=${output}`, error => errorHandle(error, cb));
 }
 
 function _buildDmgForM1(cb: () => void): void {
-  exec(`electron-installer-dmg ./dist/electron/'Platform Listener'-darwin-arm64/'Platform Listener'.app platform-listener-m1-arm64 --overwrite --out=dist/electron`, error => errorHandle(error, cb));
+  exec(`electron-installer-dmg ./dist/electron/'Platform Listener'-darwin-arm64/'Platform Listener'.app platform-listener-m1-arm64 --overwrite --out=${output}`, error => errorHandle(error, cb));
 }
 
 function _buildPackageForIntel(cb: () => void): void {
-  exec(`electron-packager ./dist/web 'Platform Listener' --platform=darwin --arch=x64 --icon=scripts/assets/icons/mac-dock.icns --overwrite=true --out=dist/electron`, error => errorHandle(error, cb));
+  exec(`electron-packager ./dist/web 'Platform Listener' --platform=darwin --arch=x64 --icon=scripts/assets/icons/mac-dock.icns --overwrite=true --out=${output}`, error => errorHandle(error, cb));
 }
 
 function _buildDmgForIntel(cb: () => void): void {
-  exec(`electron-installer-dmg ./dist/electron/'Platform Listener'-darwin-x64/'Platform Listener'.app platform-listener-intel-x64 --overwrite --out=dist/electron`, error => errorHandle(error, cb));
+  exec(`electron-installer-dmg ./dist/electron/'Platform Listener'-darwin-x64/'Platform Listener'.app platform-listener-intel-x64 --overwrite --out=${output}`, error => errorHandle(error, cb));
 }
 
 function _buildPackageForWindows(cb: () => void): void {
-  exec(`electron-packager ./dist/web 'Platform Listener' --platform=win32 --arch=ia32 --icon=scripts/assets/icons/win-taskbar.ico --overwrite=true --out=dist/electron`, error => errorHandle(error, cb));
+  exec(`electron-packager ./dist/web 'Platform Listener' --platform=win32 --arch=ia32 --icon=scripts/assets/icons/win-taskbar.ico --overwrite=true --out=${output}`, error => errorHandle(error, cb));
 }
 
 function _buildExeForWindows(cb: () => void): void {
-  exec(`electron-installer-windows --src './dist/electron/Platform Listener-win32-ia32' --dest ./dist/electron`, error => errorHandle(error, cb));
+  exec(`electron-installer-windows --src ./dist/electron/'Platform Listener'-win32-ia32 --dest ${output}`, error => errorHandle(error, cb));
 }
 
 const _buildWebDist = series(_buildReact, _createPackageJson, _createNodeModules, _createElectronFiles, consoleMessage(`Web dist has been created, it's ready for building app!`));
