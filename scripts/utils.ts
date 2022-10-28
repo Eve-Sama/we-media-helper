@@ -6,6 +6,7 @@ export function errorHandle(error: ExecException | null, cb: () => void): void {
   if (error) {
     console.log(error);
     console.log(`${ansiColors.bold.red('Something error happed so that building failed!')}`);
+    process.exit();
   }
   cb();
 }

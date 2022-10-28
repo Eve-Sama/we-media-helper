@@ -55,28 +55,42 @@ function _createElectronFiles(cb: () => void): void {
 }
 
 function _buildPackageForM1(cb: () => void): void {
-  exec(`electron-packager ./dist/web 'Platform Listener' --platform=darwin --arch=arm64 --icon=scripts/assets/icons/dock.icns --overwrite=true --out=dist/electron`, error => errorHandle(error, cb));
+  exec(`electron-packager ./dist/web 'Platform Listener' --platform=darwin --arch=arm64 --icon=scripts/assets/icons/mac-dock.icns --overwrite=true --out=dist/electron`, error => errorHandle(error, cb));
 }
 
 function _buildDmgForM1(cb: () => void): void {
-  exec(`electron-installer-dmg ./dist/electron/'Platform Listener'-darwin-arm64/'Platform Listener'.app platform-listener-m1 --overwrite --out=dist/electron`, error => errorHandle(error, cb));
+  exec(`electron-installer-dmg ./dist/electron/'Platform Listener'-darwin-arm64/'Platform Listener'.app platform-listener-m1-arm64 --overwrite --out=dist/electron`, error => errorHandle(error, cb));
 }
 
 function _buildPackageForIntel(cb: () => void): void {
-  exec(`electron-packager ./dist/web 'Platform Listener' --platform=darwin --arch=x64 --icon=scripts/assets/icons/dock.icns --overwrite=true --out=dist/electron`, error => errorHandle(error, cb));
+  exec(`electron-packager ./dist/web 'Platform Listener' --platform=darwin --arch=x64 --icon=scripts/assets/icons/mac-dock.icns --overwrite=true --out=dist/electron`, error => errorHandle(error, cb));
 }
 
 function _buildDmgForIntel(cb: () => void): void {
-  exec(`electron-installer-dmg ./dist/electron/'Platform Listener'-darwin-x64/'Platform Listener'.app platform-listener-intel --overwrite --out=dist/electron`, error => errorHandle(error, cb));
+  exec(`electron-installer-dmg ./dist/electron/'Platform Listener'-darwin-x64/'Platform Listener'.app platform-listener-intel-x64 --overwrite --out=dist/electron`, error => errorHandle(error, cb));
+}
+
+function _buildPackageForWindows(cb: () => void): void {
+  exec(`electron-packager ./dist/web 'Platform Listener' --platform=win32 --arch=ia32 --icon=scripts/assets/icons/win-taskbar.ico --overwrite=true --out=dist/electron`, error => errorHandle(error, cb));
+}
+
+function _buildExeForWindows(cb: () => void): void {
+  exec(`electron-installer-windows --src './dist/electron/Platform Listener-win32-ia32' --dest ./dist/electron`, error => errorHandle(error, cb));
 }
 
 const _buildWebDist = series(_buildReact, _createPackageJson, _createNodeModules, _createElectronFiles, consoleMessage(`Web dist has been created, it's ready for building app!`));
 
 const _buildM1Arr = [_buildWebDist, _buildPackageForM1, _buildDmgForM1, consoleMessage('Platform Listener for M1 has been built!')];
 const _buildIntelArr = [_buildWebDist, _buildPackageForIntel, _buildDmgForIntel, consoleMessage('Platform Listener for Intel has been built!')];
+const _buildWindowsArr = [_buildWebDist, _buildPackageForWindows, _buildExeForWindows, consoleMessage('Platform Listener for Windows has been built!')];
 
 export const buildM1 = series(..._buildM1Arr);
 export const buildIntel = series(..._buildIntelArr);
+export const buildWindows = series(..._buildWindowsArr);
+// export const buildWindows = series(..._buildWindowsArr);
 // 如果打包所有平台, 那么 _buildWebDist 只做一次就可以了, 因此重复的都去掉吧.
+// windows 平台打包有问题, 暂时先不使用
 const set = new Set([..._buildM1Arr, ..._buildIntelArr]);
 export const buildAll = series(Array.from(set));
+// brew install --cask wine-stable
+// brew install mono

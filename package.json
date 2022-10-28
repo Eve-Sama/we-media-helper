@@ -11,7 +11,8 @@
     "start": "cross-env BROWSER=none react-scripts start & electron .",
     "build:all": "gulp build:all",
     "build:m1": "gulp build:m1",
-    "build:intel": "gulp build:intel"
+    "build:intel": "gulp build:intel",
+    "build:windows": "gulp build:windows"
   },
   "dependencies": {
     "ahooks": "^3.7.1",
@@ -42,7 +43,9 @@
     "electron": "^21.1.0",
     "electron-builder": "^23.6.0",
     "electron-installer-dmg": "^4.0.0",
+    "electron-installer-windows": "^3.0.0",
     "electron-packager": "^16.0.0",
+    "electron-winstaller": "^5.1.0",
     "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
