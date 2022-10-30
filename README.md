@@ -83,7 +83,6 @@ Platform Listener
  - [ ] 为各个窗口设置合适的尺寸大小.
  - [ ] 使用`electron-builder`代替`electron-packager`+`electron-installer-dmg`.
  - [ ] 增加自动更新
- - [ ] 超链接、卡片与链接绑定, 而不是写死, 通过设置项开启或关闭.
  - [ ] icon增加黑暗模式.
  - [ ] 设置界面的footer可以抽象.
  - [ ] 整理下构建相关的静态资源和文件结构.

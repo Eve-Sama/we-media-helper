@@ -1,4 +1,4 @@
-import { Button, Divider, Form, Input, Switch, TimePicker } from 'antd';
+import { Button, Divider, Form, Input, Switch, TimePicker, message } from 'antd';
 import moment, { Moment } from 'moment';
 import { useEffect, useRef } from 'react';
 
@@ -54,6 +54,7 @@ export function useSettingTemplate(options: SettingTemplateOptions) {
     storageData.config.refreshTime = (values.refreshTime as unknown as Moment).format('HH:mm:ss');
     window.electron.store.set(`${key}-data`, { ...storageData, config: storageData.config });
     broadcastChannel.postMessage(`${key}-setting-changed`);
+    message.success('设置成功!');
   };
 
   const resetConfig = () => {
@@ -70,7 +71,7 @@ export function useSettingTemplate(options: SettingTemplateOptions) {
           <Form.Item label="cookie" name="cookie">
             <TextArea rows={4} placeholder="Input your cookie" />
           </Form.Item>
-          <Form.Item label="分组设置" tooltip={{ title: () => '卡片上的绿点表示是否开启系统通知. 当开启时, 该卡片的数据量有新增时, 会进行系统通知. 可以点击卡片切换系统通知状态.' }}>
+          <Form.Item label="分组设置" tooltip={{ title: () => '卡片上的绿灯表示是否开启系统通知. 开启后, 每当该卡片的数据量有新增时, 会进行系统通知. 可以点击卡片切换绿灯状态.' }}>
             <GroupSetting ref={groupSettingRef} cardGroupList={cardGroupList} groupList={storageData.config.groupList} />
           </Form.Item>
           <Form.Item label="刷新间隔时间" name="refreshTime">
