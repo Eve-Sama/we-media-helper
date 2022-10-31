@@ -2,6 +2,7 @@ const { Tray, Menu, shell, app } = require('electron');
 
 const path = require('path');
 
+const { getSystemConfig, setSystemConfig } = require('./storage');
 const { trayClick } = require('./window');
 
 function initTray() {
@@ -68,21 +69,13 @@ function initTray() {
         {
           label: '调试模式',
           type: 'checkbox',
-          checked: false,
+          checked: getSystemConfig().mode === 'dev',
           click: e => {
-            if (e.checked) {
-              console.log('开启调试模式');
-            } else {
-              console.log('关闭调试模式');
-            }
+            const config = getSystemConfig();
+            config.mode = e.checked ? 'dev' : 'pro';
+            setSystemConfig(config);
           },
         },
-        // {
-        //   label: '清除配置',
-        //   click: () => {
-        //     console.log('清除配置');
-        //   },
-        // },
         {
           label: '退出',
           role: 'quit',

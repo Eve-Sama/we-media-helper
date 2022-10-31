@@ -3,6 +3,8 @@ const { BrowserWindow, app } = require('electron');
 const path = require('path');
 const url = require('url');
 
+const { getSystemConfig } = require('./storage');
+
 const windowMap = new Map();
 
 function createWindow(routePath, windowOptions = {}) {
@@ -34,6 +36,9 @@ function createWindow(routePath, windowOptions = {}) {
         hash: `/${routePath}`,
       }),
     );
+  }
+  const config = getSystemConfig();
+  if (config.mode === 'dev') {
     browserWindow.webContents.openDevTools();
   }
   browserWindow.addListener('closed', () => windowMap.delete(routePath));

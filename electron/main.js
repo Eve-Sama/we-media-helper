@@ -1,9 +1,11 @@
 const { app, BrowserWindow } = require('electron');
 
 const { initEvent } = require('./event');
+const { initSystemConfig } = require('./storage');
 const { initTray } = require('./tray');
 
 app.on('ready', () => {
+  initSystemConfig();
   initTray();
   initEvent();
 });
