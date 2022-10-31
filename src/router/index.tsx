@@ -1,13 +1,13 @@
 import { RouteObject } from 'react-router-dom';
 
-import { Bilibili } from '../pages/display/display-bilibili/display-bilibili';
-import { JueJin } from '../pages/display/display-juejin/display-juejin';
-import { Zhihu } from '../pages/display/display-zhihu/display-zhihu';
-import { Home } from '../pages/home/home';
-import { Setting } from '../pages/setting/setting';
-import { SettingBilibili } from '../pages/setting/setting-bilibili/setting-bilibili';
-import { SettingJuejin } from '../pages/setting/setting-juejin/setting-juejin';
-import { SettingZhihu } from '../pages/setting/setting-zhihu/setting-zhihu';
+import { Bilibili } from '../page/display/display-bilibili/display-bilibili';
+import { JueJin } from '../page/display/display-juejin/display-juejin';
+import { Zhihu } from '../page/display/display-zhihu/display-zhihu';
+import { Home } from '../page/home/home';
+import { Setting } from '../page/setting/setting';
+import { SettingBilibili } from '../page/setting/setting-bilibili/setting-bilibili';
+import { SettingJuejin } from '../page/setting/setting-juejin/setting-juejin';
+import { SettingZhihu } from '../page/setting/setting-zhihu/setting-zhihu';
 
 export const router: RouteObject[] = [
   {
