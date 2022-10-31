@@ -69,10 +69,10 @@ export function useTemplate(options: TemplateOptions) {
           }
           break;
         case 3:
-          message.error('鉴权失败, 请打开『偏好设置』设置cookie!');
+          message.error('鉴权失败, 请打开『监听器设置』设置cookie!');
           break;
         default:
-          message.error('鉴权失败, 请打开『偏好设置』设置cookie!');
+          message.error('鉴权失败, 请打开『监听器设置』设置cookie!');
           break;
       }
     },

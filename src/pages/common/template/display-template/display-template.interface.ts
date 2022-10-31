@@ -13,7 +13,7 @@ export interface TemplateOptions {
 }
 
 export interface StorageData {
-  /** 偏好设置 */
+  /** 监听器设置 */
   config: {
     cookie: string;
     refreshTime: string;

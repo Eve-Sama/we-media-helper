@@ -5,10 +5,6 @@ import styles from './style.module.scss';
 
 const items: MenuProps['items'] = [
   {
-    label: '监听器设置',
-    type: 'group',
-  },
-  {
     label: '哔哩哔哩',
     key: 'bilibili',
   },

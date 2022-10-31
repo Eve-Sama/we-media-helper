@@ -9,7 +9,7 @@ function initTray() {
   const trayMenu = new Tray(path.join(__dirname, menuIcon));
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: '监听器',
+      label: '监听器列表',
       submenu: [
         { type: 'separator' },
         {
@@ -50,23 +50,46 @@ function initTray() {
         },
       ],
     },
-    { type: 'separator' },
     {
-      label: '偏好设置',
+      label: '监听器设置',
       click: () =>
         trayClick('setting/bilibili', {
           width: 850,
           height: 700,
           resizable: false,
           fullscreenable: false,
-          title: '偏好设置',
+          title: '监听器设置',
         }),
     },
     { type: 'separator' },
-    // {
-    //   label: '更多',
-    //   submenu: [{}],
-    // },
+    {
+      label: '系统',
+      submenu: [
+        {
+          label: '调试模式',
+          type: 'checkbox',
+          checked: false,
+          click: e => {
+            if (e.checked) {
+              console.log('开启调试模式');
+            } else {
+              console.log('关闭调试模式');
+            }
+          },
+        },
+        // {
+        //   label: '清除配置',
+        //   click: () => {
+        //     console.log('清除配置');
+        //   },
+        // },
+        {
+          label: '退出',
+          role: 'quit',
+        },
+      ],
+    },
+    { type: 'separator' },
     {
       label: '作者',
       submenu: [
