@@ -1,9 +1,9 @@
 import { RouteObject } from 'react-router-dom';
 
-import { Bilibili } from '../page/display/display-bilibili/display-bilibili';
-import { JueJin } from '../page/display/display-juejin/display-juejin';
+import { DisplayBilibili } from '../page/display/display-bilibili/display-bilibili';
+import { DisplayJueJin } from '../page/display/display-juejin/display-juejin';
 import { DisplayTab } from '../page/display/display-tab/display-tab';
-import { Zhihu } from '../page/display/display-zhihu/display-zhihu';
+import { DisplayZhihu } from '../page/display/display-zhihu/display-zhihu';
 import { Home } from '../page/home/home';
 import { Setting } from '../page/setting/setting';
 import { SettingBilibili } from '../page/setting/setting-bilibili/setting-bilibili';
@@ -34,19 +34,24 @@ export const router: RouteObject[] = [
     ],
   },
   {
-    path: '/tab',
-    element: <DisplayTab />,
-  },
-  {
-    path: '/bilibili',
-    element: <Bilibili />,
-  },
-  {
-    path: '/juejin',
-    element: <JueJin />,
-  },
-  {
-    path: '/zhihu',
-    element: <Zhihu />,
+    path: '/display',
+    children: [
+      {
+        path: 'tab',
+        element: <DisplayTab />,
+      },
+      {
+        path: 'bilibili',
+        element: <DisplayBilibili />,
+      },
+      {
+        path: 'juejin',
+        element: <DisplayJueJin />,
+      },
+      {
+        path: 'zhihu',
+        element: <DisplayZhihu />,
+      },
+    ],
   },
 ];

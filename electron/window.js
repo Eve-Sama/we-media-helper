@@ -6,7 +6,7 @@ const url = require('url');
 const { getSystemConfig, getTabConfig, setTabConfig } = require('./storage');
 
 const windowMap = new Map();
-const displayPathList = ['bilibili', 'juejin', 'zhihu'];
+const displayPathList = ['display/bilibili', 'display/juejin', 'display/zhihu'];
 
 function createWindow(routePath, windowOptions = {}) {
   const browserWindow = new BrowserWindow({
@@ -45,7 +45,7 @@ function createWindow(routePath, windowOptions = {}) {
   }
   browserWindow.addListener('closed', () => {
     windowMap.delete(routePath);
-    if (routePath === 'tab') {
+    if (routePath === 'display/tab') {
       setTabConfig([]);
     }
   });
@@ -56,7 +56,7 @@ function createWindow(routePath, windowOptions = {}) {
 function trayClick(routePath, windowOptions) {
   const systemConfig = getSystemConfig();
   if (systemConfig.enableSingleMode && displayPathList.some(displayPath => displayPath === routePath)) {
-    const existTabWindow = windowMap.get('tab');
+    const existTabWindow = windowMap.get('display/tab');
     const tabConfig = getTabConfig();
     const tabIndex = tabConfig.findIndex(item => item === routePath);
     if (tabIndex === -1) {
@@ -77,7 +77,7 @@ function trayClick(routePath, windowOptions) {
       return;
     } else {
       // 激活 Tab 窗口
-      const browserWindow = windowMap.get('tab');
+      const browserWindow = windowMap.get('display/tab');
       if (browserWindow) {
         browserWindow.show();
       }
@@ -87,7 +87,7 @@ function trayClick(routePath, windowOptions) {
     if (existTabWindow) {
       existTabWindow.webContents.send('add-tab', routePath);
     } else {
-      const browserWindow = createWindow('tab', {
+      const browserWindow = createWindow('display/tab', {
         width: 980,
         height: 1270,
         resizable: true,

@@ -6,7 +6,7 @@ import { DataCardGroup } from '../../common/group-setting/group.interface';
 import { useDisplayTemplate } from '../../common/template/display-template/display-template';
 import { ZhihuDefaultConfig, ZhihuOptionalCardGroupList } from '../../setting/setting-zhihu/setting-zhihu.interface';
 
-export function Zhihu() {
+export function DisplayZhihu() {
   const key = 'zhihu';
 
   let basicInfo: BasicInfo;

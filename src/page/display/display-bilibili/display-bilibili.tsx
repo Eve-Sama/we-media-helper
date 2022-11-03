@@ -6,7 +6,7 @@ import { DataCardGroup } from '../../common/group-setting/group.interface';
 import { useDisplayTemplate } from '../../common/template/display-template/display-template';
 import { BilibiliOptionalCardGroupList } from '../../setting/setting-bilibili/setting-bilibili.interface';
 
-export function Bilibili() {
+export function DisplayBilibili() {
   const key = 'bilibili';
 
   let statData: Stat;

@@ -3,9 +3,9 @@ import hotkeys from 'hotkeys-js';
 import { Tab } from 'rc-tabs/lib/interface';
 import { useEffect, useRef, useState } from 'react';
 
-import { Bilibili } from '../display-bilibili/display-bilibili';
-import { JueJin } from '../display-juejin/display-juejin';
-import { Zhihu } from '../display-zhihu/display-zhihu';
+import { DisplayBilibili } from '../display-bilibili/display-bilibili';
+import { DisplayJueJin } from '../display-juejin/display-juejin';
+import { DisplayZhihu } from '../display-zhihu/display-zhihu';
 import styles from './style.module.scss';
 
 export function DisplayTab() {
@@ -14,9 +14,9 @@ export function DisplayTab() {
   const hotkeyHandlerRef = useRef<(hotkey: string) => void>();
 
   const map = new Map<string, Tab>([
-    ['bilibili', { label: '哔哩哔哩', key: 'bilibili', children: <Bilibili></Bilibili> }],
-    ['juejin', { label: '掘金', key: 'juejin', children: <JueJin></JueJin> }],
-    ['zhihu', { label: '知乎', key: 'zhihu', children: <Zhihu></Zhihu> }],
+    ['display/bilibili', { label: '哔哩哔哩', key: 'bilibili', children: <DisplayBilibili></DisplayBilibili> }],
+    ['display/juejin', { label: '掘金', key: 'juejin', children: <DisplayJueJin></DisplayJueJin> }],
+    ['display/zhihu', { label: '知乎', key: 'zhihu', children: <DisplayZhihu></DisplayZhihu> }],
   ]);
 
   useEffect(() => {

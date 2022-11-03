@@ -6,7 +6,7 @@ import { DataCardGroup } from '../../common/group-setting/group.interface';
 import { useDisplayTemplate } from '../../common/template/display-template/display-template';
 import { JuejinOptionalCardGroupList } from '../../setting/setting-juejin/setting-juejin.interface';
 
-export function JueJin() {
+export function DisplayJueJin() {
   const key = 'juejin';
 
   let countData: Count['count'];

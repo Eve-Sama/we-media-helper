@@ -6,9 +6,9 @@ const { getSystemConfig, setSystemConfig, getTabConfig, setTabConfig } = require
 const { trayClick, windowMap, displayPathList } = require('./window');
 
 const keyNameMap = new Map([
-  ['bilibili', '哔哩哔哩'],
-  ['juejin', '掘金'],
-  ['zhihu', '知乎'],
+  ['display/bilibili', '哔哩哔哩'],
+  ['display/juejin', '掘金'],
+  ['display/zhihu', '知乎'],
 ]);
 
 function getDisplayByBrowserWindow(browserWindow) {
@@ -28,36 +28,36 @@ function initTray() {
         {
           label: '哔哩哔哩',
           click: () => {
-            trayClick('bilibili', {
+            trayClick('display/bilibili', {
               width: 980,
               height: 1270,
               resizable: true,
               fullscreenable: true,
-              title: keyNameMap.get('bilibili'),
+              title: keyNameMap.get('display/bilibili'),
             });
           },
         },
         {
           label: '掘金',
           click: () => {
-            trayClick('juejin', {
+            trayClick('display/juejin', {
               width: 980,
               height: 1270,
               resizable: true,
               fullscreenable: true,
-              title: keyNameMap.get('juejin'),
+              title: keyNameMap.get('display/juejin'),
             });
           },
         },
         {
           label: '知乎',
           click: () => {
-            trayClick('zhihu', {
+            trayClick('display/zhihu', {
               width: 980,
               height: 1270,
               resizable: true,
               fullscreenable: true,
-              title: keyNameMap.get('zhihu'),
+              title: keyNameMap.get('display/zhihu'),
             });
           },
         },
@@ -118,7 +118,7 @@ function initTray() {
               });
               setTabConfig(pathList);
               if (pathList.length > 0) {
-                trayClick('tab', {
+                trayClick('display/tab', {
                   width: 980,
                   height: 1270,
                   resizable: true,
@@ -128,7 +128,7 @@ function initTray() {
               }
             } else {
               // 关闭 tab 窗口, 开启多个独立展示窗口
-              const browserWindow = windowMap.get('tab');
+              const browserWindow = windowMap.get('display/tab');
               let workArea;
               if (browserWindow) {
                 const display = getDisplayByBrowserWindow(browserWindow);
