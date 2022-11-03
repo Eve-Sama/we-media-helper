@@ -81,17 +81,14 @@ function initTray() {
         {
           label: '调试模式',
           type: 'checkbox',
-          checked: getSystemConfig().debugMode === 'dev',
+          checked: getSystemConfig().enableDebugMode,
           click: e => {
-            const enableDebugMode = e.checked;
             const config = getSystemConfig();
-            config.debugMode = enableDebugMode ? 'dev' : 'prod';
+            config.enableDebugMode = e.checked;
             setSystemConfig(config);
-            if (enableDebugMode) {
-              config.debugMode = 'dev';
+            if (config.enableDebugMode) {
               windowMap.forEach(browserWindow => browserWindow.webContents.openDevTools());
             } else {
-              config.debugMode = 'prod';
               windowMap.forEach(browserWindow => browserWindow.webContents.closeDevTools());
             }
           },
@@ -99,15 +96,14 @@ function initTray() {
         {
           label: '单屏模式',
           type: 'checkbox',
-          checked: getSystemConfig().windowMode === 'single',
+          checked: getSystemConfig().enableSingleMode,
           click: e => {
-            const enableSingleMode = e.checked;
             // #region 将新的状态保存在本地
             const config = getSystemConfig();
-            config.windowMode = enableSingleMode ? 'single' : 'multiple';
+            config.enableSingleMode = e.checked;
             setSystemConfig(config);
             // #endregion
-            if (enableSingleMode) {
+            if (config.enableSingleMode) {
               // 关闭多个独立展示页面, 打开 tab 窗口
               const pathList = [];
               displayPathList.forEach(displayPath => {

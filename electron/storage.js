@@ -9,8 +9,8 @@ function initConfig() {
   const systemConfig = getSystemConfig();
   if (!systemConfig) {
     const newConfig = {
-      debugMode: 'prod', // dev | prod
-      windowMode: 'multiple', // multiple | single
+      enableDebugMode: false,
+      enableSingleMode: false,
     };
     store.set(systemConfigkey, newConfig);
   }

@@ -40,7 +40,7 @@ function createWindow(routePath, windowOptions = {}) {
   }
 
   const config = getSystemConfig();
-  if (config.debugMode === 'dev') {
+  if (config.enableDebugMode) {
     browserWindow.webContents.openDevTools();
   }
   browserWindow.addListener('closed', () => {
@@ -55,7 +55,7 @@ function createWindow(routePath, windowOptions = {}) {
 
 function trayClick(routePath, windowOptions) {
   const systemConfig = getSystemConfig();
-  if (systemConfig.windowMode === 'single' && displayPathList.some(displayPath => displayPath === routePath)) {
+  if (systemConfig.enableSingleMode && displayPathList.some(displayPath => displayPath === routePath)) {
     const existTabWindow = windowMap.get('tab');
     const tabConfig = getTabConfig();
     const tabIndex = tabConfig.findIndex(item => item === routePath);
