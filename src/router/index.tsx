@@ -2,6 +2,7 @@ import { RouteObject } from 'react-router-dom';
 
 import { Bilibili } from '../page/display/display-bilibili/display-bilibili';
 import { JueJin } from '../page/display/display-juejin/display-juejin';
+import { Tab } from '../page/display/display-tab/display-tab';
 import { Zhihu } from '../page/display/display-zhihu/display-zhihu';
 import { Home } from '../page/home/home';
 import { Setting } from '../page/setting/setting';
@@ -31,6 +32,10 @@ export const router: RouteObject[] = [
         element: <SettingZhihu />,
       },
     ],
+  },
+  {
+    path: '/tab',
+    element: <Tab />,
   },
   {
     path: '/bilibili',

@@ -1,0 +1,13 @@
+.tab-container {
+  :global {
+    .ant-tabs-nav {
+      &::before {
+        border-bottom: 0px !important;
+      }
+    }
+    .ant-tabs-tabpane-active {
+      position: relative;
+      top: -30px;
+    }
+  }
+}

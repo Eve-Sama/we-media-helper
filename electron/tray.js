@@ -1,9 +1,21 @@
-const { Tray, Menu, shell, app } = require('electron');
+const { Tray, Menu, shell, app, screen } = require('electron');
 
 const path = require('path');
 
-const { getSystemConfig, setSystemConfig } = require('./storage');
-const { trayClick } = require('./window');
+const { getSystemConfig, setSystemConfig, getTabConfig, setTabConfig } = require('./storage');
+const { trayClick, windowMap, displayPathList } = require('./window');
+
+const keyNameMap = new Map([
+  ['bilibili', '哔哩哔哩'],
+  ['juejin', '掘金'],
+  ['zhihu', '知乎'],
+]);
+
+function getDisplayByBrowserWindow(browserWindow) {
+  const winBounds = browserWindow.getBounds();
+  const whichScreen = screen.getDisplayNearestPoint({ x: winBounds.x, y: winBounds.y });
+  return whichScreen;
+}
 
 function initTray() {
   const menuIcon = app.isPackaged ? `../menu-icon-prod.png` : `../scripts/assets/icons/menu-icon-dev.png`;
@@ -20,8 +32,8 @@ function initTray() {
               width: 980,
               height: 1270,
               resizable: true,
-              fullscreenable: false,
-              title: 'Bilibili',
+              fullscreenable: true,
+              title: keyNameMap.get('bilibili'),
             });
           },
         },
@@ -32,8 +44,8 @@ function initTray() {
               width: 980,
               height: 1270,
               resizable: true,
-              fullscreenable: false,
-              title: '掘金',
+              fullscreenable: true,
+              title: keyNameMap.get('juejin'),
             });
           },
         },
@@ -44,8 +56,8 @@ function initTray() {
               width: 980,
               height: 1270,
               resizable: true,
-              fullscreenable: false,
-              title: '知乎',
+              fullscreenable: true,
+              title: keyNameMap.get('zhihu'),
             });
           },
         },
@@ -69,11 +81,75 @@ function initTray() {
         {
           label: '调试模式',
           type: 'checkbox',
-          checked: getSystemConfig().mode === 'dev',
+          checked: getSystemConfig().debugMode === 'dev',
           click: e => {
             const config = getSystemConfig();
-            config.mode = e.checked ? 'dev' : 'pro';
+            config.debugMode = e.checked ? 'dev' : 'pro';
             setSystemConfig(config);
+          },
+        },
+        {
+          label: '单屏模式',
+          type: 'checkbox',
+          checked: getSystemConfig().windowMode === 'single',
+          click: e => {
+            const enableSingleMode = e.checked;
+            // #region 将新的状态保存在本地
+            const config = getSystemConfig();
+            config.windowMode = enableSingleMode ? 'single' : 'multiple';
+            setSystemConfig(config);
+            // #endregion
+            if (enableSingleMode) {
+              // 关闭多个独立展示页面, 打开 tab 窗口
+              const pathList = [];
+              displayPathList.forEach(displayPath => {
+                const openedPathList = Array.from(windowMap.keys());
+                if (openedPathList.find(openedPath => openedPath === displayPath)) {
+                  pathList.push(displayPath);
+                }
+                const browserWindow = windowMap.get(displayPath);
+                if (browserWindow) {
+                  browserWindow.close();
+                }
+              });
+              setTabConfig(pathList);
+              if (pathList.length > 0) {
+                trayClick('tab', {
+                  width: 980,
+                  height: 1270,
+                  resizable: true,
+                  fullscreenable: true,
+                  title: 'Platform Listener',
+                });
+              }
+            } else {
+              // 关闭 tab 窗口, 开启多个独立展示窗口
+              const browserWindow = windowMap.get('tab');
+              let workArea;
+              if (browserWindow) {
+                const display = getDisplayByBrowserWindow(browserWindow);
+                workArea = display.workArea;
+              } else {
+                workArea = screen.getPrimaryDisplay().workArea;
+              }
+              const tabConfig = getTabConfig();
+              if (browserWindow) {
+                browserWindow.close();
+              }
+              tabConfig.forEach((key, index) => {
+                // 平分窗口宽度
+                const width = workArea.width / tabConfig.length;
+                trayClick(key, {
+                  width: width,
+                  height: 1270,
+                  x: index * width,
+                  y: 0,
+                  resizable: true,
+                  fullscreenable: true,
+                  title: keyNameMap.get(key),
+                });
+              });
+            }
           },
         },
         {

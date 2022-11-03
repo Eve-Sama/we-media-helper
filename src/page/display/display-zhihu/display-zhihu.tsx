@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { BasicInfo, Follow, Message } from '../../../request/request-zhihu/request-zhihu.interface';
 import { getBaiscInfo, getFollow, getMessage } from '../../../request/request-zhihu/request-zhihu.request';
 import { DataCardGroup } from '../../common/group-setting/group.interface';
-import { useTemplate } from '../../common/template/display-template/display-template';
+import { useDisplayTemplate } from '../../common/template/display-template/display-template';
 import { ZhihuDefaultConfig, ZhihuOptionalCardGroupList } from '../../setting/setting-zhihu/setting-zhihu.interface';
 
 export function Zhihu() {
@@ -13,7 +13,7 @@ export function Zhihu() {
   let message: Message;
   let follow: Follow['List'][number];
 
-  const { getRenderDOM, analyzeRequest, analyzeDataCard, forceUpdate } = useTemplate({ key, cardGroupList: ZhihuOptionalCardGroupList, defaultConfig: ZhihuDefaultConfig, title: '知乎' });
+  const { getRenderDOM, analyzeRequest, analyzeDataCard, forceUpdate } = useDisplayTemplate({ key, cardGroupList: ZhihuOptionalCardGroupList, defaultConfig: ZhihuDefaultConfig, title: '知乎' });
 
   useEffect(() => {
     analyzeRequest(

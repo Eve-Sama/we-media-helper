@@ -30,7 +30,8 @@ function initEvent() {
   ipcMain.on('set-title', (_, message) => {
     const { key, title } = message;
     const browserWindow = windowMap.get(key);
-    browserWindow.setTitle(title);
+    // 如果是 tab 页面, 则不设置标题了
+    browserWindow?.setTitle(title);
   });
 
   ipcMain.on('notify', (_, message) => {

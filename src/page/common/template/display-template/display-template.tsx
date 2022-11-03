@@ -9,7 +9,7 @@ import { DataCardGroup, Group } from '../../group-setting/group.interface';
 import { AnalyzeDataCard, AnalyzeRequest, StorageData, TemplateOptions } from './display-template.interface';
 import styles from './style.module.scss';
 
-export function useTemplate(options: TemplateOptions) {
+export function useDisplayTemplate(options: TemplateOptions) {
   const { key, cardGroupList, title, defaultConfig } = options;
   const broadcastChannel = new BroadcastChannel(key);
 
@@ -54,7 +54,6 @@ export function useTemplate(options: TemplateOptions) {
       };
     })();
   }, []);
-
   useEffect(
     function retryRequest() {
       switch (retryTimes) {

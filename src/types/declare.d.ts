@@ -10,6 +10,7 @@ declare global {
         get: Store.get;
         clear: Store.clear;
       };
+      addTab: (handler) => void;
     };
   }
 }

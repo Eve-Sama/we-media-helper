@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { Stat, Unread, Message } from '../../../request/request-bilibili/request-bilibili.interface';
 import { getStat, getAccount, getUnread, getMessage } from '../../../request/request-bilibili/request-bilibili.request';
 import { DataCardGroup } from '../../common/group-setting/group.interface';
-import { useTemplate } from '../../common/template/display-template/display-template';
+import { useDisplayTemplate } from '../../common/template/display-template/display-template';
 import { BilibiliOptionalCardGroupList } from '../../setting/setting-bilibili/setting-bilibili.interface';
 
 export function Bilibili() {
@@ -13,7 +13,7 @@ export function Bilibili() {
   let unreadData: Unread;
   let messageData: Message;
 
-  const { getRenderDOM, analyzeRequest, analyzeDataCard, forceUpdate } = useTemplate({ key, cardGroupList: BilibiliOptionalCardGroupList, title: '哔哩哔哩' });
+  const { getRenderDOM, analyzeRequest, analyzeDataCard, forceUpdate } = useDisplayTemplate({ key, cardGroupList: BilibiliOptionalCardGroupList, title: '哔哩哔哩' });
 
   useEffect(() => {
     analyzeRequest(

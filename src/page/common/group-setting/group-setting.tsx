@@ -28,11 +28,13 @@ export const GroupSetting = forwardRef<GroupSettingRef, GroupSettingProps>((prop
     );
   });
 
-  useEffect(function checkCardGroupValid() {
-    const invalid = dataCardList.some(card => dataCardList.filter(v => v.value === card.value).length > 1);
-    if (invalid) {
-      throw new Error(`The input variable 'cardGroupList' exist duplicate type in different 'cardList'!`);
-    }
+  useEffect(() => {
+    (function checkCardGroupValid() {
+      const invalid = dataCardList.some(card => dataCardList.filter(v => v.value === card.value).length > 1);
+      if (invalid) {
+        throw new Error(`The input variable 'cardGroupList' exist duplicate type in different 'cardList'!`);
+      }
+    })();
   }, []);
 
   useImperativeHandle(ref, () => ({
