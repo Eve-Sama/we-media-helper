@@ -83,9 +83,17 @@ function initTray() {
           type: 'checkbox',
           checked: getSystemConfig().debugMode === 'dev',
           click: e => {
+            const enableDebugMode = e.checked;
             const config = getSystemConfig();
-            config.debugMode = e.checked ? 'dev' : 'pro';
+            config.debugMode = enableDebugMode ? 'dev' : 'prod';
             setSystemConfig(config);
+            if (enableDebugMode) {
+              config.debugMode = 'dev';
+              windowMap.forEach(browserWindow => browserWindow.webContents.openDevTools());
+            } else {
+              config.debugMode = 'prod';
+              windowMap.forEach(browserWindow => browserWindow.webContents.closeDevTools());
+            }
           },
         },
         {
