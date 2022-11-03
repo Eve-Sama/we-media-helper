@@ -1,5 +1,6 @@
 import { Tabs } from 'antd';
 import hotkeys from 'hotkeys-js';
+import { Tab } from 'rc-tabs/lib/interface';
 import { useEffect, useRef, useState } from 'react';
 
 import { Bilibili } from '../display-bilibili/display-bilibili';
@@ -7,13 +8,12 @@ import { JueJin } from '../display-juejin/display-juejin';
 import { Zhihu } from '../display-zhihu/display-zhihu';
 import styles from './style.module.scss';
 
-export function Tab() {
-  const [items, setItems] = useState([]);
-  const [firstRun, setFirstRun] = useState(true);
+export function DisplayTab() {
+  const [items, setItems] = useState<Tab[]>([]);
   const [activeKey, setActiveKey] = useState('');
   const hotkeyHandlerRef = useRef<(hotkey: string) => void>();
 
-  const map = new Map([
+  const map = new Map<string, Tab>([
     ['bilibili', { label: '哔哩哔哩', key: 'bilibili', children: <Bilibili></Bilibili> }],
     ['juejin', { label: '掘金', key: 'juejin', children: <JueJin></JueJin> }],
     ['zhihu', { label: '知乎', key: 'zhihu', children: <Zhihu></Zhihu> }],
@@ -26,7 +26,7 @@ export function Tab() {
     })();
 
     (function addHotKeyListener() {
-      hotkeys('a,d,left,right', (_event, handler) => {
+      hotkeys('w,s,a,d,up,down,left,right', (_event, handler) => {
         hotkeyHandlerRef.current?.(handler.key);
       });
     })();
@@ -36,33 +36,21 @@ export function Tab() {
     if (items.length === 0) {
       return;
     }
-    if (firstRun) {
-      const key = window.electron.store.get(`tab-active-key`) as string;
-      if (key) {
-        setActiveKey(() => key);
-      } else {
-        updateActiveKeyByLast();
-      }
-      setFirstRun(false);
-    } else {
-      updateActiveKeyByLast();
-    }
+    updateActiveKeyByLast();
   }, [items]);
 
   const updateActiveKeyByLast = () => {
     const last = items.at(-1);
     if (last) {
       setActiveKey(() => last.key);
-      window.electron.store.set(`tab-active-key`, last.key);
     }
   };
 
   hotkeyHandlerRef.current = (hotkey: string) => {
-    const doLast = ['a', 'left'].includes(hotkey);
-    const doNext = ['d', 'right'].includes(hotkey);
-    const key = window.electron.store.get(`tab-active-key`) as string;
-    let newItem;
-    const index = items.findIndex(item => item.key === key);
+    const doLast = ['w', 'a', 'up', 'left'].includes(hotkey);
+    const doNext = ['s', 'd', 'down', 'right'].includes(hotkey);
+    let newItem: Tab;
+    const index = items.findIndex(item => item.key === activeKey);
     if (items.length <= 1) {
       return;
     }
@@ -74,7 +62,6 @@ export function Tab() {
       newItem = beingFirstItem ? items[items.length - 1] : items[index - 1];
     }
     setActiveKey(() => newItem.key);
-    window.electron.store.set(`tab-active-key`, newItem.key);
   };
 
   const addTabHandler = () => {
@@ -90,7 +77,6 @@ export function Tab() {
 
   const onTabClick = (key: string) => {
     setActiveKey(() => key);
-    window.electron.store.set(`tab-active-key`, key);
   };
 
   return (
