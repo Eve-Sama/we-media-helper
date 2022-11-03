@@ -1,5 +1,6 @@
 import { Tabs } from 'antd';
-import { useEffect, useState } from 'react';
+import hotkeys from 'hotkeys-js';
+import { useEffect, useRef, useState } from 'react';
 
 import { Bilibili } from '../display-bilibili/display-bilibili';
 import { JueJin } from '../display-juejin/display-juejin';
@@ -10,6 +11,7 @@ export function Tab() {
   const [items, setItems] = useState([]);
   const [firstRun, setFirstRun] = useState(true);
   const [activeKey, setActiveKey] = useState('');
+  const hotkeyHandlerRef = useRef<(hotkey: string) => void>();
 
   const map = new Map([
     ['bilibili', { label: '哔哩哔哩', key: 'bilibili', children: <Bilibili></Bilibili> }],
@@ -21,6 +23,12 @@ export function Tab() {
     addTabHandler();
     (function addTabListener() {
       window.electron.addTab(addTabHandler);
+    })();
+
+    (function addHotKeyListener() {
+      hotkeys('a,d,left,right', (_event, handler) => {
+        hotkeyHandlerRef.current?.(handler.key);
+      });
     })();
   }, []);
 
@@ -47,6 +55,26 @@ export function Tab() {
       setActiveKey(() => last.key);
       window.electron.store.set(`tab-active-key`, last.key);
     }
+  };
+
+  hotkeyHandlerRef.current = (hotkey: string) => {
+    const doLast = ['a', 'left'].includes(hotkey);
+    const doNext = ['d', 'right'].includes(hotkey);
+    const key = window.electron.store.get(`tab-active-key`) as string;
+    let newItem;
+    const index = items.findIndex(item => item.key === key);
+    if (items.length <= 1) {
+      return;
+    }
+    if (doNext) {
+      const beingLastItem = index === items.length - 1;
+      newItem = beingLastItem ? items[0] : items[index + 1];
+    } else if (doLast) {
+      const beingFirstItem = index === 0;
+      newItem = beingFirstItem ? items[items.length - 1] : items[index - 1];
+    }
+    setActiveKey(() => newItem.key);
+    window.electron.store.set(`tab-active-key`, newItem.key);
   };
 
   const addTabHandler = () => {
