@@ -4,7 +4,7 @@ import { Count, UserBasicInfo } from '../../../request/request-juejin/request-ju
 import { getCount, getUser, getUserBaiscInfo } from '../../../request/request-juejin/request-juejin.request';
 import { DataCardGroup } from '../../common/group-setting/group.interface';
 import { useDisplayTemplate } from '../../common/template/display-template/display-template';
-import { JuejinOptionalCardGroupList } from '../../setting/setting-juejin/setting-juejin.interface';
+import { JuejinDefaultConfig, JuejinOptionalCardGroupList } from '../../setting/setting-juejin/setting-juejin.interface';
 
 export function DisplayJueJin() {
   const key = 'juejin';
@@ -12,7 +12,7 @@ export function DisplayJueJin() {
   let countData: Count['count'];
   let basicInfoData: UserBasicInfo;
 
-  const { getRenderDOM, analyzeRequest, analyzeDataCard, forceUpdate } = useDisplayTemplate({ key, cardGroupList: JuejinOptionalCardGroupList, title: '掘金' });
+  const { getRenderDOM, analyzeRequest, analyzeDataCard, forceUpdate } = useDisplayTemplate({ key, cardGroupList: JuejinOptionalCardGroupList, defaultConfig: JuejinDefaultConfig, title: '掘金' });
 
   useEffect(() => {
     analyzeRequest(
