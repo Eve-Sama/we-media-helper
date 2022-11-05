@@ -123,7 +123,7 @@ function initTray() {
                   height: 1270,
                   resizable: true,
                   fullscreenable: true,
-                  title: 'Platform Listener',
+                  title: 'We Media Helper',
                 });
               }
             } else {
@@ -165,7 +165,7 @@ function initTray() {
     { type: 'separator' },
     {
       label: '如何使用',
-      click: () => shell.openExternal('https://github.com/Eve-Sama/platform-listener'),
+      click: () => shell.openExternal('https://github.com/Eve-Sama/we-media-helper'),
     },
     {
       label: '作者',
@@ -185,7 +185,7 @@ function initTray() {
       ],
     },
   ]);
-  trayMenu.setToolTip('Platform Listener');
+  trayMenu.setToolTip('We Media Helper');
   trayMenu.setContextMenu(contextMenu);
 }
 

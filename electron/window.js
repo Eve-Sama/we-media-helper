@@ -92,7 +92,7 @@ function trayClick(routePath, windowOptions) {
         height: 1270,
         resizable: true,
         fullscreenable: true,
-        title: 'Platform Listener',
+        title: 'We Media Helper',
       });
       browserWindow.webContents.on('did-finish-load', () => browserWindow.webContents.send('add-tab', routePath));
     }

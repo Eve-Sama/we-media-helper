@@ -1,8 +1,8 @@
 {
-  "name": "platform-listener",
+  "name": "we-media-helper",
   "version": "0.0.6",
   "main": "electron/main.js",
-  "description": "Listen some imformation",
+  "description": "Grab account data via your cookie and support more function makes you focus on we media",
   "author": {
     "name": "Eve-Sama",
     "url": "https://github.com/Eve-Sama"

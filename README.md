@@ -2,7 +2,7 @@
     <img width="230" src="https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202210251258890.png">
 </p>
 <h1 align="center">
-Platform Listener
+We Media Helper
 </h1>
 <p align="center">
 自媒体大数据平台, 定时获取你的个人账号数据, 关键信息及时通知, 让你轻松开启多线程模式!
@@ -24,7 +24,7 @@ Platform Listener
 
 ### 1. 下载并安装
 
-在[这里](https://github.com/Eve-Sama/platform-listener/releases)下载适配设备的安装包进行安装. 双击进运行后, 并不会弹出任何窗口. 但是在`菜单栏`将会出现一个新的图标.
+在[这里](https://github.com/Eve-Sama/we-media-helper/releases)下载适配设备的安装包进行安装. 双击进运行后, 并不会弹出任何窗口. 但是在`菜单栏`将会出现一个新的图标.
 
 ![image-20221103105718981](https://eve-sama.oss-cn-shanghai.aliyuncs.com/blog/202211031057006.png)
 
