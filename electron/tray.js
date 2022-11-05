@@ -1,4 +1,5 @@
 const { Tray, Menu, shell, app, screen } = require('electron');
+const { autoUpdater } = require('electron-updater');
 
 const path = require('path');
 
@@ -154,6 +155,13 @@ function initTray() {
                 });
               });
             }
+          },
+        },
+        { type: 'separator' },
+        {
+          label: '检查更新',
+          click: () => {
+            autoUpdater.checkForUpdates();
           },
         },
         {

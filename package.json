@@ -1,6 +1,7 @@
 {
   "name": "we-media-helper",
-  "version": "0.0.7",
+  "productName": "We Media Helper",
+  "version": "0.0.8",
   "main": "electron/main.js",
   "description": "Grab account data via your cookie and support more function makes you focus on we media",
   "author": {
