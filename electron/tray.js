@@ -164,6 +164,10 @@ function initTray() {
     },
     { type: 'separator' },
     {
+      label: '如何使用',
+      click: () => shell.openExternal('https://github.com/Eve-Sama/platform-listener'),
+    },
+    {
       label: '作者',
       submenu: [
         {

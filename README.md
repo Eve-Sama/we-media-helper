@@ -84,17 +84,11 @@ Platform Listener
 
 ### 💪feat
 
- - [ ] 将 Electron 改版为 TypeScript 版本(试过2次了, 老是会出问题).
- - [ ] 制作欢迎页.
- - [ ] 为各个窗口设置合适的尺寸大小.
- - [ ] 使用`electron-builder`代替`electron-packager`+`electron-installer-dmg`.
- - [ ] 增加自动更新
- - [ ] icon增加黑暗模式.
- - [ ] 设置界面的footer可以抽象.
+ - [ ] 将 Electron 改版为 TypeScript 版本(need help).
+ - [ ] 增加自动更新.
  - [ ] 整理下构建相关的静态资源和文件结构.
  - [ ] 文档补充新建模块的能力.
- - [ ] 支持Windows平台.
- - [ ] 单屏模式增加快捷键.
+ - [ ] 支持Windows平台(need help).
 
 ### 🐛fix
 
