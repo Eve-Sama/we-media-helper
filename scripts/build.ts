@@ -15,43 +15,47 @@ function _buildReact(cb: () => void): void {
 }
 
 function _createPackageJson(cb: () => void): void {
-  const files = ['./package.json'];
-  src(files)
-    .pipe(
-      through.obj(function (file, _encode, cb) {
-        const targetPackage = {
-          name: null,
-          version: null,
-          description: null,
-          author: null,
-          productName: null,
-          main: 'electron/main.js',
-          dependencies: {
-            dayjs: '^1.11.5',
-            'electron-store': '^8.1.0',
-            uuid: '^9.0.0',
-          },
-        };
-        const sourcePackage: string = file.contents.toString();
-        const obj = JSON.parse(sourcePackage);
-        targetPackage.name = obj.name;
-        targetPackage.version = obj.version;
-        targetPackage.description = obj.description;
-        targetPackage.author = obj.author;
-        targetPackage.productName = obj.productName;
-        file.contents = Buffer.from(`${JSON.stringify(targetPackage, null, 2)}\n`);
-        this.push(file);
-        version = obj.version;
-        cb();
-      }),
-    )
-    .pipe(dest(webOutput));
+  // const files = ['./package.json'];
+  // src(files)
+  //   .pipe(
+  //     through.obj(function (file, _encode, cb) {
+  //       const targetPackage = {
+  //         name: null,
+  //         version: null,
+  //         description: null,
+  //         author: null,
+  //         productName: null,
+  //         main: 'electron/main.js',
+  //         dependencies: {
+  //           dayjs: '^1.11.5',
+  //           'electron-store': '^8.1.0',
+  //           'electron-updater': '^5.3.0',
+  //           uuid: '^9.0.0',
+  //         },
+  //         build: null,
+  //       };
+  //       const sourcePackage: string = file.contents.toString();
+  //       const obj = JSON.parse(sourcePackage);
+  //       targetPackage.name = obj.name;
+  //       targetPackage.version = obj.version;
+  //       targetPackage.description = obj.description;
+  //       targetPackage.author = obj.author;
+  //       targetPackage.productName = obj.productName;
+  //       targetPackage.build = obj.build;
+  //       file.contents = Buffer.from(`${JSON.stringify(targetPackage, null, 2)}\n`);
+  //       this.push(file);
+  //       version = obj.version;
+  //       cb();
+  //     }),
+  //   )
+  //   .pipe(dest(webOutput));
   cb();
 }
 
 function _createNodeModules(cb: () => void): void {
-  const files = ['atomically', '.bin', '.yarn-integrity', 'ajv', 'ajv-formats', 'conf', 'dayjs', 'debounce-fn', 'dot-prop', 'electron-store', 'env-paths', 'fast-deep-equal', 'find-up', 'is-obj', 'json-schema-traverse', 'json-schema-typed', 'locate-path', 'lru-cache', 'mimic-fn', 'onetime', 'p-limit', 'p-locate', 'p-try', 'path-exists', 'pkg-up', 'punycode', 'require-from-string', 'semver', 'type-fest', 'uri-js', 'uuid', 'yallist'];
-  files.forEach(v => src(`./node_modules/${v}/**/*`).pipe(dest(`${webOutput}/node_modules/${v}`)));
+  // const files = ['atomically', '.bin', '.yarn-integrity', 'ajv', 'ajv-formats', 'conf', 'dayjs', 'debounce-fn', 'dot-prop', 'electron-store', 'electron-updater', '@types/semver', 'builder-util-runtime', 'env-paths', 'fast-deep-equal', 'find-up', 'is-obj', 'json-schema-traverse', 'json-schema-typed', 'locate-path', 'lru-cache', 'mimic-fn', 'onetime', 'p-limit', 'p-locate', 'p-try', 'path-exists', 'pkg-up', 'punycode', 'require-from-string', 'semver', 'type-fest', 'uri-js', 'uuid', 'yallist'];
+  // files.forEach(v => src(`./node_modules/${v}/**/*`).pipe(dest(`${webOutput}/node_modules/${v}`)));
+  // src(`./node_modules/**/*`).pipe(dest(`${webOutput}/node_modules/**/*`));
   cb();
 }
 
@@ -84,12 +88,15 @@ function _buildExeForWindows(cb: () => void): void {
   exec(`electron-installer-windows --src ${applicationOutput}/${applicationName}-win32-x64 --dest ${applicationOutput}`, error => errorHandle(error, cb));
 }
 
+function _buildMac(cb: () => void): void {}
+
 const _buildWebDist = series(_buildReact, _createPackageJson, _createNodeModules, _createElectronFiles, consoleMessage(`Web dist has been created, it's ready for building app!`));
 
 const _buildM1Arr = [_buildWebDist, _buildPackageForM1, _buildDmgForM1, consoleMessage('${applicationName} for M1 has been built!')];
 const _buildIntelArr = [_buildWebDist, _buildPackageForIntel, _buildDmgForIntel, consoleMessage('${applicationName} for Intel has been built!')];
 const _buildWindowsArr = [_buildWebDist, _buildPackageForWindows, _buildExeForWindows, consoleMessage('${applicationName} for Windows has been built!')];
 
+export const buildEB = series(_buildMac);
 export const buildM1 = series(..._buildM1Arr);
 export const buildIntel = series(..._buildIntelArr);
 // windows 平台打包有问题, 暂时先不使用

@@ -89,6 +89,7 @@ We Media Helper
  - [ ] 整理下构建相关的静态资源和文件结构.
  - [ ] 文档补充新建模块的能力.
  - [ ] 支持Windows平台(need help).
+ - [ ] node_modules打包进去了, 需要优化体积.
 
 ### 🐛fix
 

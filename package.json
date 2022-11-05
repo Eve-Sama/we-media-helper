@@ -7,12 +7,53 @@
     "name": "Eve-Sama",
     "url": "https://github.com/Eve-Sama"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Eve-Sama/we-media-helper"
+  },
   "scripts": {
     "start": "cross-env BROWSER=none react-scripts start & electron .",
     "build:all": "gulp build:all",
     "build:m1": "gulp build:m1",
     "build:intel": "gulp build:intel",
-    "build:windows": "gulp build:windows"
+    "build:windows": "gulp build:windows",
+    "build:mac": "electron-builder build --mac"
+  },
+  "build": {
+    "appId": "com.electron.we-media-helper",
+    "copyright": "Copyright © 2022 Eve-Sama",
+    "generateUpdatesFilesForAllChannels": true,
+    "directories": {
+      "output": "./dist/installer"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "./scripts/assets/icons/mac-dock.icns",
+      "publish": {
+        "owner": "Eve-Sama",
+        "repo": "we-media-helper",
+        "provider": "github"
+      }
+    },
+    "files": [
+      "**/*",
+      "!dist/installer",
+      "!**/*.ts",
+      "!**/*.tsx",
+      "!src/",
+      "!.eslintignore",
+      "!.eslintrc.js",
+      "!.gitignore",
+      "!.prettierrc",
+      "!gulpfile.ts",
+      "!LICENSE",
+      "!package.json",
+      "!package-lock.json",
+      "!README.md",
+      "!tsconfig.json",
+      "!yarn.lock"
+    ],
+    "extends": null
   },
   "dependencies": {
     "ahooks": "^3.7.1",
@@ -28,7 +69,8 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "uuid": "^9.0.0",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "electron-updater": "^5.3.0"
   },
   "devDependencies": {
     "@types/gulp": "^4.0.9",
@@ -45,6 +87,7 @@
     "electron-installer-dmg": "^4.0.0",
     "electron-installer-windows": "^3.0.0",
     "electron-packager": "^16.0.0",
+    "electron-updater": "^5.3.0",
     "electron-winstaller": "^5.1.0",
     "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",

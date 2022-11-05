@@ -22,7 +22,7 @@ function createWindow(routePath, windowOptions = {}) {
   if (app.isPackaged) {
     browserWindow.loadURL(
       url.format({
-        pathname: path.join(__dirname, `/../index.html`),
+        pathname: path.join(__dirname, `../dist/web/index.html`),
         protocol: 'file:',
         slashes: true,
         hash: `/${routePath}`,
