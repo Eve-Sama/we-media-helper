@@ -14,11 +14,10 @@
   },
   "scripts": {
     "start": "cross-env BROWSER=none react-scripts start & electron .",
-    "build": "cross-env BUILD_PATH=./dist/web react-scripts build && electron-builder build --mac",
-    "build2": "gulp build"
+    "build": "cross-env BUILD_PATH=./dist/web react-scripts build && electron-builder build --mac"
   },
   "build": {
-    "appId": "com.electron.we-media-helper",
+    "appId": "we-media-helper",
     "copyright": "Copyright © 2022 Eve-Sama",
     "generateUpdatesFilesForAllChannels": true,
     "directories": {

@@ -49,6 +49,10 @@ export function useSettingTemplate(options: SettingTemplateOptions) {
   );
 
   const onSubmit = (values: StorageData['config']) => {
+    if (values.cookie.includes('\n')) {
+      message.error('cookie中不允许包含换行符!');
+      return;
+    }
     const groupList = groupSettingRef.current.getData();
     Object.assign(storageData.config, { ...values, groupList });
     storageData.config.refreshTime = (values.refreshTime as unknown as Moment).format('HH:mm:ss');
