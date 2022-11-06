@@ -14,11 +14,8 @@
   },
   "scripts": {
     "start": "cross-env BROWSER=none react-scripts start & electron .",
-    "build:all": "gulp build:all",
-    "build:m1": "gulp build:m1",
-    "build:intel": "gulp build:intel",
-    "build:windows": "gulp build:windows",
-    "build:mac": "electron-builder build --mac"
+    "build": "cross-env BUILD_PATH=./dist/web react-scripts build && electron-builder build --mac",
+    "build2": "gulp build"
   },
   "build": {
     "appId": "com.electron.we-media-helper",
@@ -36,7 +33,7 @@
           "universal"
         ]
       },
-      "icon": "./scripts/assets/icons/mac-dock.icns",
+      "icon": "./assets/icons/mac-dock.icns",
       "publish": {
         "owner": "Eve-Sama",
         "repo": "we-media-helper",
@@ -55,6 +52,7 @@
       "!**/*.ts",
       "!**/*.tsx",
       "!src/",
+      "!public/",
       "!.eslintignore",
       "!.eslintrc.js",
       "!.gitignore",

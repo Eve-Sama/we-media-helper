@@ -19,7 +19,7 @@ function getDisplayByBrowserWindow(browserWindow) {
 }
 
 function initTray() {
-  const menuIcon = app.isPackaged ? `../scripts/assets/icons/menu-icon-prod.png` : `../scripts/assets/icons/menu-icon-dev.png`;
+  const menuIcon = `../assets/icons/menu-${app.isPackaged ? 'prod' : 'dev'}.png`;
   const trayMenu = new Tray(path.join(__dirname, menuIcon));
   const contextMenu = Menu.buildFromTemplate([
     {
