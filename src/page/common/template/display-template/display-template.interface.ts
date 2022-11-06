@@ -1,4 +1,4 @@
-import { AxiosPromise } from 'axios-esm';
+import { AxiosPromise } from 'axios';
 
 import { DataCardGroup, Group } from '../../group-setting/group.interface';
 

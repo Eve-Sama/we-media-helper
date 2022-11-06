@@ -1,4 +1,4 @@
-import axios, { AxiosPromise } from 'axios-esm';
+import axios, { AxiosPromise } from 'axios';
 
 import { BasicInfo, Follow, Message } from './request-zhihu.interface';
 

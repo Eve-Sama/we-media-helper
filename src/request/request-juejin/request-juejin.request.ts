@@ -1,4 +1,4 @@
-import axios, { AxiosPromise } from 'axios-esm';
+import axios, { AxiosPromise } from 'axios';
 
 import { Count, JuejinResponse, User, UserBasicInfo } from './request-juejin.interface';
 

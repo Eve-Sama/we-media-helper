@@ -1,4 +1,4 @@
-import axios, { AxiosPromise } from 'axios-esm';
+import axios, { AxiosPromise } from 'axios';
 
 import { Account, BilibiliResponse, Message, Stat, Unread } from './request-bilibili.interface';
 

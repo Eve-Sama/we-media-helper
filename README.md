@@ -85,10 +85,8 @@ We Media Helper
 ### 💪feat
 
  - [ ] 将 Electron 改版为 TypeScript 版本(need help).
- - [ ] 增加自动更新.
- - [ ] 整理下构建相关的静态资源和文件结构.
  - [ ] 文档补充新建模块的能力.
- - [ ] 支持Windows平台(need help).
+ - [ ] 支持Windows平台.
  - [ ] node_modules打包进去了, 需要优化体积.
 
 ### 🐛fix
