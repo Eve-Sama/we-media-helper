@@ -28,13 +28,26 @@
       "output": "./dist/installer"
     },
     "mac": {
-      "target": "dmg",
+      "target": {
+        "target": "default",
+        "arch": [
+          "arm64",
+          "x64",
+          "universal"
+        ]
+      },
       "icon": "./scripts/assets/icons/mac-dock.icns",
       "publish": {
         "owner": "Eve-Sama",
         "repo": "we-media-helper",
         "provider": "github"
       }
+    },
+    "nsis": {
+      "differentialPackage": false
+    },
+    "dmg": {
+      "writeUpdateInfo": false
     },
     "files": [
       "**/*",
