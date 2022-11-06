@@ -1,33 +1,54 @@
-const { app, dialog } = require('electron');
-const { autoUpdater } = require('electron-updater');
+const axios = require('axios');
+const { compareVersions } = require('compare-versions');
+const { dialog, shell } = require('electron');
 
-function initUpdate() {
-  if (app.isPackaged) {
-    autoUpdater.checkForUpdates();
-  }
-  autoUpdater.on('update-available', (_event, releaseNotes, releaseName) => {
-    const dialogOpts = {
-      type: 'info',
-      buttons: ['Ok'],
-      title: 'Application Update',
-      message: process.platform === 'win32' ? releaseNotes : releaseName,
-      detail: 'A new version is being downloaded.',
-    };
-    dialog.showMessageBox(dialogOpts, response => {});
-  });
+const package = require('../package.json');
 
-  autoUpdater.on('update-downloaded', (_event, releaseNotes, releaseName) => {
-    const dialogOpts = {
-      type: 'info',
-      buttons: ['Restart', 'Later'],
-      title: 'Application Update',
-      message: process.platform === 'win32' ? releaseNotes : releaseName,
-      detail: 'A new version has been downloaded. Restart the application to apply the updates.',
-    };
-    dialog.showMessageBox(dialogOpts).then(returnValue => {
-      if (returnValue.response === 0) autoUpdater.quitAndInstall();
-    });
+function showErrorDialog(tip) {
+  const dialogOpts = {
+    type: 'error',
+    buttons: ['我才懒得弄', '前去报告'],
+    message: `糟糕! 更新检测出错了!`,
+    detail: tip,
+  };
+  dialog.showMessageBox(dialogOpts).then(v => {
+    if (v.response === 1) {
+      shell.openExternal('https://github.com/Eve-Sama/we-media-helper/issues');
+    }
   });
 }
 
-exports.initUpdate = initUpdate;
+function checkUpdate() {
+  axios
+    .get('https://api.github.com/repos/Eve-Sama/we-media-helper/releases')
+    .then(v => {
+      const tagName = v.data[0].tag_name;
+      const latestVersion = tagName.substr(1);
+      const currentVersion = package.version;
+      const canUpdate = compareVersions(latestVersion, currentVersion) === 1;
+      if (canUpdate) {
+        const dialogOpts = {
+          type: 'info',
+          buttons: ['前去下载'],
+          detail: `当前版本: ${currentVersion}\n最新版本: ${latestVersion}`,
+          message: '请更新至最新版以体验更多功能',
+        };
+        dialog.showMessageBox(dialogOpts).then(() => {
+          shell.openExternal('https://github.com/Eve-Sama/we-media-helper/releases');
+        });
+      } else {
+        const dialogOpts = {
+          type: 'info',
+          buttons: ['好'],
+          message: '当前已是最新版本',
+          detail: `当前版本: ${currentVersion}\n最新版本: ${latestVersion}\n`,
+        };
+        dialog.showMessageBox(dialogOpts).then(() => {});
+      }
+    })
+    .catch(error => {
+      showErrorDialog(error.toString());
+    });
+}
+
+exports.checkUpdate = checkUpdate;

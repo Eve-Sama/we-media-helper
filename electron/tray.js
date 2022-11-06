@@ -1,9 +1,9 @@
 const { Tray, Menu, shell, app, screen } = require('electron');
-const { autoUpdater } = require('electron-updater');
 
 const path = require('path');
 
 const { getSystemConfig, setSystemConfig, getTabConfig, setTabConfig } = require('./storage');
+const { checkUpdate } = require('./update');
 const { trayClick, windowMap, displayPathList } = require('./window');
 
 const keyNameMap = new Map([
@@ -160,9 +160,7 @@ function initTray() {
         { type: 'separator' },
         {
           label: '检查更新',
-          click: () => {
-            autoUpdater.checkForUpdates();
-          },
+          click: () => checkUpdate(),
         },
         {
           label: '退出',
@@ -176,7 +174,7 @@ function initTray() {
       click: () => shell.openExternal('https://github.com/Eve-Sama/we-media-helper'),
     },
     {
-      label: '作者',
+      label: '关于作者',
       submenu: [
         {
           label: 'B站',
