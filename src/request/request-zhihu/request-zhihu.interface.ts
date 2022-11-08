@@ -28,10 +28,10 @@ export interface Message {
 export interface Follow {
   List: Array<{
     /** 关注者总数 */
-    total_follow: 8107;
+    total_follow: number;
     /** 活跃关注者 */
-    active_follow: 2033;
+    active_follow: number;
     /** 昨日关注者变化 */
-    pre_follow: -1;
+    pre_follow: number;
   }>;
 }

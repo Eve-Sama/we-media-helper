@@ -14,36 +14,51 @@
   },
   "scripts": {
     "start": "cross-env BROWSER=none react-scripts start & electron .",
-    "build": "cross-env BUILD_PATH=./dist/web react-scripts build && electron-builder build --mac"
+    "build": "cross-env BUILD_PATH=./dist/web react-scripts build && electron-builder build --mac --win"
   },
   "build": {
     "appId": "we-media-helper",
-    "copyright": "Copyright © 2022 Eve-Sama",
-    "generateUpdatesFilesForAllChannels": true,
+    "copyright": "Copyright © 2022 ${author}",
+    "artifactName": "${productName}-${os}-${arch}-${version}.${ext}",
     "directories": {
       "output": "./dist/installer"
     },
     "mac": {
       "target": {
-        "target": "default",
+        "target": "dmg",
         "arch": [
           "arm64",
           "x64",
           "universal"
         ]
       },
-      "icon": "./assets/icons/mac-dock.icns",
-      "publish": {
-        "owner": "Eve-Sama",
-        "repo": "we-media-helper",
-        "provider": "github"
-      }
-    },
-    "nsis": {
-      "differentialPackage": false
+      "icon": "./assets/icons/mac-dock.icns"
     },
     "dmg": {
       "writeUpdateInfo": false
+    },
+    "nsis": {
+      "differentialPackage": false,
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "./assets/icons/win-taskbar.ico",
+      "uninstallerIcon": "./assets/icons/win-taskbar.ico",
+      "installerHeaderIcon": "./assets/icons/win-taskbar.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "win": {
+      "icon": "./assets/icons/win-taskbar.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "ia32",
+            "x64"
+          ]
+        }
+      ]
     },
     "files": [
       "**/*",
