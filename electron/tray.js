@@ -21,7 +21,7 @@ function getDisplayByBrowserWindow(browserWindow) {
 function initTray() {
   const menuIcon = `../assets/icons/menu-${app.isPackaged ? 'prod' : 'dev'}.png`;
   const trayMenu = new Tray(path.join(__dirname, menuIcon));
-  const contextMenu = Menu.buildFromTemplate([
+  const listenerDisplayList = [
     {
       label: '监听器列表',
       submenu: [
@@ -64,6 +64,8 @@ function initTray() {
         },
       ],
     },
+  ];
+  const listenerSettingList = [
     {
       label: '监听器设置',
       click: () =>
@@ -75,7 +77,8 @@ function initTray() {
           title: '监听器设置',
         }),
     },
-    { type: 'separator' },
+  ];
+  const systemList = [
     {
       label: '系统',
       submenu: [
@@ -168,11 +171,23 @@ function initTray() {
         },
       ],
     },
-    { type: 'separator' },
+  ];
+  const howToUseList = [
     {
       label: '如何使用',
-      click: () => shell.openExternal('https://github.com/Eve-Sama/we-media-helper'),
+      submenu: [
+        {
+          label: '文字版',
+          click: () => shell.openExternal('https://github.com/Eve-Sama/we-media-helper'),
+        },
+        // {
+        //   label: '视频版',
+        //   click: () => shell.openExternal('https://github.com/Eve-Sama/we-media-helper'),
+        // },
+      ],
     },
+  ];
+  const aboutAuthourList = [
     {
       label: '关于作者',
       submenu: [
@@ -190,7 +205,8 @@ function initTray() {
         },
       ],
     },
-  ]);
+  ];
+  const contextMenu = Menu.buildFromTemplate([...listenerDisplayList, { type: 'separator' }, ...listenerSettingList, { type: 'separator' }, ...systemList, { type: 'separator' }, ...howToUseList, ...aboutAuthourList]);
   trayMenu.setToolTip('We Media Helper');
   trayMenu.setContextMenu(contextMenu);
 }

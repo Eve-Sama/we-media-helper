@@ -29,12 +29,14 @@ function checkUpdate() {
       if (canUpdate) {
         const dialogOpts = {
           type: 'info',
-          buttons: ['前去下载'],
+          buttons: ['下个毛, 不下!', '前去下载'],
           detail: `当前版本: ${currentVersion}\n最新版本: ${latestVersion}`,
           message: '请更新至最新版以体验更多功能',
         };
-        dialog.showMessageBox(dialogOpts).then(() => {
-          shell.openExternal('https://github.com/Eve-Sama/we-media-helper/releases');
+        dialog.showMessageBox(dialogOpts).then(v => {
+          if (v.response === 1) {
+            shell.openExternal('https://github.com/Eve-Sama/we-media-helper/releases');
+          }
         });
       } else {
         const dialogOpts = {
