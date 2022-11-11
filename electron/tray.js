@@ -2,7 +2,7 @@ const { Tray, Menu, shell, app, screen } = require('electron');
 
 const path = require('path');
 
-const { getSystemConfig, setSystemConfig, getTabConfig, setTabConfig } = require('./storage');
+const { getSystemConfig, setSystemConfig, getTabConfig, setTabConfig, resetSystemConfig } = require('./storage');
 const { checkUpdate } = require('./update');
 const { trayClick, windowMap, displayPathList } = require('./window');
 
@@ -18,9 +18,15 @@ function getDisplayByBrowserWindow(browserWindow) {
   return whichScreen;
 }
 
-function initTray() {
+let getTrayMenu = () => {
   const menuIcon = `../assets/icons/menu-${app.isPackaged ? 'prod' : 'dev'}.png`;
-  const trayMenu = new Tray(path.join(__dirname, menuIcon));
+  trayMenu = new Tray(path.join(__dirname, menuIcon));
+  getTrayMenu = () => trayMenu;
+  return trayMenu;
+};
+
+function initTray() {
+  const trayMenu = getTrayMenu();
   const listenerDisplayList = [
     {
       label: '监听器列表',
@@ -206,7 +212,25 @@ function initTray() {
       ],
     },
   ];
-  const contextMenu = Menu.buildFromTemplate([...listenerDisplayList, { type: 'separator' }, ...listenerSettingList, { type: 'separator' }, ...systemList, { type: 'separator' }, ...howToUseList, ...aboutAuthourList]);
+  const menuOptions = [...listenerDisplayList, { type: 'separator' }, ...listenerSettingList, { type: 'separator' }, ...systemList, { type: 'separator' }, ...howToUseList, ...aboutAuthourList];
+  if (!app.isPackaged) {
+    const clearStoreDataList = [
+      {
+        label: '清除本地缓存',
+        submenu: [
+          {
+            label: 'system-config',
+            click: () => {
+              resetSystemConfig();
+              initTray();
+            },
+          },
+        ],
+      },
+    ];
+    menuOptions.push({ type: 'separator' }, ...clearStoreDataList);
+  }
+  const contextMenu = Menu.buildFromTemplate(menuOptions);
   trayMenu.setToolTip('We Media Helper');
   trayMenu.setContextMenu(contextMenu);
 }

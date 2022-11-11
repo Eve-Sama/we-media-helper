@@ -8,16 +8,11 @@ const tabConfigkey = 'tab-config';
 function initConfig() {
   const systemConfig = getSystemConfig();
   if (!systemConfig) {
-    const newConfig = {
-      enableDebugMode: false,
-      enableSingleMode: false,
-    };
-    store.set(systemConfigkey, newConfig);
+    resetSystemConfig();
   }
   const tabConfig = getTabConfig();
   if (!tabConfig) {
-    const newConfig = [];
-    store.set(tabConfigkey, newConfig);
+    resetTabConfig();
   }
 }
 
@@ -30,6 +25,14 @@ function setSystemConfig(config) {
   store.set(systemConfigkey, config);
 }
 
+function resetSystemConfig() {
+  const config = {
+    enableDebugMode: false,
+    enableSingleMode: false,
+  };
+  setSystemConfig(config);
+}
+
 function getTabConfig() {
   const config = store.get(tabConfigkey);
   return config;
@@ -39,15 +42,15 @@ function setTabConfig(config) {
   store.set(tabConfigkey, config);
 }
 
-function clearTabConfig() {
+function resetTabConfig() {
   setTabConfig([]);
-  store.set('tab-active-key', null);
 }
 
 exports.initConfig = initConfig;
 exports.getSystemConfig = getSystemConfig;
 exports.setSystemConfig = setSystemConfig;
+exports.resetSystemConfig = resetSystemConfig;
 exports.getTabConfig = getTabConfig;
 exports.setTabConfig = setTabConfig;
 exports.setTabConfig = setTabConfig;
-exports.clearTabConfig = clearTabConfig;
+exports.resetTabConfig = resetTabConfig;

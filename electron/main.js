@@ -1,14 +1,14 @@
 const { app } = require('electron');
 
 const { initEvent } = require('./event');
-const { initConfig, clearTabConfig } = require('./storage');
+const { initConfig, resetTabConfig } = require('./storage');
 const { initTray } = require('./tray');
 
 app.on('ready', () => {
   initConfig();
   initTray();
   initEvent();
-  clearTabConfig();
+  resetTabConfig();
 });
 
 // 如果不写这个, 会在关闭一个窗口时直接退出应用
