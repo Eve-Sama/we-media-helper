@@ -14,10 +14,11 @@ export interface CountdownDisplayRef {
 
 interface CountdownDisplayProps {
   loadData: () => void;
+  setDefaultTitle: () => void;
 }
 
 export const CountdownDisplay = forwardRef<CountdownDisplayRef, CountdownDisplayProps>((props, ref) => {
-  const { loadData } = props;
+  const { loadData, setDefaultTitle } = props;
 
   const [countdownValue, setCountdownValue] = useState<number>(0);
   const [mode, setMode] = useState<'normal' | 'error'>('normal');
@@ -51,6 +52,7 @@ export const CountdownDisplay = forwardRef<CountdownDisplayRef, CountdownDisplay
       window.addEventListener('offline', () => {
         setMode('error');
         startCountdown('0:0:0');
+        setDefaultTitle();
       });
     })();
   }, []);

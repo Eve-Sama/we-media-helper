@@ -241,7 +241,7 @@ export function useDisplayTemplate(options: TemplateOptions) {
     return (
       <div className={styles['template-container']}>
         <div style={{ display: storageData.config.showCountdown ? 'flex' : 'none' }}>
-          <CountdownDisplay loadData={loadDataRef.current} ref={countdownRef} />
+          <CountdownDisplay loadData={loadDataRef.current} ref={countdownRef} setDefaultTitle={setDefaultTitle} />
         </div>
         <Spin tip="Loading..." spinning={loading}>
           <div className={styles['group-container']}>{initGroupComponents()}</div>

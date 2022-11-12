@@ -212,7 +212,7 @@ function initTray() {
       ],
     },
   ];
-  const menuOptions = [...listenerDisplayList, { type: 'separator' }, ...listenerSettingList, { type: 'separator' }, ...systemList, { type: 'separator' }, ...howToUseList, ...aboutAuthourList];
+  const menuOptions = [...listenerDisplayList, ...listenerSettingList, { type: 'separator' }, ...systemList, { type: 'separator' }, ...howToUseList, ...aboutAuthourList];
   if (!app.isPackaged) {
     const clearStoreDataList = [
       {
