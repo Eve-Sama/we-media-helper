@@ -1,4 +1,5 @@
 import { message, Spin } from 'antd';
+import isOnline from 'is-online';
 import _ from 'lodash';
 import { useEffect, useReducer, useRef, useState } from 'react';
 
@@ -123,7 +124,15 @@ export function useDisplayTemplate(options: TemplateOptions) {
   useEffect(() => {
     if (loadData && getDataCardInfo) {
       setCanRender(true);
-      loadDataRef.current();
+      isOnline().then(online => {
+        if (online) {
+          loadDataRef.current();
+        } else {
+          countdownRef.current?.setMode('error');
+          countdownRef.current?.startCountdown('0:0:0');
+          message.error('你能不能先把网连上再点?');
+        }
+      });
     }
   }, [loadData, getDataCardInfo]);
 

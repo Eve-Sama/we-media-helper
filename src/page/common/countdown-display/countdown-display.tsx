@@ -1,6 +1,7 @@
 import { useDebounceFn } from 'ahooks';
-import { Divider, Statistic } from 'antd';
-import { forwardRef, useImperativeHandle, useState } from 'react';
+import { Divider, message, Statistic } from 'antd';
+import isOnline from 'is-online';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 
 import styles from './style.module.scss';
 
@@ -26,14 +27,33 @@ export const CountdownDisplay = forwardRef<CountdownDisplayRef, CountdownDisplay
     setCountdownValue(Date.now() + 1000 * (hour * 3600 + minite * 60 + second) + 1000);
   };
 
-  const { run: loadDataCB } = useDebounceFn(loadData, { wait: 300 });
-
   const countdownFinish = () => {
     // 当请求失败时, 会重置倒计时为0, 而0作为值依旧会进行倒计时从而触发重新请求(loadData)而导致无限循环. 因此对于倒计时结束的场景再+一个 mode 字段作为区分
     if (mode === 'normal') {
       loadData();
     }
   };
+
+  const countdownClick = async () => {
+    const online = await isOnline();
+    if (online) {
+      loadData();
+    } else {
+      message.error('你能不能先把网连上再点?');
+    }
+  };
+
+  const { run: countdownClickCB } = useDebounceFn(countdownClick, { wait: 300 });
+
+  useEffect(() => {
+    (function listenNetwork() {
+      window.addEventListener('online', loadData);
+      window.addEventListener('offline', () => {
+        setMode('error');
+        startCountdown('0:0:0');
+      });
+    })();
+  }, []);
 
   useImperativeHandle(ref, () => ({
     setMode: (mode: 'error' | 'normal') => setMode(mode),
@@ -43,7 +63,7 @@ export const CountdownDisplay = forwardRef<CountdownDisplayRef, CountdownDisplay
   return (
     <div className={styles['container']}>
       <Divider>
-        <div className={styles['countdown-container']} onClick={loadDataCB}>
+        <div className={styles['countdown-container']} onClick={countdownClickCB}>
           <Countdown className={styles[mode]} value={countdownValue} onFinish={countdownFinish}></Countdown>
         </div>
       </Divider>
