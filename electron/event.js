@@ -1,6 +1,7 @@
 const { session, ipcMain, Notification, shell } = require('electron');
 const Store = require('electron-store');
 
+const { getSystemConfig } = require('./storage');
 const { windowMap } = require('./window');
 
 const store = new Store();
@@ -31,9 +32,12 @@ function initEvent() {
 
   ipcMain.on('set-title', (_, message) => {
     const { key, title } = message;
-    const browserWindow = windowMap.get(key);
-    // 如果是 tab 页面, 则不设置标题了
-    browserWindow?.setTitle(title);
+    const browserWindow = windowMap.get(`display/${key}`);
+    const systemConfig = getSystemConfig();
+    // 单屏模式有多个监听器, 但是只有一个窗口, 所以在这种情况下不设置标题
+    if (!systemConfig.enableSingleMode) {
+      browserWindow?.setTitle(title);
+    }
   });
 
   ipcMain.on('notify', (_, message) => {
