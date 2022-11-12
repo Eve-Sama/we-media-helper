@@ -1,3 +1,4 @@
+const openAboutWindow = require('about-window');
 const { Tray, Menu, shell, app, screen } = require('electron');
 
 const path = require('path');
@@ -170,6 +171,26 @@ function initTray() {
         {
           label: '检查更新',
           click: () => checkUpdate(),
+        },
+        {
+          label: '关于软件',
+          click: () => {
+            openAboutWindow.default({
+              icon_path: path.join(__dirname, '../assets/icons/main.png'),
+              description: 'Display data that you are concerning',
+              product_name: 'We Media Helper',
+              copyright: 'Copyright © 2022 Eve-Sama',
+              homepage: 'https://github.com/Eve-Sama/we-media-helper',
+              license: 'MIT',
+              bug_report_url: 'https://github.com/Eve-Sama/we-media-helper/issues',
+              win_options: {
+                resizable: false,
+                fullscreenable: false,
+                minimizable: false,
+              },
+              use_version_info: false,
+            });
+          },
         },
         {
           label: '退出',
