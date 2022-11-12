@@ -10,6 +10,7 @@ import styles from './style.module.scss';
 
 export function DisplayTab() {
   const [items, setItems] = useState<Tab[]>([]);
+  const [firstRun, setFirstRun] = useState(true);
   const [activeKey, setActiveKey] = useState('');
   const hotkeyHandlerRef = useRef<(hotkey: string) => void>();
 
@@ -36,13 +37,24 @@ export function DisplayTab() {
     if (items.length === 0) {
       return;
     }
-    updateActiveKeyByLast();
+    if (firstRun) {
+      const key = window.electron.store.get(`tab-active-key`) as string;
+      if (key) {
+        setActiveKey(() => key);
+      } else {
+        updateActiveKeyByLast();
+      }
+      setFirstRun(false);
+    } else {
+      updateActiveKeyByLast();
+    }
   }, [items]);
 
   const updateActiveKeyByLast = () => {
     const last = items.at(-1);
     if (last) {
       setActiveKey(() => last.key);
+      window.electron.store.set(`tab-active-key`, last.key);
     }
   };
 
@@ -62,6 +74,7 @@ export function DisplayTab() {
       newItem = beingFirstItem ? items[items.length - 1] : items[index - 1];
     }
     setActiveKey(() => newItem.key);
+    window.electron.store.set(`tab-active-key`, newItem.key);
   };
 
   const addTabHandler = () => {
@@ -77,6 +90,7 @@ export function DisplayTab() {
 
   const onTabClick = (key: string) => {
     setActiveKey(() => key);
+    window.electron.store.set(`tab-active-key`, key);
   };
 
   return (
