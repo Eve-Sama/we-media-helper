@@ -32,7 +32,7 @@
           "universal"
         ]
       },
-      "icon": "./assets/icons/mac-dock.icns"
+      "icon": "./assets/icons/main.icns"
     },
     "dmg": {
       "writeUpdateInfo": false
@@ -42,14 +42,14 @@
       "oneClick": false,
       "allowElevation": true,
       "allowToChangeInstallationDirectory": true,
-      "installerIcon": "./assets/icons/win-taskbar.ico",
-      "uninstallerIcon": "./assets/icons/win-taskbar.ico",
-      "installerHeaderIcon": "./assets/icons/win-taskbar.ico",
+      "installerIcon": "./assets/icons/main.ico",
+      "uninstallerIcon": "./assets/icons/main.ico",
+      "installerHeaderIcon": "./assets/icons/main.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true
     },
     "win": {
-      "icon": "./assets/icons/win-taskbar.ico",
+      "icon": "./assets/icons/main.ico",
       "target": [
         {
           "target": "nsis",

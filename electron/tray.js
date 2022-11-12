@@ -20,7 +20,7 @@ function getDisplayByBrowserWindow(browserWindow) {
 }
 
 let getTrayMenu = () => {
-  const menuIcon = `../assets/icons/menu-${app.isPackaged ? 'prod' : 'dev'}.png`;
+  const menuIcon = `../assets/icons/second-${app.isPackaged ? 'prod' : 'dev'}.png`;
   trayMenu = new Tray(path.join(__dirname, menuIcon));
   getTrayMenu = () => trayMenu;
   return trayMenu;
