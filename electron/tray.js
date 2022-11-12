@@ -243,7 +243,8 @@ function initTray() {
             label: 'system-config',
             click: () => {
               resetSystemConfig();
-              initTray();
+              app.relaunch({ args: process.argv.slice(1).concat(['--relaunch']) });
+              app.exit(0);
             },
           },
         ],
