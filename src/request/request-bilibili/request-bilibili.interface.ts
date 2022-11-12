@@ -40,6 +40,7 @@ export interface Unread {
   like: number;
   sys_msg: number;
   reply: number;
+  up: number;
 }
 
 export interface Message {

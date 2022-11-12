@@ -23,7 +23,7 @@ export const BilibiliOptionalCardGroupList: DataCardGroup[] = [
       { label: '回复我的', value: 'reply', changeValue: [], totalValue: ['reply'], url: 'https://message.bilibili.com/#/reply' },
       { label: '@我的', value: 'at', changeValue: [], totalValue: ['at'], url: 'https://message.bilibili.com/#/at' },
       { label: '收到的赞', value: 'like', changeValue: [], totalValue: ['like'], url: 'https://message.bilibili.com/#/love' },
-      { label: '系统消息', value: 'systemMessage', changeValue: [], totalValue: ['sys_msg'], url: 'https://message.bilibili.com/#/system' },
+      { label: '系统消息', value: 'systemMessage', changeValue: [], totalValue: ['sys_msg', 'up'], url: 'https://message.bilibili.com/#/system' },
       { label: '我的消息', value: 'message', changeValue: [], totalValue: ['follow_unread', 'unfollow_unread'], url: 'https://message.bilibili.com/#/whisper' },
     ],
   },
