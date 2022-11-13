@@ -32,5 +32,7 @@ type UnionToTuple<U> = [U] extends [never] ? [] : [...UnionToTuple<Exclude<U, Un
  * 下面俩类型是我手动慢慢推导的, 上面三行网上查的
  * @see https://segmentfault.com/q/1010000042243980
  */
-export type AnalyzeRequest = <T extends ReadonlyArray<() => AxiosPromise>>(request: T, thenCallback: (data: UnionToTuple<Awaited<ReturnType<T[number]>>>) => boolean, catchCallback: () => void) => void;
+// export type AnalyzeRequest = <T extends ReadonlyArray<() => AxiosPromise>>(request: T, thenCallback: (data: UnionToTuple<Awaited<ReturnType<T[number]>>>) => boolean, catchCallback: () => void) => void;
+// VSC存在类型推导bug, 先设为any吧. 详见 https://github.com/microsoft/vscode/issues/166175
+export type AnalyzeRequest = <T extends ReadonlyArray<() => AxiosPromise>>(request: T, thenCallback: (data: any) => boolean, catchCallback: () => void) => void;
 export type AnalyzeDataCard = (callback: (type: string, allCardList: DataCardGroup['children']) => { target: DataCardGroup['children'][number]; dataSource: object }) => void;
