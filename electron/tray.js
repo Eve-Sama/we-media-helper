@@ -205,12 +205,12 @@ function initTray() {
       submenu: [
         {
           label: '文字版',
-          click: () => shell.openExternal('https://github.com/Eve-Sama/we-media-helper'),
+          click: () => shell.openExternal('https://juejin.cn/post/7165486611361169422'),
         },
-        // {
-        //   label: '视频版',
-        //   click: () => shell.openExternal('https://github.com/Eve-Sama/we-media-helper'),
-        // },
+        {
+          label: '视频版',
+          click: () => shell.openExternal('https://www.bilibili.com/video/BV1At4y1N7Kq'),
+        },
       ],
     },
   ];
