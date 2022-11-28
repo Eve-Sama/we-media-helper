@@ -17,7 +17,7 @@ export function DisplayZhihu() {
 
   useEffect(() => {
     analyzeRequest(
-      [getBaiscInfo, getMessage, getFollow],
+      [getBaiscInfo, getMessage, getFollow] as const,
       data => {
         let showError = false;
         // 处理基础信息

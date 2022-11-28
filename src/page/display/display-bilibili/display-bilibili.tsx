@@ -17,7 +17,7 @@ export function DisplayBilibili() {
 
   useEffect(() => {
     analyzeRequest(
-      [getStat, getAccount, getUnread, getMessage],
+      [getStat, getAccount, getUnread, getMessage] as const,
       data => {
         let showError = false;
         // 处理统计数据

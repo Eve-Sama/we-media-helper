@@ -16,7 +16,7 @@ export function DisplayJueJin() {
 
   useEffect(() => {
     analyzeRequest(
-      [getCount, getUser, getUserBaiscInfo],
+      [getCount, getUser, getUserBaiscInfo] as const,
       data => {
         let showError = false;
         // 处理实时交互数据
