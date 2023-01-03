@@ -1,6 +1,5 @@
 import { useDebounceFn } from 'ahooks';
-import { Divider, message, Statistic } from 'antd';
-import isOnline from 'is-online';
+import { Divider, Statistic } from 'antd';
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 
 import styles from './style.module.scss';
@@ -35,16 +34,7 @@ export const CountdownDisplay = forwardRef<CountdownDisplayRef, CountdownDisplay
     }
   };
 
-  const countdownClick = async () => {
-    const online = await isOnline();
-    if (online) {
-      loadData();
-    } else {
-      message.error('你能不能先把网连上再点?');
-    }
-  };
-
-  const { run: countdownClickCB } = useDebounceFn(countdownClick, { wait: 300 });
+  const { run: countdownClickCB } = useDebounceFn(loadData, { wait: 300 });
 
   useEffect(() => {
     (function listenNetwork() {
